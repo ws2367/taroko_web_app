@@ -6,6 +6,7 @@ import Tab from '@material-ui/core/Tab';
 import SwipeableViews from 'react-swipeable-views';
 import { UITIMELINE } from 'constants/uiComponents'
 import Profile from './Profile';
+import Note from './Note';
 
 const EXAMPLEPAGE = UITIMELINE[1].path;
 
@@ -21,11 +22,13 @@ const TabContent1 = ( {profile} ) => (
   </div>
 )
 
-const TabContent2 = () => (
-  <div className="container-fluid container-mw-md">
-    <div className="callout callout-warning">
-      <p>You can change container max-width with <code>.container-mw-</code> utility class</p>
-    </div>
+const TabContent2 = ( {notes} ) => (
+  <div className="container-fluid no-breadcrumb container-mw-md chapter">
+    <article className="article">
+      <QueueAnim type="bottom" className="ui-animate">
+        <div key="1" className="mb-3"> <Note notes={notes}/> </div>
+      </QueueAnim>
+    </article>
   </div>
 )
 
@@ -34,6 +37,44 @@ const TabContent3 = () => (
 )
 
 class Client extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      notes: [],
+      todos: [],
+      error: null,
+      isLoaded: false
+    }
+  }
+
+  componentDidMount() {
+    const { client } = this.props.location.state;
+    console.log(client);
+    fetch("http://api.cooby.co/clients/" + client.profile.id + "/notes/", {
+      "method": "GET",
+      mode: 'cors',
+      "headers": {
+        'Content-Type': 'application/json',
+        "Authorization": "BEARER PS3eSI8zNXIa4m_bfc2P8Qh4XbQtgbX2bOz9qphHcKMinFmMtGpPkOtso1gKJDTvj0ZJmn9PzNEirnVPVcdlevTleq2mUuVPgsW0SnKR5GaQqrH-qmtwtTWkr77Mja0wzOATEevMPLuNWWh9e7aiP2Tqkw8Hc69BA41nB2ozrhg"
+      }
+    }).then(res => res.json())
+      .then(
+        (result) => {
+          console.log(result);
+          this.setState({
+            isLoaded: true,
+            notes: result.notes
+          });
+        },
+        (error) => {
+          this.setState({
+            isLoaded: true,
+            error
+          });
+        }
+      )
+
+  }
 
   state = {
     value: 0,
@@ -69,7 +110,7 @@ class Client extends React.Component {
               onChangeIndex={this.handleChangeIndex}
             >
               <TabContent1 profile={client.profile}/>
-              <TabContent2 />
+              <TabContent2 notes={this.state.notes}/>
               <TabContent3 />
             </SwipeableViews>
           </div>

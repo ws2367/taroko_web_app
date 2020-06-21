@@ -22,11 +22,11 @@ function SimpleTable({match, clients}) {
         </TableHead>
         <TableBody>
           {
-            clients.map(client => (
-              <TableRow key={1}>
+            clients.map((client, index) => (
+              <TableRow key={index}>
                 <TableCell component="th" scope="row">
                   <Link to={{
-                      pathname: "/app/client/${client.id}",
+                      pathname: "/app/client/" + client.profile.id,
                       state: {
                         client: client
                       }
