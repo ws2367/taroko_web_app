@@ -12,8 +12,8 @@ const Statboxes = () => (
             </span>
           </div>
           <div className="box-info">
-            <p className="info-desc">Visit Today</p>
-            <p className="box-main-num">100k+</p>
+            <p className="info-desc">客戶數量</p>
+            <p className="box-main-num">+3</p>
           </div>
         </div>
         <div className="box-bottom">
@@ -37,8 +37,8 @@ const Statboxes = () => (
             </span>
           </div>
           <div className="box-info">
-            <p className="info-desc">% Unique Visitors</p>
-            <p className="box-main-num">54.5%</p>
+            <p className="info-desc">會議數量</p>
+            <p className="box-main-num">+12</p>
           </div>
         </div>
         <div className="box-bottom">
@@ -58,8 +58,8 @@ const Statboxes = () => (
             </span>
           </div>
           <div className="box-info">
-            <p className="info-desc">% Earning Growth</p>
-            <p className="box-main-num">45.4%</p>
+            <p className="info-desc">待辦事項</p>
+            <p className="box-main-num">21個完成</p>
           </div>
         </div>
         <div className="box-bottom">
@@ -83,7 +83,7 @@ const Statboxes = () => (
             </span>
           </div>
           <div className="box-info">
-            <p className="info-desc">% Sales Growth</p>
+            <p className="info-desc">下週行程</p>
             <p className="box-main-num">25.5%</p>
           </div>
         </div>

@@ -1,6 +1,12 @@
 import React from 'react';
 import QueueAnim from 'rc-queue-anim';
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch
+} from 'react-router-dom';
 import KPIsChart from './KPIsChart';
+import Client from './Client';
 import AquisitionChart from './AquisitionChart';
 import StatBoxes1 from './StatBoxes1';
 import StatBoxes2 from './StatBoxes2';
@@ -26,17 +32,20 @@ const Main = () => (
   </div>
 );
 
-const Dashboard = () => (
-  <div className="container-fluid no-breadcrumb page-dashboard">
-
-    <QueueAnim type="bottom" className="ui-animate">
-      <div key="1"><Main /></div>
-      <div key="2"><StatBoxes1 /></div>
-      <div key="3"><StatBoxes2 /></div>
-      <div key="4"><ProjectTable /></div>
-    </QueueAnim>
-
-  </div>
+const Dashboard = ({match}) => (
+    <div>
+      <Switch>
+        <Route path={`${match.path}/:clientId`} component={Client} />
+        <Route path={match.path}>
+          <div className="container-fluid no-breadcrumb page-dashboard">
+            <QueueAnim type="bottom" className="ui-animate">
+              <div key="1"><ProjectTable /></div>
+              <div key="2"><StatBoxes1 /></div>
+              </QueueAnim>
+          </div>
+        </Route>
+      </Switch>
+    </div>
 );
 
 export default Dashboard;

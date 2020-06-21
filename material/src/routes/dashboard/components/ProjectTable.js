@@ -1,67 +1,48 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import MaterialIcon from 'components/MaterialIcon';
 import Chip from '@material-ui/core/Chip';
 
-function SimpleTable(props) {
+function SimpleTable({match}) {
+
+
   return (
-    <div className="box box-default table-responsive">
+    <div className="box box-default table-responsive mb-4">
       <Table className="table-hover">
         <TableHead>
           <TableRow>
-            <TableCell>#</TableCell>
-            <TableCell>Project</TableCell>
-            <TableCell>Status</TableCell>
-            <TableCell>Manager</TableCell>
-            <TableCell>Progress</TableCell>
+            <TableCell>名字</TableCell>
+            <TableCell>標籤</TableCell>
+            <TableCell>任職公司</TableCell>
+            <TableCell>認識方式</TableCell>
+            <TableCell>有興趣保險類別</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           <TableRow key={1}>
-            <TableCell component="th" scope="row">1</TableCell>
-            <TableCell><MaterialIcon icon="trending_up" className="text-success mr-1" />TWLT</TableCell>
-            <TableCell><Chip label="Pending" className="table-chip bg-info" /></TableCell>
-            <TableCell>Amery Lee</TableCell>
-            <TableCell><span className="text-primary">55%</span></TableCell>
+            <TableCell component="th" scope="row"><Link to="/app/dashboard/1" className="link-cta link-animated-hover link-hover-v1 text-primary">方大同</Link></TableCell>
+            <TableCell><Chip label="A級客戶" className="table-chip bg-info px-2" /><Chip label="美元" className="table-chip bg-info px-2" /></TableCell>
+            <TableCell>中華開發</TableCell>
+            <TableCell>緣故客戶</TableCell>
+            <TableCell>壽險</TableCell>
           </TableRow>
           <TableRow key={2}>
-            <TableCell component="th" scope="row">2</TableCell>
-            <TableCell><MaterialIcon icon="trending_up" className="text-primary mr-1" />A16Z</TableCell>
-            <TableCell><Chip label="Due" className="table-chip bg-primary" /></TableCell>
-            <TableCell>Romayne Carlyn</TableCell>
-            <TableCell><span className="text-success">34%</span></TableCell>
+            <TableCell component="th" scope="row">張忠謀</TableCell>
+            <TableCell><Chip label="B級客戶" className="table-chip bg-info px-2" /></TableCell>
+            <TableCell>美麗華</TableCell>
+            <TableCell>陌生開發</TableCell>
+            <TableCell>儲蓄險</TableCell>
           </TableRow>
           <TableRow key={3}>
-            <TableCell component="th" scope="row">3</TableCell>
-            <TableCell><MaterialIcon icon="trending_down" className="text-warning mr-1" />DARK</TableCell>
-            <TableCell><Chip label="Due" className="table-chip bg-success" /></TableCell>
-            <TableCell>Marybeth Joanna</TableCell>
-            <TableCell><span className="text-info">68%</span></TableCell>
-          </TableRow>
-          <TableRow key={4}>
-            <TableCell component="th" scope="row">4</TableCell>
-            <TableCell><MaterialIcon icon="trending_flat" className="text-info mr-1" />Q300</TableCell>
-            <TableCell><Chip label="Blocked" className="table-chip bg-danger" /></TableCell>
-            <TableCell>Jonah Benny</TableCell>
-            <TableCell><span className="text-warning">52%</span></TableCell>
-          </TableRow>
-          <TableRow key={5}>
-            <TableCell component="th" scope="row">5</TableCell>
-            <TableCell><MaterialIcon icon="trending_down" className="text-danger mr-1" />RVNG</TableCell>
-            <TableCell><Chip label="Suspended" className="table-chip bg-warning" /></TableCell>
-            <TableCell>Daly Royle</TableCell>
-            <TableCell><span className="text-danger">77%</span></TableCell>
-          </TableRow>
-          <TableRow key={6}>
-            <TableCell component="th" scope="row">6</TableCell>
-            <TableCell><MaterialIcon icon="trending_down" className="text-info mr-1" />FDSA</TableCell>
-            <TableCell><Chip label="Suspended" className="table-chip bg-info" /></TableCell>
-            <TableCell>Jane Swift</TableCell>
-            <TableCell><span className="text-success">55%</span></TableCell>
+            <TableCell component="th" scope="row">陳時中</TableCell>
+            <TableCell><Chip label="D級客戶" className="table-chip bg-info px-2" /></TableCell>
+            <TableCell>台積電</TableCell>
+            <TableCell>陌生開發</TableCell>
+            <TableCell>長照險</TableCell>
           </TableRow>
         </TableBody>
       </Table>
