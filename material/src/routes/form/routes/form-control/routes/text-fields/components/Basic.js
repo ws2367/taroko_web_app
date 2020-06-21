@@ -36,6 +36,10 @@ const currencies = [
     value: 'JPY',
     label: '¥',
   },
+  {
+    value: 'NTD',
+    label: 'NT$',
+  },
 ];
 
 class TextFields extends React.Component {
@@ -43,7 +47,7 @@ class TextFields extends React.Component {
     name: 'Cat in the Hat',
     age: '',
     multiline: 'Controlled',
-    currency: 'EUR',
+    currency: 'NTD',
   };
 
   handleChange = name => event => {
@@ -68,7 +72,7 @@ class TextFields extends React.Component {
         <TextField
           id="uncontrolled"
           label="Uncontrolled"
-          defaultValue="foo"
+          defaultValue="AWESOME "
           className={classes.textField}
           margin="normal"
         />
@@ -242,4 +246,3 @@ const Box = () => (
 )
 
 export default Box;
-

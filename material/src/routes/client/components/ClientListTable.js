@@ -24,7 +24,14 @@ function SimpleTable({match, clients}) {
           {
             clients.map(client => (
               <TableRow key={1}>
-                <TableCell component="th" scope="row"><Link to="/app/client/${client.id}export default class Root extends Component {" className="link-cta link-animated-hover link-hover-v1 text-primary">{client.profile.name}</Link></TableCell>
+                <TableCell component="th" scope="row">
+                  <Link to={{
+                      pathname: "/app/client/${client.id}",
+                      state: {
+                        client: client
+                      }
+                    }} className="link-cta link-animated-hover link-hover-v1 text-primary">{client.profile.name}
+                  </Link></TableCell>
                 <TableCell><Tag tags={client.profile.tags} /></TableCell>
                 <TableCell>{client.profile.company}</TableCell>
                 <TableCell>{client.profile.source}</TableCell>
