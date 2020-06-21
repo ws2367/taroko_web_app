@@ -15,7 +15,7 @@ class AppMenu extends React.Component {
   // list for AccordionNav
   rootMenuItemKeys= [ // without submenu
     '/app/client',
-    '/app/ui-overview',
+    '/app/task',
     '/app/calendar',
   ]
   rootSubmenuKeys = [
@@ -138,8 +138,8 @@ class AppMenu extends React.Component {
             <span className="nav-badge nav-badge-icon badge-right ml-1"><MaterialIcon icon="stars" className="m-0 text-warning" /></span>
           </Button>
         </Menu.Item>
-        <Menu.Item key="/app/ui-overview">
-          <Button className="nav-item" href="#/app/ui-overview">
+        <Menu.Item key="/app/task">
+          <Button className="nav-item" href="#/app/task">
             <MaterialIcon icon="store" />
             <span className="nav-text">待辦事項</span>
           </Button>

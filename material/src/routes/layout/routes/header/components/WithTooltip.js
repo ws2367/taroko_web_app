@@ -31,12 +31,12 @@ class AppHeader extends React.Component {
             <div className="list-unstyled list-inline">
               <a href={DEMO.link} className="list-inline-item"> <MaterialIcon icon="menu" className="list-icon" /> </a>
               <Tooltip placement="bottom" title="UI Overview">
-                <a href="#/app/ui-overview" className="list-inline-item">
+                <a href="#/app/task" className="list-inline-item">
                   <MaterialIcon icon="store" className="list-icon" />
                 </a>
               </Tooltip>
               <Popover placement="bottom" content="100+ Components" title="UI Overview" trigger="hover">
-                <a href="#/app/ui-overview" className="list-inline-item">
+                <a href="#/app/task" className="list-inline-item">
                   <MaterialIcon icon="card_giftcard" className="list-icon" />
                 </a>
               </Popover>
@@ -46,7 +46,7 @@ class AppHeader extends React.Component {
           <div className="header-right">
             <div className="list-unstyled list-inline">
               <Tooltip placement="bottom" title="UI Overview">
-                <a href="#/app/ui-overview" className="list-inline-item">
+                <a href="#/app/task" className="list-inline-item">
                   <MaterialIcon icon="store" className="list-icon" />
                 </a>
               </Tooltip>
@@ -62,7 +62,7 @@ class AppHeader extends React.Component {
               </Popover>
               <a className="list-inline-item" href={DEMO.link}>
                 <div
-                  className="avatar" 
+                  className="avatar"
                   aria-owns={anchorEl ? 'app-header-menu-4' : null}
                   aria-haspopup="true"
                   onClick={this.handleClick}
@@ -94,4 +94,3 @@ class AppHeader extends React.Component {
 }
 
 export default AppHeader;
-

@@ -45,7 +45,7 @@ class AppHeader extends React.Component {
       <Header className={classnames('app-header', {
         'header-elevation': headerShadow,
       })}>
-        <div 
+        <div
           className={classnames('app-header-inner', {
             'bg-white': ['11','12','13','14','15','16','21'].indexOf(colorOption) >= 0,
             'bg-dark': colorOption === '31',
@@ -67,8 +67,8 @@ class AppHeader extends React.Component {
               <a href={DEMO.link} className="list-inline-item d-md-none" onClick={this.onToggleOffCanvasMobileNav}>
                 <MaterialIcon icon="menu" className="list-icon" />
               </a>
-              <Tooltip placement="bottom" title="Material UI">
-                <a href="#/app/ui-overview" className="list-inline-item d-none d-md-inline-block">
+              <Tooltip placement="bottom" title="待辦事項">
+                <a href="#/app/task" className="list-inline-item d-none d-md-inline-block">
                   <MaterialIcon icon="store" className="list-icon" />
                 </a>
               </Tooltip>
@@ -88,8 +88,8 @@ class AppHeader extends React.Component {
                 <a href={DEMO.link} className="list-inline-item"><Badge className="header-badge" badgeContent={11}><MaterialIcon icon="notifications_none" className="header-icon-notification" /></Badge></a>
               </Popover>
               <a className="list-inline-item" href={DEMO.link}>
-                <div 
-                  className="avatar" 
+                <div
+                  className="avatar"
                   aria-owns={anchorEl ? 'app-header-menu' : null}
                   aria-haspopup="true"
                   onClick={this.handleClick}

@@ -18,7 +18,7 @@ const styles = theme => ({
   },
 });
 
-class CheckboxList extends React.Component {
+class TaskList extends React.Component {
   state = {
     checked: [0],
   };
@@ -103,17 +103,17 @@ class CheckboxList extends React.Component {
   }
 }
 
-CheckboxList.propTypes = {
+TaskList.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-const CheckboxList1 = withStyles(styles)(CheckboxList);
+const TaskList1 = withStyles(styles)(TaskList);
 
 const ListExample = () => (
   <section className="box box-default">
     <div className="box-header">待辦事項</div>
     <div className="box-body">
-      <CheckboxList1 />
+      <TaskList1 />
     </div>
   </section>
 );

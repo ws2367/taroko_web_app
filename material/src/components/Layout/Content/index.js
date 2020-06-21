@@ -6,6 +6,15 @@ import LoadingComponent from 'components/Loading';
 import { Layout } from 'antd';
 const { Content } = Layout;
 
+let ClientList = loadable({
+  loader: () => import('routes/client/'),
+  loading: LoadingComponent
+})
+let Task = loadable({
+  loader: () => import('routes/task/'),
+  loading: LoadingComponent
+})
+
 let Calendar = loadable({
   loader: () => import('routes/calendar/'),
   loading: LoadingComponent
@@ -16,10 +25,6 @@ let Card = loadable({
 })
 let Chart = loadable({
   loader: () => import('routes/chart/'),
-  loading: LoadingComponent
-})
-let ClientList = loadable({
-  loader: () => import('routes/client/'),
   loading: LoadingComponent
 })
 let ECommerce = loadable({
@@ -54,10 +59,6 @@ let UI = loadable({
   loader: () => import('routes/ui/'),
   loading: LoadingComponent
 })
-let UIOverview = loadable({
-  loader: () => import('routes/ui-overview/'),
-  loading: LoadingComponent
-})
 let Exception = loadable({
   loader: () => import('routes/exception/'),
   loading: LoadingComponent
@@ -72,6 +73,8 @@ class AppContent extends React.Component {
     return (
       <Content id='app-content'>
         <Route path={`${match.url}/client`} component={ClientList} />
+        <Route path={`${match.url}/task`} component={Task} />
+
         <Route path={`${match.url}/calendar`} component={Calendar} />
         <Route path={`${match.url}/card`} component={Card}/>
         <Route path={`${match.url}/chart`} component={Chart} />
@@ -84,7 +87,7 @@ class AppContent extends React.Component {
         <Route path={`${match.url}/page`} component={Page} />
         <Route path={`${match.url}/table`} component={Table} />
         <Route path={`${match.url}/ui`} component={UI} />
-        <Route path={`${match.url}/ui-overview`} component={UIOverview} />
+
       </Content>
     );
   }

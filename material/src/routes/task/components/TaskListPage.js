@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import MaterialIcon from 'components/MaterialIcon';
 import QueueAnim from 'rc-queue-anim';
-import ListControlsCheckbox from './ListControlsCheckbox';
+import TaskList from './TaskList';
 import COMPONENTS from 'constants/uiComponents';
 import APPCONFIG from 'constants/appConfig';
 
@@ -34,7 +34,7 @@ const Cover = () => (
   </section>
 );
 
-const Overview = () => {
+const TaskListPage = () => {
   return(
     <div>
       <QueueAnim type="bottom" className="ui-animate">
@@ -43,11 +43,11 @@ const Overview = () => {
 
       <section className="container-fluid page-dashboard no-breadcrumb">
         <QueueAnim type="bottom" className="ui-animate">
-          <ListControlsCheckbox />
+          <TaskList />
         </QueueAnim>
       </section>
     </div>
   )
 }
 
-export default Overview;
+export default TaskListPage;
