@@ -32,7 +32,7 @@ const Main = () => (
   </div>
 );
 
-const Dashboard = ({match}) => (
+const ClientList = ({match}) => (
     <div>
       <Switch>
         <Route path={`${match.path}/:clientId`} component={Client} />
@@ -48,4 +48,4 @@ const Dashboard = ({match}) => (
     </div>
 );
 
-export default Dashboard;
+export default ClientList;

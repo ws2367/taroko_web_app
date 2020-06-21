@@ -24,7 +24,7 @@ function SimpleTable({match}) {
         </TableHead>
         <TableBody>
           <TableRow key={1}>
-            <TableCell component="th" scope="row"><Link to="/app/dashboard/1" className="link-cta link-animated-hover link-hover-v1 text-primary">方大同</Link></TableCell>
+            <TableCell component="th" scope="row"><Link to="/app/client/1" className="link-cta link-animated-hover link-hover-v1 text-primary">方大同</Link></TableCell>
             <TableCell><Chip label="A級客戶" className="table-chip bg-info px-2" /><Chip label="美元" className="table-chip bg-info px-2" /></TableCell>
             <TableCell>中華開發</TableCell>
             <TableCell>緣故客戶</TableCell>

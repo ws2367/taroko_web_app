@@ -35,7 +35,7 @@ class App extends React.Component {
     const { match, location, theme } = this.props;
     const isRoot = location.pathname === '/' ? true : false;
     if (isRoot) {
-      return ( <Redirect to={'/app/dashboard'}/> );
+      return ( <Redirect to={'/app/client'}/> );
     }
 
     let materialUITheme;
@@ -52,7 +52,7 @@ class App extends React.Component {
 
     return (
       <MuiThemeProvider theme={materialUITheme}>
-        <div id="app" 
+        <div id="app"
           className={classnames('app-main', {
             'theme-gray': theme === 'gray',
             'theme-dark': theme === 'dark'})

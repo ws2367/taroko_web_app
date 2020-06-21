@@ -18,8 +18,8 @@ let Chart = loadable({
   loader: () => import('routes/chart/'),
   loading: LoadingComponent
 })
-let Dashboard = loadable({
-  loader: () => import('routes/dashboard/'),
+let ClientList = loadable({
+  loader: () => import('routes/client/'),
   loading: LoadingComponent
 })
 let ECommerce = loadable({
@@ -71,7 +71,7 @@ class AppContent extends React.Component {
 
     return (
       <Content id='app-content'>
-        <Route path={`${match.url}/dashboard`} component={Dashboard} />
+        <Route path={`${match.url}/client`} component={ClientList} />
         <Route path={`${match.url}/calendar`} component={Calendar} />
         <Route path={`${match.url}/card`} component={Card}/>
         <Route path={`${match.url}/chart`} component={Chart} />

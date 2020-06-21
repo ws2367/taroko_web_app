@@ -14,7 +14,7 @@ class AppMenu extends React.Component {
 
   // list for AccordionNav
   rootMenuItemKeys= [ // without submenu
-    '/app/dashboard',
+    '/app/client',
     '/app/ui-overview',
     '/app/calendar',
   ]
@@ -35,7 +35,7 @@ class AppMenu extends React.Component {
   ];
 
   state = {
-    openKeys: ['/app/dashboard'],
+    openKeys: ['/app/client'],
   };
 
   onOpenChange = (openKeys) => {
@@ -131,8 +131,8 @@ class AppMenu extends React.Component {
         onClick={this.onMenuItemClick}
         selectedKeys={[currentPathname]}
       >
-        <Menu.Item key="/app/dashboard">
-          <Button className="nav-item" href="#/app/dashboard">
+        <Menu.Item key="/app/client">
+          <Button className="nav-item" href="#/app/client">
             <MaterialIcon icon="dashboard" />
             <span className="nav-text">客戶列表</span>
             <span className="nav-badge nav-badge-icon badge-right ml-1"><MaterialIcon icon="stars" className="m-0 text-warning" /></span>
