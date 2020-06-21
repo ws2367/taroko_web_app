@@ -1,0 +1,143 @@
+
+
+// make sure it overrides material2 styles
+a,
+button {
+  &.btn-w-xs { min-width: 80px; }
+  &.btn-w-sm { min-width: 100px; }
+  &.btn-w-md { min-width: 135px; }
+  &.btn-w-lg { min-width: 160px; }
+
+  &.btn-round { border-radius: 2em; }
+  &.btn-gap { margin: 5px; }
+  &.btn-gap-h { margin: 0 5px; }
+  &.btn-gap-v { margin: 0 0 5px; }
+}
+
+.btn-cta.ant-btn, // antd
+.btn-cta {
+  height: auto;
+  padding: .6em 3.5em;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  line-height: 2;
+  font-size: $font-size-sm;
+}
+
+// 
+a.btn-icon-v2,
+.btn-icon-v2 {
+  color: $white;
+  height: auto;
+  padding: .5em 2.5em;
+
+  &:focus,
+  &:active,
+  &:hover {
+    text-decoration: none;
+  }
+
+  i {
+    margin-right: .5rem; 
+  }
+
+  .btn-text {
+    letter-spacing: .5px;
+    text-transform: uppercase;
+    font-size: $font-size-sm;
+  }
+}
+
+
+
+// Buttons
+@mixin button-state-color($background) {
+  &:hover,
+  &:focus,
+  &.focus,
+  &:active,
+  &.active,
+  .open > &.dropdown-toggle {
+    background-color: darken($background, 5%);
+      border-color: darken($background, 5%);
+  }
+}
+.btn,
+.btn-group {
+  &.btn-raised {
+    text-transform: uppercase;
+    @include z-depth-1;
+    transition: .25s ease-out;
+    &:hover,
+    &:focus,
+    &:active {
+      outline: none;
+    }
+    &:disabled,
+    &.disabled {
+      box-shadow: none;
+    }
+    &:hover {
+      @include z-depth-1-half;
+    }
+  }
+  &.btn-floating {
+    @include z-depth-1;
+    transition: .25s;
+    &:hover,
+    &:focus,
+    &:active {
+      outline: none;
+    }
+    &:disabled,
+    &.disabled {
+      box-shadow: none;
+    }
+    &:hover {
+      @include z-depth-1-half;
+    }        
+  }
+
+  &.btn-raised,
+  &.btn-floating {
+    &.btn-primary { @include button-state-color($primary); }
+    &.btn-info { @include button-state-color($info); }
+    &.btn-warning { @include button-state-color($warning); }
+    &.btn-danger { @include button-state-color($danger); }
+    // &.btn-default { @include button-state-color($btn-default-bg); }
+  }
+}
+
+
+// Click Wave
+.ui-wave {
+  position:relative;
+  overflow:hidden;
+  z-index:0;
+  transition: all 0.2s $material_animation;
+  &.ui-wave-overflowed {
+    overflow:visible;
+  }
+  .ink {
+    display: block;
+    position: absolute;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 100%;
+    transform: scale(0) ;
+  }
+
+  // 
+  &.btn-flat,
+  &.btn-default {
+    .ink {
+      background: rgba(0, 0, 0, 0.2);
+    }
+  }
+}
+.wave-animate {
+  animation: ripple 0.65s linear;
+}
+// .keyframes(~'ripple, 100% {opacity: 0; transform: scale(2.5); }');
+@-webkit-keyframes ripple {
+  100% {opacity: 0; transform: scale(2.5); }
+}
