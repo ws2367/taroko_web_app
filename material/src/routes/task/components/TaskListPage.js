@@ -15,9 +15,6 @@ function compare(a,b) {
 }
 
 
-// let sortedComponents = COMPONENTS.sort(compare).filter(el => !el.hideInOverview && !el.children);
-// console.log(sortedComponents);
-
 const Cover = () => (
   <section className="cover border-bottom">
     <div className="cover-bg-img d-none d-md-block" style={{backgroundImage: 'url(assets/images-demo/covers/leone-venter-559377-cut.jpg)'}}></div>

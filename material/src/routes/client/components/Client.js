@@ -7,6 +7,7 @@ import SwipeableViews from 'react-swipeable-views';
 import { UITIMELINE } from 'constants/uiComponents'
 import Profile from './Profile';
 import Note from './Note';
+import TaskList from '../../task/components/TaskList';
 
 const EXAMPLEPAGE = UITIMELINE[1].path;
 
@@ -33,7 +34,9 @@ const TabContent2 = ( {notes} ) => (
 )
 
 const TabContent3 = () => (
-  <div className="container-fluid"><div className="article-title-style text-secondary">Blank 3</div></div>
+  <div className="container-fluid pt-3">
+    <TaskList />
+  </div>
 )
 
 class Client extends React.Component {

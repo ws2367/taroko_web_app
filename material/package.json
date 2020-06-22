@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.1",
   "main": "",
-  "homepage": "",
+  "homepage": "https://github.com/ws2367/taroko_web_app/material/build",
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
