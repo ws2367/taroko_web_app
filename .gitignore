@@ -2,4 +2,4 @@ build/
 documentation/
 material/node_modules/*
 .DS_Store
-
+.publish/

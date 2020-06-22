@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.1",
   "main": "",
-  "homepage": "https://github.com/ws2367/taroko_web_app/material/build",
+  "homepage": "https://github.com/ws2367/taroko_web_app/",
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
@@ -22,6 +22,8 @@
     "downshift": "^2.1.1",
     "echarts": "^4.1.0",
     "echarts-for-react": "^2.0.14",
+    "gulp": "^4.0.2",
+    "gulp-gh-pages": "^0.5.4",
     "history": "^4.6.1",
     "material-ui-pickers": "1.0.0-rc.11",
     "prop-types": "^15.6.2",
