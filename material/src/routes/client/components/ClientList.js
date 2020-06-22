@@ -25,7 +25,7 @@ export default class ClientList extends React.Component {
   }
 
   componentDidMount() {
-    fetch("http://api.cooby.co/clients/", {
+    fetch("https://api.cooby.co/clients/", {
       "method": "GET",
       mode: 'cors',
       "headers": {

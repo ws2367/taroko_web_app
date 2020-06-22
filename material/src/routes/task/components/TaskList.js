@@ -36,7 +36,7 @@ class TaskList extends React.Component {
       return uniqueDates;
     };
 
-    fetch("http://api.cooby.co/tasks/", {
+    fetch("https://api.cooby.co/tasks/", {
       "method": "GET",
       mode: 'cors',
       "headers": {

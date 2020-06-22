@@ -53,7 +53,7 @@ class Client extends React.Component {
   componentDidMount() {
     const { client } = this.props.location.state;
     console.log(client);
-    fetch("http://api.cooby.co/clients/" + client.profile.id + "/notes/", {
+    fetch("https://api.cooby.co/clients/" + client.profile.id + "/notes/", {
       "method": "GET",
       mode: 'cors',
       "headers": {
