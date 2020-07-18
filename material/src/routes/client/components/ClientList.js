@@ -1,177 +1,23 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import MaterialIcon from 'components/MaterialIcon';
-import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
-import IconButton from '@material-ui/core/IconButton';
-import Tooltip from '@material-ui/core/Tooltip';
-import DeleteIcon from '@material-ui/icons/Delete';
-import FilterListIcon from '@material-ui/icons/FilterList';
-import { lighten } from '@material-ui/core/styles/colorManipulator';
+import {EnhancedTableHead, EnhancedTableToolbar} from './EnhancedTableElements';
 import Tag from './Tag';
 
-let counter = 0;
-function createData(name, calories, fat, carbs, protein) {
-  counter += 1;
-  return { id: counter, name, calories, fat, carbs, protein };
-}
 
 function getSorting(order, orderBy) {
   return order === 'desc'
     ? (a, b) => (b[orderBy] < a[orderBy] ? -1 : 1)
     : (a, b) => (a[orderBy] < b[orderBy] ? -1 : 1);
 }
-
-const columnData = [
-  { id: 'name', numeric: false, disablePadding: true, label: '名字' },
-  { id: 'tags', numeric: false, disablePadding: false, label: '標籤' },
-  { id: 'company', numeric: false, disablePadding: false, label: '任職公司' },
-  { id: 'income', numeric: false, disablePadding: false, label: '收入' },
-  { id: 'note_summary', numeric: false, disablePadding: false, label: '筆記摘要' },
-  { id: 'updated', numeric: false, disablePadding: false, label: '更新時間' },
-];
-
-class EnhancedTableHead extends React.Component {
-  createSortHandler = property => event => {
-    this.props.onRequestSort(event, property);
-  };
-
-  render() {
-    const { onSelectAllClick, order, orderBy, numSelected, rowCount } = this.props;
-
-    return (
-      <TableHead>
-        <TableRow>
-          <TableCell padding="checkbox">
-            <Checkbox
-              indeterminate={numSelected > 0 && numSelected < rowCount}
-              checked={numSelected === rowCount}
-              onChange={onSelectAllClick}
-            />
-          </TableCell>
-          {columnData.map(column => {
-            return (
-              <TableCell
-                key={column.id}
-                numeric={column.numeric}
-                padding={column.disablePadding ? 'none' : 'default'}
-                sortDirection={orderBy === column.id ? order : false}
-              >
-                <Tooltip
-                  title="Sort"
-                  placement={column.numeric ? 'bottom-end' : 'bottom-start'}
-                  enterDelay={300}
-                >
-                  <TableSortLabel
-                    active={orderBy === column.id}
-                    direction={order}
-                    onClick={this.createSortHandler(column.id)}
-                  >
-                    {column.label}
-                  </TableSortLabel>
-                </Tooltip>
-              </TableCell>
-            );
-          }, this)}
-        </TableRow>
-      </TableHead>
-    );
-  }
-}
-
-EnhancedTableHead.propTypes = {
-  numSelected: PropTypes.number.isRequired,
-  onRequestSort: PropTypes.func.isRequired,
-  onSelectAllClick: PropTypes.func.isRequired,
-  order: PropTypes.string.isRequired,
-  orderBy: PropTypes.string.isRequired,
-  rowCount: PropTypes.number.isRequired,
-};
-
-const toolbarStyles = theme => ({
-  root: {
-    paddingRight: theme.spacing.unit,
-  },
-  highlight:
-    theme.palette.type === 'light'
-      ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        }
-      : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark,
-        },
-  spacer: {
-    flex: '1 1 100%',
-  },
-  actions: {
-    color: theme.palette.text.secondary,
-  },
-  title: {
-    flex: '0 0 auto',
-  },
-});
-
-let EnhancedTableToolbar = props => {
-  const { numSelected, classes } = props;
-
-  return (
-    <Toolbar
-      className={classNames(classes.root, {
-        [classes.highlight]: numSelected > 0,
-      })}
-    >
-      <div className={classes.title}>
-        {numSelected > 0 ? (
-          <Typography color="inherit" variant="subheading">
-            {numSelected} 個已選擇
-          </Typography>
-        ) : (
-          <Typography variant="title" id="tableTitle">
-            客戶列表
-          </Typography>
-        )}
-      </div>
-      <div className={classes.spacer} />
-      <div className={classes.actions}>
-        {numSelected > 0 ? (
-          <Tooltip title="刪除">
-            <IconButton aria-label="Delete">
-              <DeleteIcon />
-            </IconButton>
-          </Tooltip>
-        ) : (
-          <Tooltip title="篩選列表">
-            <IconButton aria-label="Filter list">
-              <FilterListIcon />
-            </IconButton>
-          </Tooltip>
-
-        )}
-      </div>
-    </Toolbar>
-  );
-};
-
-EnhancedTableToolbar.propTypes = {
-  classes: PropTypes.object.isRequired,
-  numSelected: PropTypes.number.isRequired,
-};
-
-EnhancedTableToolbar = withStyles(toolbarStyles)(EnhancedTableToolbar);
 
 const styles = theme => ({
   root: {
@@ -190,48 +36,72 @@ class EnhancedTable extends React.Component {
   constructor(props) {
     super(props);
     console.log(props.clients);
-    
+
     this.state = {
+      // ui state
       order: 'asc',
       orderBy: 'name',
       selected: [],
-      data: [],
       page: 0,
-      rowsPerPage: 5,
+      rowsPerPage: 10,
       error: null,
-      isLoaded: false
+      isLoaded: false,
+      // app data
+      clients: [],
+      config: {},
+
+      //handlers
+      removeTagFromClient: (tag, client) => {
+
+      },
+      filterByTag: (tag) => {
+
+      },
     };
+
+
   }
 
+  getConfig = (key) => {
+    return this.state.config[key];
+  }
 
-    componentDidMount() {
-      fetch("https://api.cooby.co/clients/", {
-        "method": "GET",
-        mode: 'cors',
-        "headers": {
-          'Content-Type': 'application/json',
-          "Authorization": "BEARER PS3eSI8zNXIa4m_bfc2P8Qh4XbQtgbX2bOz9qphHcKMinFmMtGpPkOtso1gKJDTvj0ZJmn9PzNEirnVPVcdlevTleq2mUuVPgsW0SnKR5GaQqrH-qmtwtTWkr77Mja0wzOATEevMPLuNWWh9e7aiP2Tqkw8Hc69BA41nB2ozrhg"
+  getTags = () => (this.getConfig('tags'));
+  getInterests = () => (this.getConfig('interests'));
 
+  handleClientChange = () => {
+
+  }
+
+  componentDidMount() {
+    fetch("https://api.cooby.co/clients/", {
+      "method": "GET",
+      mode: 'cors',
+      "headers": {
+        'Content-Type': 'application/json',
+        "Authorization": "BEARER PS3eSI8zNXIa4m_bfc2P8Qh4XbQtgbX2bOz9qphHcKMinFmMtGpPkOtso1gKJDTvj0ZJmn9PzNEirnVPVcdlevTleq2mUuVPgsW0SnKR5GaQqrH-qmtwtTWkr77Mja0wzOATEevMPLuNWWh9e7aiP2Tqkw8Hc69BA41nB2ozrhg"
+
+      }
+    }).then(res => res.json())
+      .then(
+        (result) => {
+          this.setState({
+            isLoaded: true,
+            clients: result.clients,
+            config: result.config
+          });
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          this.setState({
+            isLoaded: true,
+            error
+          });
         }
-      }).then(res => res.json())
-        .then(
-          (result) => {
-            this.setState({
-              isLoaded: true,
-              data: result.clients
-            });
-          },
-          // Note: it's important to handle errors here
-          // instead of a catch() block so that we don't swallow
-          // exceptions from actual bugs in components.
-          (error) => {
-            this.setState({
-              isLoaded: true,
-              error
-            });
-          }
-        )
-    }
+      )
+  }
 
 
   handleRequestSort = (event, property) => {
@@ -247,7 +117,7 @@ class EnhancedTable extends React.Component {
 
   handleSelectAllClick = (event, checked) => {
     if (checked) {
-      this.setState(state => ({ selected: state.data.map(n => n.id) }));
+      this.setState(state => ({ selected: state.clients.map(n => n.id) }));
       return;
     }
     this.setState({ selected: [] });
@@ -286,8 +156,8 @@ class EnhancedTable extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { data, order, orderBy, selected, rowsPerPage, page } = this.state;
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
+    const { clients, order, orderBy, selected, rowsPerPage, page, config, handlers } = this.state;
+    const emptyRows = rowsPerPage - Math.min(rowsPerPage, clients.length - page * rowsPerPage);
 
     return (
       <Paper className={classes.root}>
@@ -300,10 +170,10 @@ class EnhancedTable extends React.Component {
               orderBy={orderBy}
               onSelectAllClick={this.handleSelectAllClick}
               onRequestSort={this.handleRequestSort}
-              rowCount={data.length}
+              rowCount={clients.length}
             />
             <TableBody>
-              {data
+              {clients
                 .sort(getSorting(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map(n => {
@@ -325,11 +195,13 @@ class EnhancedTable extends React.Component {
                       <Link to={{
                           pathname: "/app/client/" + n.profile.id,
                           state: {
-                            client: n
+                            client: n,
+                            config: config,
+                            handleClientChange: this.handleClientChange
                           }
                         }} className="link-cta link-animated-hover link-hover-v1 text-primary">{n.profile.name}
                       </Link></TableCell>
-                      <TableCell><Tag tags={n.profile.tags} /></TableCell>
+                      <TableCell><Tag tags={n.profile.tags} config={config} handlers={handlers} /></TableCell>
                       <TableCell>{n.profile.company}</TableCell>
                       <TableCell>{n.profile.income}</TableCell>
                       <TableCell>{n.profile.note_summary}</TableCell>
@@ -347,14 +219,15 @@ class EnhancedTable extends React.Component {
         </div>
         <TablePagination
           component="div"
-          count={data.length}
+          count={clients.length}
           rowsPerPage={rowsPerPage}
           page={page}
+          labelRowsPerPage="每頁數目"
           backIconButtonProps={{
-            'aria-label': 'Previous Page',
+            'aria-label': '上一頁',
           }}
           nextIconButtonProps={{
-            'aria-label': 'Next Page',
+            'aria-label': '下一頁',
           }}
           onChangePage={this.handleChangePage}
           onChangeRowsPerPage={this.handleChangeRowsPerPage}
@@ -371,52 +244,5 @@ EnhancedTable.propTypes = {
 const EnhancedTable1 = withStyles(styles)(EnhancedTable);
 
 
-
-function ClientList({match, clients}) {
-  return (
-    <div className="box box-default table-responsive mb-4">
-      <div className="search-box seach-box-right">
-        <div className="search-box-inner">
-          <div className="search-box-icon"><MaterialIcon icon="search" /></div>
-          <input type="text" placeholder="search..." />
-          <span className="input-bar"></span>
-        </div>
-      </div>
-      <Table className="table-hover">
-        <TableHead>
-          <TableRow>
-            <TableCell>名字</TableCell>
-            <TableCell>標籤</TableCell>
-            <TableCell>任職公司</TableCell>
-            <TableCell>收入</TableCell>
-            <TableCell>筆記摘要</TableCell>
-            <TableCell>更新時間</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {
-            clients.map((client, index) => (
-              <TableRow key={index}>
-                <TableCell component="th" scope="row">
-                  <Link to={{
-                      pathname: "/app/client/" + client.profile.id,
-                      state: {
-                        client: client
-                      }
-                    }} className="link-cta link-animated-hover link-hover-v1 text-primary">{client.profile.name}
-                  </Link></TableCell>
-                <TableCell><Tag tags={client.profile.tags} /></TableCell>
-                <TableCell>{client.profile.company}</TableCell>
-                <TableCell>{client.profile.source}</TableCell>
-                <TableCell>{client.note_summary}</TableCell>
-                <TableCell>{client.updated}</TableCell>
-              </TableRow>
-            ))
-          }
-        </TableBody>
-      </Table>
-    </div>
-  );
-}
 
 export default EnhancedTable1;

@@ -1,21 +1,25 @@
 import React from 'react';
 import Chip from '@material-ui/core/Chip';
 
-function Tag({tags}) {
-
-  function handleDelete() {
+function Tag({tags, config}) {
+  const handleDelete = () => {
 
   }
 
-  function handleClick() {
+  const handleClick = () => {
 
+  }
+
+  const getTagName = (tagId) => {
+    var matches = config.tags.filter(tag => tag.id === tagId);
+    return matches[0]['name'];
   }
 
   return (
-      tags.map((tag, i) => (
+      tags.map((tagId, i) => (
         <Chip
           key={i}
-          label={tag.name}
+          label={getTagName(tagId)}
           className="table-chip bg-info px-2"
           onClick={handleClick}
           onDelete={handleDelete}

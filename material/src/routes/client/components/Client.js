@@ -51,10 +51,7 @@ class Client extends React.Component {
   }
 
 
-  componentWillMount() {
-
-  }
-
+  
   componentDidMount() {
     const { client } = this.props.location.state;
     console.log(client);
