@@ -78,6 +78,7 @@ class FirstTextFields extends React.Component {
           label="生日"
           value={profile.birthday}
           className={classes.textField}
+          onChange={this.handleChange}
           margin="normal"
         />
         <TextField
@@ -151,7 +152,7 @@ class FirstTextFields extends React.Component {
             </MenuItem>
           ))}
         </TextField>
-        
+
 
       </form>
     );
@@ -161,6 +162,8 @@ class FirstTextFields extends React.Component {
 class SecondTextFields extends React.Component {
 
   handleChange = name => event => {
+
+    
     this.setState({
       [name]: event.target.value,
     });
