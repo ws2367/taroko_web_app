@@ -1,5 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import QueueAnim from 'rc-queue-anim';
+import Button from '@material-ui/core/Button';
+
 import {
   BrowserRouter as Router,
   Route,
@@ -36,7 +38,6 @@ export default class ClientsPage extends React.Component {
     }).then(res => res.json())
       .then(
         (result) => {
-          console.log(result);
           this.setState({
             isLoaded: true,
             clients: result.clients
@@ -61,14 +62,15 @@ export default class ClientsPage extends React.Component {
 
     return (
         <div>
-
           <Switch>
             <Route path={`${match.path}/:clientId`} component={Client} />
+
             <Route path={match.path}>
               <div className="container-fluid no-breadcrumb page-dashboard">
                 <QueueAnim type="bottom" className="ui-animate">
-                  <div key="1"><ClientList clients={clients} /></div>
-                  <div key="2"><StatBoxes1 /></div>
+                    <Button variant="contained" color="primary" className="btn-w-md">新增客戶</Button><div className="divider" />
+                    <div key="1"><StatBoxes1 /></div>
+                    <div key="2"><ClientList clients={clients} /></div>
                   </QueueAnim>
               </div>
             </Route>
