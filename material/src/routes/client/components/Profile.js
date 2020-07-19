@@ -2,6 +2,7 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
+import { DatePicker } from 'material-ui-pickers/DatePicker';
 
 const styles = theme => ({
   container: {
@@ -39,7 +40,7 @@ class FirstTextFields extends React.Component {
 
     this.setState( state => {
       var p = state.profile;
-      
+
       return {
         profile: {
           ...p,
@@ -68,14 +69,6 @@ class FirstTextFields extends React.Component {
           className={classes.textField}
           value={profile.name}
           onChange={this.handleChange('name')}
-          margin="normal"
-        />
-        <TextField
-          id="birthday"
-          label="生日"
-          value={profile.birthday}
-          className={classes.textField}
-          onChange={this.handleChange('birthday')}
           margin="normal"
         />
         <TextField
