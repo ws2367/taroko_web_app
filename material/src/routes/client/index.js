@@ -11,7 +11,6 @@ import Client from './components/Client';
 import StatBoxes1 from './components/StatBoxes1';
   import StatBoxes2 from './components/StatBoxes2';
 import ClientList from './components/ClientList';
-import ClientDrawer from './components/ClientDrawer';
 import './components/styles.scss';
 
 
@@ -77,9 +76,13 @@ export default class ClientsPage extends React.Component {
                     <Button variant="contained" color="primary" className="btn-w-md" onClick={this.toggleClientDrawer(true)}>
                       新增客戶</Button>
                     <div className="divider" />
-                    <ClientDrawer isOpen={openClientDrawer} toggleClientDrawer={this.toggleClientDrawer}/>
                     <div key="1"><StatBoxes1 /></div>
-                    <div key="2"><ClientList clients={clients} /></div>
+                    <div key="2">
+                      <ClientList
+                        clients={clients}
+                        toggleClientDrawer={this.toggleClientDrawer}
+                        openClientDrawer={openClientDrawer}/>
+                    </div>
                   </QueueAnim>
               </div>
             </Route>

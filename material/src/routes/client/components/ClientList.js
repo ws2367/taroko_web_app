@@ -10,6 +10,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
 import {EnhancedTableHead, EnhancedTableToolbar} from './EnhancedTableElements';
+import ClientDrawer from './ClientDrawer';
 import Tag from './Tag';
 
 
@@ -33,10 +34,45 @@ const styles = theme => ({
 });
 
 class EnhancedTable extends React.Component {
+
   constructor(props) {
     super(props);
-    console.log(props.clients);
 
+    // handlers
+    const createClient = (profile) => {
+      fetch("https://api.cooby.co/clients/", {
+        "method": "POST",
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+          "Authorization": "BEARER PS3eSI8zNXIa4m_bfc2P8Qh4XbQtgbX2bOz9qphHcKMinFmMtGpPkOtso1gKJDTvj0ZJmn9PzNEirnVPVcdlevTleq2mUuVPgsW0SnKR5GaQqrH-qmtwtTWkr77Mja0wzOATEevMPLuNWWh9e7aiP2Tqkw8Hc69BA41nB2ozrhg"
+        },
+        body: JSON.stringify(profile)
+      }).then(res => res.json())
+        .then(
+          (result) => {
+            console.log(result);
+            this.setState({
+              clients: this.state.clients.concat({
+                note_summary: result.note_summary,
+                profile: {
+                  ...profile,
+                  id: result.id
+                }
+              })
+            });
+          });
+    };
+
+    const removeTagFromClient = (tag, client) => {
+
+    };
+
+    const filterByTag = (tag) => {
+
+    };
+
+    // state variables
     this.state = {
       // ui state
       order: 'asc',
@@ -51,23 +87,9 @@ class EnhancedTable extends React.Component {
       config: {},
 
       //handlers
-      removeTagFromClient: (tag, client) => {
-
-      },
-      filterByTag: (tag) => {
-
-      },
+      handlers: {createClient, removeTagFromClient, filterByTag}
     };
-
-
   }
-
-  getConfig = (key) => {
-    return this.state.config[key];
-  }
-
-  getTags = () => (this.getConfig('tags'));
-  getInterests = () => (this.getConfig('interests'));
 
   handleClientChange = () => {
 
@@ -155,12 +177,13 @@ class EnhancedTable extends React.Component {
   isSelected = id => this.state.selected.indexOf(id) !== -1;
 
   render() {
-    const { classes } = this.props;
+    const { classes, toggleClientDrawer, openClientDrawer } = this.props;
     const { clients, order, orderBy, selected, rowsPerPage, page, config, handlers } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, clients.length - page * rowsPerPage);
 
     return (
       <Paper className={classes.root}>
+        <ClientDrawer isOpen={openClientDrawer} toggleClientDrawer={toggleClientDrawer} handlers={handlers} />
         <EnhancedTableToolbar numSelected={selected.length} />
         <div className={classes.tableWrapper}>
           <Table className={classes.table} aria-labelledby="tableTitle">
