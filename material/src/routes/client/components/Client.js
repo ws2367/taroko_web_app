@@ -11,17 +11,6 @@ import TaskList from '../../task/components/TaskList';
 
 const EXAMPLEPAGE = UITIMELINE[1].path;
 
-const TabContent1 = ( {profile} ) => (
-  <div className="container-fluid">
-    <Profile profile={profile} />
-    <div className="callout callout-info">
-      <p>Page with Tabs takes advantage of <code>Tabs</code> component API</p>
-    </div>
-    <div className="callout callout-success">
-      <p>To see in action, check out <Link to={EXAMPLEPAGE}>Timeline page</Link></p>
-    </div>
-  </div>
-)
 
 const TabContent2 = ( {notes} ) => (
   <div className="container-fluid no-breadcrumb container-mw-md chapter">
@@ -51,10 +40,9 @@ class Client extends React.Component {
   }
 
 
-  
+
   componentDidMount() {
     const { client } = this.props.location.state;
-    console.log(client);
     fetch("https://api.cooby.co/clients/" + client.profile.id + "/notes/", {
       "method": "GET",
       mode: 'cors',
@@ -65,7 +53,6 @@ class Client extends React.Component {
     }).then(res => res.json())
       .then(
         (result) => {
-          console.log(result);
           this.setState({
             isLoaded: true,
             notes: result.notes
@@ -94,7 +81,7 @@ class Client extends React.Component {
   };
 
   render() {
-    const { client } = this.props.location.state;
+    const { client, config, handlers } = this.props.location.state;
     const { value } = this.state;
 
     return(
@@ -114,7 +101,7 @@ class Client extends React.Component {
               index={value}
               onChangeIndex={this.handleChangeIndex}
             >
-              <TabContent1 profile={client.profile}/>
+              <Profile profile={client.profile} config={config} handlers={handlers} />
               <TabContent2 notes={this.state.notes}/>
               <TabContent3 />
             </SwipeableViews>

@@ -33,6 +33,11 @@ const styles = theme => ({
   },
 });
 
+const HEADER = {
+  'Content-Type': 'application/json',
+  "Authorization": "BEARER PS3eSI8zNXIa4m_bfc2P8Qh4XbQtgbX2bOz9qphHcKMinFmMtGpPkOtso1gKJDTvj0ZJmn9PzNEirnVPVcdlevTleq2mUuVPgsW0SnKR5GaQqrH-qmtwtTWkr77Mja0wzOATEevMPLuNWWh9e7aiP2Tqkw8Hc69BA41nB2ozrhg"
+};
+
 class EnhancedTable extends React.Component {
 
   constructor(props) {
@@ -43,10 +48,7 @@ class EnhancedTable extends React.Component {
       fetch("https://api.cooby.co/clients/", {
         "method": "POST",
         mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json',
-          "Authorization": "BEARER PS3eSI8zNXIa4m_bfc2P8Qh4XbQtgbX2bOz9qphHcKMinFmMtGpPkOtso1gKJDTvj0ZJmn9PzNEirnVPVcdlevTleq2mUuVPgsW0SnKR5GaQqrH-qmtwtTWkr77Mja0wzOATEevMPLuNWWh9e7aiP2Tqkw8Hc69BA41nB2ozrhg"
-        },
+        headers: HEADER,
         body: JSON.stringify(profile)
       }).then(res => res.json())
         .then(
@@ -61,6 +63,20 @@ class EnhancedTable extends React.Component {
                 }
               })
             });
+          });
+    };
+
+    const updateClient = (profile) => {
+      // one-way only. doesn't update React data
+      fetch("https://api.cooby.co/clients/" + profile.id, {
+        "method": "PUT",
+        mode: 'cors',
+        headers: HEADER,
+        body: JSON.stringify(profile)
+      }).then(res => res.json())
+        .then(
+          (result) => {
+            console.log(result);
           });
     };
 
@@ -87,13 +103,13 @@ class EnhancedTable extends React.Component {
       config: {},
 
       //handlers
-      handlers: {createClient, removeTagFromClient, filterByTag}
+      handlers: {
+          createClient, updateClient,
+          removeTagFromClient,
+          filterByTag}
     };
   }
 
-  handleClientChange = () => {
-
-  }
 
   componentDidMount() {
     fetch("https://api.cooby.co/clients/", {
@@ -220,7 +236,7 @@ class EnhancedTable extends React.Component {
                           state: {
                             client: n,
                             config: config,
-                            handleClientChange: this.handleClientChange
+                            handlers: handlers
                           }
                         }} className="link-cta link-animated-hover link-hover-v1 text-primary">{n.profile.name}
                       </Link></TableCell>

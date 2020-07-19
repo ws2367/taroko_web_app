@@ -24,42 +24,40 @@ const styles = theme => ({
 });
 
 
-const incomeOptions = [
-  {
-    value: '一百萬'
-  },
-  {
-    value: '十萬'
-  }
-]
-
-
-const sourceOptions = [
-  {
-    value: '陌生開發'
-  },
-  {
-    value: '緣故客戶'
-  }
-]
 
 
 class FirstTextFields extends React.Component {
-  state = {
-    name: 'Cat in the Hat',
-    age: '',
-    multiline: 'Controlled',
-    currency: 'NTD',
-  };
+  constructor(props) {
+    super();
+    this.state = {
+      profile: props.profile
+    };
+  }
 
   handleChange = name => event => {
-    this.setState({
-      [name]: event.target.value,
+    var value = event.target.value;
+
+    this.setState( state => {
+      var p = state.profile;
+      
+      return {
+        profile: {
+          ...p,
+          [name]: value
+        }
+      };
+    });
+
+    this.props.handlers.updateClient({
+      id: this.state.profile.id,
+      [name]: value
     });
   };
 
   render() {
-    const { classes, profile } = this.props;
+    const { profile } = this.state;
+    const { classes, config } = this.props;
+    console.log(profile);
 
     return (
       <form className={classes.container} noValidate autoComplete="off">
@@ -77,7 +75,7 @@ class FirstTextFields extends React.Component {
           label="生日"
           value={profile.birthday}
           className={classes.textField}
-          onChange={this.handleChange}
+          onChange={this.handleChange('birthday')}
           margin="normal"
         />
         <TextField
@@ -86,6 +84,7 @@ class FirstTextFields extends React.Component {
           type="email"
           value={profile.email}
           className={classes.textField}
+          onChange={this.handleChange('email')}
           margin="normal"
         />
         <TextField
@@ -93,10 +92,11 @@ class FirstTextFields extends React.Component {
           label="公司"
           value={profile.company}
           className={classes.textField}
+          onChange={this.handleChange('company')}
           margin="normal"
         />
         <TextField
-          id="company"
+          id="address"
           label="地址"
           value={profile.address}
           className={classes.textField}
@@ -124,9 +124,9 @@ class FirstTextFields extends React.Component {
           helperText="請選擇收入"
           margin="normal"
         >
-          {incomeOptions.map(option => (
-            <MenuItem key={option.value}>
-              {option.value}
+          {Object.keys(config.income).map( k => (
+            <MenuItem key={k}>
+              {config.income[k]}
             </MenuItem>
           ))}
         </TextField>
@@ -145,9 +145,9 @@ class FirstTextFields extends React.Component {
           helperText="請選擇認識方式"
           margin="normal"
         >
-          {sourceOptions.map(option => (
-            <MenuItem key={option.value}>
-              {option.value}
+          {Object.keys(config.source).map(k => (
+            <MenuItem key={k}>
+              {config.source[k]}
             </MenuItem>
           ))}
         </TextField>
@@ -161,19 +161,18 @@ class FirstTextFields extends React.Component {
 class SecondTextFields extends React.Component {
 
   handleChange = name => event => {
-
-
     this.setState({
       [name]: event.target.value,
     });
   };
 
   render() {
-    const { classes, profile } = this.props;
+    const { classes, profile, config } = this.props;
 
     return (
       <form className={classes.container} noValidate autoComplete="off">
         <TextField
+          select
           id="is_insured"
           label="有保險？"
           className={classes.textField}
@@ -186,9 +185,9 @@ class SecondTextFields extends React.Component {
           onChange={this.handleChange('is_insured')}
           margin="normal"
         >
-        {incomeOptions.map(option => (
-          <MenuItem key={option.value} value={option.value}>
-            {option.label}
+        {Object.keys(config.is_insured).map( k => (
+          <MenuItem key={k} value={config.is_insured[k]}>
+            {config.is_insured[k]}
           </MenuItem>
         ))}
       </TextField>
@@ -232,31 +231,32 @@ const StyledFirstTextFields = withStyles(styles)(FirstTextFields);
 const StyledSecondTextFields = withStyles(styles)(SecondTextFields);
 
 
-const Profile = ({profile}) => (
-  <article className="article pt-3">
-    <div className="row">
-      <div className="col-xl-6">
-        <div className="box box-default mb-6">
-          <div className="box-header">基本資料</div>
-          <div className="box-divider"></div>
-          <div className="box-body">
-            <StyledFirstTextFields profile={profile}/>
+const Profile = ({profile, config, handlers}) => (
+  <div className="container-fluid">
+    <article className="article pt-3">
+      <div className="row">
+        <div className="col-xl-6">
+          <div className="box box-default mb-6">
+            <div className="box-header">基本資料</div>
+            <div className="box-divider"></div>
+            <div className="box-body">
+              <StyledFirstTextFields profile={profile} config={config} handlers={handlers} />
+            </div>
+          </div>
+        </div>
 
+        <div className="col-xl-6">
+          <div className="box box-default mb-6">
+            <div className="box-header">財務狀況</div>
+            <div className="box-divider"></div>
+            <div className="box-body">
+              <StyledSecondTextFields profile={profile} config={config} handlers={handlers} />
+            </div>
           </div>
         </div>
       </div>
-
-      <div className="col-xl-6">
-        <div className="box box-default mb-6">
-          <div className="box-header">財務狀況</div>
-          <div className="box-divider"></div>
-          <div className="box-body">
-            <StyledSecondTextFields profile={profile} />
-          </div>
-        </div>
-      </div>
-    </div>
-  </article>
+    </article>
+  </div>
 )
 
 export default Profile;
