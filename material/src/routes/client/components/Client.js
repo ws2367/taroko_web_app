@@ -4,7 +4,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import SwipeableViews from 'react-swipeable-views';
 import Profile from './Profile';
-import Note from './Note';
+import NoteList from './NoteList';
 import TaskList from '../../task/components/TaskList';
 
 const HEADER = {
@@ -57,36 +57,13 @@ class Client extends React.Component {
         });
   };
 
-  fetchNotes = () => {
-    fetch("https://api.cooby.co/clients/" + this.state.clientId + "/notes/", {
-      "method": "GET",
-      mode: 'cors',
-      "headers": {
-        'Content-Type': 'application/json',
-        "Authorization": "BEARER PS3eSI8zNXIa4m_bfc2P8Qh4XbQtgbX2bOz9qphHcKMinFmMtGpPkOtso1gKJDTvj0ZJmn9PzNEirnVPVcdlevTleq2mUuVPgsW0SnKR5GaQqrH-qmtwtTWkr77Mja0wzOATEevMPLuNWWh9e7aiP2Tqkw8Hc69BA41nB2ozrhg"
-      }
-    }).then(res => res.json())
-      .then(
-        (result) => {
-          this.setState({
-            notes: result.notes
-          });
-        },
-        (error) => {
-          this.setState({
-            error
-          });
-        }
-      )
-  };
 
   componentDidMount() {
-    this.fetchNotes();
     this.fetchTasks();
   }
 
-  handleChange = (event, value) => {
-    this.setState({ value });
+  handleTabChange = (event, value) => {
+    this.setState({ tabIndex: value });
   };
 
   handleChangeIndex = index => {
@@ -102,7 +79,7 @@ class Client extends React.Component {
       <div className="container-fluid no-breadcrumb container-mw-md chapter">
         <article className="article">
           <QueueAnim type="bottom" className="ui-animate">
-            <div key="1" className="mb-3"> <Note notes={notes}/> </div>
+            <div key="1" className="mb-3"> <NoteList clientId={clientId}/> </div>
           </QueueAnim>
         </article>
       </div>
@@ -122,7 +99,7 @@ class Client extends React.Component {
           </div>
 
           <div key="2">
-            <Tabs value={tabIndex} onChange={this.handleChange} className="page-tabs">
+            <Tabs value={tabIndex} onChange={this.handleTabChange} className="page-tabs">
               <Tab label="基本資料" />
               <Tab label="會議記錄" />
               <Tab label="待辦事項" />

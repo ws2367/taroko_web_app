@@ -28,34 +28,6 @@ export default class ClientsPage extends React.Component {
 
   }
 
-  componentDidMount() {
-    // fetch("https://api.cooby.co/clients/", {
-    //   "method": "GET",
-    //   mode: 'cors',
-    //   "headers": {
-    //     'Content-Type': 'application/json',
-    //     "Authorization": "BEARER PS3eSI8zNXIa4m_bfc2P8Qh4XbQtgbX2bOz9qphHcKMinFmMtGpPkOtso1gKJDTvj0ZJmn9PzNEirnVPVcdlevTleq2mUuVPgsW0SnKR5GaQqrH-qmtwtTWkr77Mja0wzOATEevMPLuNWWh9e7aiP2Tqkw8Hc69BA41nB2ozrhg"
-    //
-    //   }
-    // }).then(res => res.json())
-    //   .then(
-    //     (result) => {
-    //       this.setState({
-    //         isLoaded: true,
-    //         clients: result.clients
-    //       });
-    //     },
-    //     // Note: it's important to handle errors here
-    //     // instead of a catch() block so that we don't swallow
-    //     // exceptions from actual bugs in components.
-    //     (error) => {
-    //       this.setState({
-    //         isLoaded: true,
-    //         error
-    //       });
-    //     }
-    //   )
-  }
 
   toggleClientDrawer = (state) => () => {
     this.setState({openClientDrawer: state});

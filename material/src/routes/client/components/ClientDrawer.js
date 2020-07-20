@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography';
 
 const styles = theme => ({
   divContainer: {
-    width: '200px',
+    width: '400px',
     margin: '20px'
   },
   container: {

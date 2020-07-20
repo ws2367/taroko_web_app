@@ -46,7 +46,6 @@ class TaskList extends React.Component {
     }).then(res => res.json())
       .then(
         (result) => {
-          console.log("HELLO!!!!!");
 
           this.setState({
             isLoaded: true,
