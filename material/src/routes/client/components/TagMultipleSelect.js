@@ -44,7 +44,7 @@ class MultipleSelect extends React.Component {
   constructor(props) {
     super();
     this.state = {
-      tags: props.tags
+      tags: props.tags || []
     };
   }
 

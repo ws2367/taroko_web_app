@@ -35,8 +35,7 @@ class BasicInfoTextFields extends React.Component {
   constructor(props) {
     super();
     this.state = {
-      profile: props.profile,
-      birthday: '2018-01-01T00:00:00.000Z',
+      profile: props.profile
     };
   }
 
@@ -62,16 +61,15 @@ class BasicInfoTextFields extends React.Component {
       };
     });
 
-    this.props.handlers.updateClient({
-      id: this.state.profile.id,
-      [name]: value
-    });
+    // this.props.handlers.updateClient({
+    //   id: this.state.profile.id,
+    //   [name]: value
+    // });
   };
 
   render() {
-    const { profile, birthday } = this.state;
+    const { profile } = this.state;
     const { classes, config } = this.props;
-    console.log(profile);
 
     return (
       <Fragment>
@@ -89,8 +87,7 @@ class BasicInfoTextFields extends React.Component {
           <TextField
             type='date'
             label="生日"
-            value={birthday}
-            maxDateMessage="生日必須在過去"
+            value={profile.birthday}
             onChange={this.handleDateChange}
             margin="normal"
           />
@@ -144,9 +141,8 @@ class BasicInfoTextFields extends React.Component {
           select
           label="月收入"
           className={classes.textField}
-          value={profile.income}
+          value={String(profile.income)}
           onChange={this.handleChange('income')}
-          renderValue={selected => (config.income[selected])}
           SelectProps={{
             MenuProps: {
               className: classes.menu,
@@ -166,9 +162,8 @@ class BasicInfoTextFields extends React.Component {
           select
           label="認識方式"
           className={classes.textField}
-          value={profile.source}
+          value={String(profile.source)}
           onChange={this.handleChange('source')}
-          renderValue={selected => (config.source[selected])}
           SelectProps={{
             MenuProps: {
               className: classes.menu,
@@ -190,15 +185,36 @@ class BasicInfoTextFields extends React.Component {
 }
 
 class InsuranceInfoTextFields extends React.Component {
+  constructor(props) {
+    super();
+    this.state = {
+      profile: props.profile
+    };
+  }
 
   handleChange = name => event => {
-    this.setState({
-      [name]: event.target.value,
+    var value = event.target.value;
+    console.log(event.target);
+    this.setState( state => {
+      var p = state.profile;
+
+      return {
+        profile: {
+          ...p,
+          [name]: value
+        }
+      };
     });
+
+    // this.props.handlers.updateClient({
+    //   id: this.state.profile.id,
+    //   [name]: value
+    // });
   };
 
   render() {
-    const { classes, profile, config } = this.props;
+    const { profile } = this.state;
+    const { classes, config } = this.props;
 
     return (
       <form className={classes.container} noValidate autoComplete="off">
@@ -207,7 +223,7 @@ class InsuranceInfoTextFields extends React.Component {
           id="is_insured"
           label="有保險？"
           className={classes.textField}
-          value={profile.is_insured}
+          value={String(profile.is_insured)}
           SelectProps={{
             MenuProps: {
               className: classes.menu,
@@ -217,7 +233,7 @@ class InsuranceInfoTextFields extends React.Component {
           margin="normal"
         >
           {Object.keys(config.is_insured).map( k => (
-            <MenuItem key={k} value={config.is_insured[k]}>
+            <MenuItem key={k} value={k}>
               {config.is_insured[k]}
             </MenuItem>
           ))}
@@ -227,6 +243,7 @@ class InsuranceInfoTextFields extends React.Component {
           title='投保公司'
           tags={profile.insurance_companies}
           tagOptions={config.insurance_companies}
+          onChange={this.handleChange('insurance_companies')}
           label="投保公司"
         />
         <TagMultipleSelect
@@ -234,6 +251,7 @@ class InsuranceInfoTextFields extends React.Component {
           title='有興趣保險種類'
           tags={profile.insurances_of_interest}
           tagOptions={config.insurances_of_interest}
+          onChange={this.handleChange('insurances_of_interest')}
           label="有興趣保險種類"
         />
       </form>
@@ -244,6 +262,12 @@ class InsuranceInfoTextFields extends React.Component {
 
 
 class FinancialPlanTextFields extends React.Component {
+  constructor(props) {
+    super();
+    this.state = {
+      profile: props.profile
+    };
+  }
 
   handleChange = name => event => {
     this.setState({
@@ -264,6 +288,7 @@ class FinancialPlanTextFields extends React.Component {
           fullWidth
           id="financial_plan"
           value={profile.financial_plan}
+          onChange={this.handleChange('financial_plan')}
           className={classes.longTextField}
           margin="normal"
         />
@@ -274,31 +299,65 @@ class FinancialPlanTextFields extends React.Component {
 
 
 class FamilyInfoTextFields extends React.Component {
+  constructor(props) {
+    super();
+    this.state = {
+      profile: props.profile
+    };
+  }
 
   handleChange = name => event => {
-    this.setState({
-      [name]: event.target.value,
+    var value = event.target.value;
+    console.log(event.target);
+    this.setState( state => {
+      var p = state.profile;
+
+      return {
+        profile: {
+          ...p,
+          [name]: value
+        }
+      };
     });
+
+    // this.props.handlers.updateClient({
+    //   id: this.state.profile.id,
+    //   [name]: value
+    // });
   };
 
   render() {
-    const { classes, profile, config } = this.props;
+    const { classes, config, clientOptions } = this.props;
+    const { profile } = this.state;
 
     return (
       <form className={classes.container} noValidate autoComplete="off">
         <TextField
+          select
           id="marital_status"
           label="婚姻狀況"
-          value={profile.marital_status}
+          value={String(profile.marital_status)}
           className={classes.longTextField}
+          onChange={this.handleChange('marital_status')}
+          SelectProps={{
+            MenuProps: {
+              className: classes.menu,
+            },
+          }}
           margin="normal"
-        />
-        <TextField
-          id="marital_status"
-          label="延伸親友名單"
-          value={profile.marital_status}
-          className={classes.longTextField}
-          margin="normal"
+        >
+          {Object.keys(config.marital_status).map(k => (
+            <MenuItem key={k} value={k}>
+              {config.marital_status[k]}
+            </MenuItem>
+          ))}
+        </TextField>
+        <TagMultipleSelect
+          title='延伸親友名單'
+          tags={profile.related_clients}
+          tagOptions={clientOptions}
+          onChange={this.handleChange('related_clients')}
+          label="related_clients"
         />
       </form>
     );
@@ -307,15 +366,36 @@ class FamilyInfoTextFields extends React.Component {
 
 
 class AppendixTextFields extends React.Component {
+  constructor(props) {
+    super();
+    this.state = {
+      profile: props.profile
+    };
+  }
 
   handleChange = name => event => {
-    this.setState({
-      [name]: event.target.value,
+    var value = event.target.value;
+    console.log(event.target);
+    this.setState( state => {
+      var p = state.profile;
+
+      return {
+        profile: {
+          ...p,
+          [name]: value
+        }
+      };
     });
+
+    // this.props.handlers.updateClient({
+    //   id: this.state.profile.id,
+    //   [name]: value
+    // });
   };
 
   render() {
-    const { classes, profile, config } = this.props;
+    const { classes, config } = this.props;
+    const { profile } = this.state;
 
     return (
       <form className={classes.container} noValidate autoComplete="off">
@@ -344,7 +424,7 @@ const StyledFamilyInfoTextFields = withStyles(styles)(FamilyInfoTextFields);
 const StyledAppendixTextFields = withStyles(styles)(AppendixTextFields);
 
 
-const Profile = ({profile, config, handlers}) => (
+const Profile = ({profile, config, handlers, clientOptions}) => (
   <div className="container-fluid">
     <article className="article pt-3">
       <div className="row">
@@ -379,7 +459,7 @@ const Profile = ({profile, config, handlers}) => (
             <div className="box-header">婚姻與家庭</div>
             <div className="box-divider"></div>
             <div className="box-body">
-              <StyledFamilyInfoTextFields profile={profile} config={config} handlers={handlers} />
+              <StyledFamilyInfoTextFields profile={profile} config={config} handlers={handlers} clientOptions={clientOptions} />
             </div>
           </div>
 

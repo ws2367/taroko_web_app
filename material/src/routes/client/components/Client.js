@@ -55,6 +55,7 @@ class Client extends React.Component {
       todos: [],
       clientId: clientId,
       client: {profile: {}},
+      clientOptions: [],
       config: {},
       error: null,
       isLoaded: false,
@@ -64,6 +65,7 @@ class Client extends React.Component {
 
 
   fetchClient = (clientId) => {
+    // this is just to reload the client. we'll still have to fetch it again. 
     if (this.props.location.state != undefined) {
       const { client, config } = this.props.location.state;
       if (client != null && config != null) {
@@ -72,7 +74,6 @@ class Client extends React.Component {
           client: client,
           config: config
         });
-        return;
       }
     }
 
@@ -84,10 +85,11 @@ class Client extends React.Component {
       .then(
         (result) => {
           let client = result.clients.filter( client => client.profile.id === clientId )[0];
-          console.log(client);
+
           this.setState({
             isLoaded: true,
             client: client,
+            clientOptions: result.clients.map(c => ({id: c.profile.id, name: c.profile.name} )),
             config: result.config
           });
         },
@@ -163,7 +165,7 @@ class Client extends React.Component {
       handlers = this.props.location.state.handlers;
     }
 
-    const { client, config, tabIndex, isLoaded } = this.state;
+    const { client, config, tabIndex, isLoaded, clientOptions } = this.state;
 
     const ClientWithTabs = () => (
       <section className="page-with-tabs">
@@ -182,7 +184,7 @@ class Client extends React.Component {
               index={tabIndex}
               onChangeIndex={this.handleChangeIndex}
             >
-              <Profile profile={client.profile} config={config} handlers={handlers} />
+              <Profile profile={client.profile} config={config} handlers={handlers} clientOptions={clientOptions} />
               <TabContent2 notes={this.state.notes}/>
               <TabContent3 />
             </SwipeableViews>
