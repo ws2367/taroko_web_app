@@ -238,7 +238,7 @@ class EnhancedTable extends React.Component {
                       </Link></TableCell>
                       <TableCell><Tag tags={n.profile.tags} config={config} handlers={handlers} /></TableCell>
                       <TableCell>{n.profile.company}</TableCell>
-                      <TableCell>{n.profile.income}</TableCell>
+                      <TableCell>{config.income[n.profile.income]}</TableCell>
                       <TableCell>{n.profile.note_summary}</TableCell>
                       <TableCell>{n.profile.updated}</TableCell>
                     </TableRow>

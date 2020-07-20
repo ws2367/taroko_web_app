@@ -2,9 +2,6 @@ import React from 'react';
 import Chip from '@material-ui/core/Chip';
 
 function Tag({tags, config}) {
-  const handleDelete = () => {
-
-  }
 
   const handleClick = () => {
 
@@ -22,7 +19,6 @@ function Tag({tags, config}) {
           label={getTagName(tagId)}
           className="table-chip bg-info px-2"
           onClick={handleClick}
-          onDelete={handleDelete}
         />
       ))
   );
