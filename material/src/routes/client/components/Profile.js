@@ -1,11 +1,34 @@
 import React, {Fragment, PureComponent} from 'react';
+import QueueAnim from 'rc-queue-anim';
 import { withStyles } from '@material-ui/core/styles';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 import { DatePicker } from 'material-ui-pickers';
+import { Grid } from '@material-ui/core';
 import TagMultipleSelect from './TagMultipleSelect.js';
 import AddIcon from '@material-ui/icons/Add';
 import Button from '@material-ui/core/Button';
+import "../../feedback/routes/loaders/components/loaders/loaders.scss";
+
+const Loader = () => (
+  <div className="ball-grid-pulse">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+)
+
+
+const HEADER = {
+  'Content-Type': 'application/json',
+  "Authorization": "BEARER PS3eSI8zNXIa4m_bfc2P8Qh4XbQtgbX2bOz9qphHcKMinFmMtGpPkOtso1gKJDTvj0ZJmn9PzNEirnVPVcdlevTleq2mUuVPgsW0SnKR5GaQqrH-qmtwtTWkr77Mja0wzOATEevMPLuNWWh9e7aiP2Tqkw8Hc69BA41nB2ozrhg"
+};
 
 const styles = theme => ({
   container: {
@@ -30,8 +53,7 @@ const styles = theme => ({
   },
 });
 
-
-class BasicInfoTextFields extends React.Component {
+class AbstractTextFields extends React.Component {
   constructor(props) {
     super();
     this.state = {
@@ -42,10 +64,13 @@ class BasicInfoTextFields extends React.Component {
   handleDateChange = date => {
     this.handleChange('birthday')({
       event: {
-        target: date
+        target: {
+          value: date
+        }
       }
-    })
+    });
   };
+
 
   handleChange = name => event => {
     var value = event.target.value;
@@ -61,11 +86,28 @@ class BasicInfoTextFields extends React.Component {
       };
     });
 
-    // this.props.handlers.updateClient({
-    //   id: this.state.profile.id,
-    //   [name]: value
-    // });
+    var profile = {
+      id: this.state.profile.id,
+      [name]: value
+    }
+    // one-way only. doesn't update React data
+    fetch("https://api.cooby.co/clients/" + profile.id, {
+      "method": "PUT",
+      mode: 'cors',
+      headers: HEADER,
+      body: JSON.stringify(profile)
+    }).then(res => res.json())
+      .then(
+        (result) => {
+          console.log(result);
+    });
+
+    name == 'name' && this.props.handlers.updateClientName(value);
   };
+}
+
+class BasicInfoTextFields extends AbstractTextFields {
+
 
   render() {
     const { profile } = this.state;
@@ -96,6 +138,7 @@ class BasicInfoTextFields extends React.Component {
           title='標籤'
           tags={profile.tags}
           tagOptions={config.tags}
+          onChange={this.handleChange('tags')}
           label="Tag"
         />
 
@@ -184,33 +227,8 @@ class BasicInfoTextFields extends React.Component {
   }
 }
 
-class InsuranceInfoTextFields extends React.Component {
-  constructor(props) {
-    super();
-    this.state = {
-      profile: props.profile
-    };
-  }
+class InsuranceInfoTextFields extends AbstractTextFields {
 
-  handleChange = name => event => {
-    var value = event.target.value;
-    console.log(event.target);
-    this.setState( state => {
-      var p = state.profile;
-
-      return {
-        profile: {
-          ...p,
-          [name]: value
-        }
-      };
-    });
-
-    // this.props.handlers.updateClient({
-    //   id: this.state.profile.id,
-    //   [name]: value
-    // });
-  };
 
   render() {
     const { profile } = this.state;
@@ -261,19 +279,8 @@ class InsuranceInfoTextFields extends React.Component {
 
 
 
-class FinancialPlanTextFields extends React.Component {
-  constructor(props) {
-    super();
-    this.state = {
-      profile: props.profile
-    };
-  }
+class FinancialPlanTextFields extends AbstractTextFields {
 
-  handleChange = name => event => {
-    this.setState({
-      [name]: event.target.value,
-    });
-  };
 
   render() {
     const { classes, profile, config } = this.props;
@@ -298,33 +305,8 @@ class FinancialPlanTextFields extends React.Component {
 }
 
 
-class FamilyInfoTextFields extends React.Component {
-  constructor(props) {
-    super();
-    this.state = {
-      profile: props.profile
-    };
-  }
+class FamilyInfoTextFields extends AbstractTextFields {
 
-  handleChange = name => event => {
-    var value = event.target.value;
-    console.log(event.target);
-    this.setState( state => {
-      var p = state.profile;
-
-      return {
-        profile: {
-          ...p,
-          [name]: value
-        }
-      };
-    });
-
-    // this.props.handlers.updateClient({
-    //   id: this.state.profile.id,
-    //   [name]: value
-    // });
-  };
 
   render() {
     const { classes, config, clientOptions } = this.props;
@@ -365,34 +347,7 @@ class FamilyInfoTextFields extends React.Component {
 }
 
 
-class AppendixTextFields extends React.Component {
-  constructor(props) {
-    super();
-    this.state = {
-      profile: props.profile
-    };
-  }
-
-  handleChange = name => event => {
-    var value = event.target.value;
-    console.log(event.target);
-    this.setState( state => {
-      var p = state.profile;
-
-      return {
-        profile: {
-          ...p,
-          [name]: value
-        }
-      };
-    });
-
-    // this.props.handlers.updateClient({
-    //   id: this.state.profile.id,
-    //   [name]: value
-    // });
-  };
-
+class AppendixTextFields extends AbstractTextFields {
   render() {
     const { classes, config } = this.props;
     const { profile } = this.state;
@@ -424,57 +379,123 @@ const StyledFamilyInfoTextFields = withStyles(styles)(FamilyInfoTextFields);
 const StyledAppendixTextFields = withStyles(styles)(AppendixTextFields);
 
 
-const Profile = ({profile, config, handlers, clientOptions}) => (
-  <div className="container-fluid">
-    <article className="article pt-3">
-      <div className="row">
-        <div className="col-xl-6">
-          <div className="box box-default mb-3">
-            <div className="box-header">基本資料</div>
-            <div className="box-divider"></div>
-            <div className="box-body">
-              <StyledBasicInfoTextFields profile={profile} config={config} handlers={handlers} />
+
+
+class Profile extends React.Component {
+  constructor(props) {
+    super();
+    this.state = {
+      isLoaded: false,
+
+    }
+  }
+
+  componentDidMount() {
+    this.fetchClient(this.props.clientId);
+  }
+
+  fetchClient = (clientId) => {
+    fetch("https://api.cooby.co/clients/", {
+      "method": "GET",
+      mode: 'cors',
+      headers: HEADER
+    }).then(res => res.json())
+      .then(
+        (result) => {
+          let client = result.clients.filter( client => client.profile.id === clientId )[0];
+
+          this.setState({
+            isLoaded: true,
+            profile: client.profile,
+            clientOptions: result.clients.map(c => ({id: c.profile.id, name: c.profile.name} )),
+            config: result.config
+          });
+
+          //TODO: figure out how to update name without refreshing all components
+          // this.props.handlers.updateClientName(client.profile.name);
+        },
+        (error) => {
+          this.setState({
+            isLoaded: false,
+            error
+          });
+        });
+  };
+
+  render() {
+    const {isLoaded, profile, config, clientOptions} = this.state;
+    const { handlers } = this.props;
+
+    const LoadedProfile = () => (
+      <div className="container-fluid">
+        <article className="article pt-3">
+          <div className="row">
+            <div className="col-xl-6">
+              <div className="box box-default mb-3">
+                <div className="box-header">基本資料</div>
+                <div className="box-divider"></div>
+                <div className="box-body">
+                  <StyledBasicInfoTextFields profile={profile} config={config} handlers={handlers} />
+                </div>
+              </div>
+
+              <div className="box box-default mb-3">
+                <div className="box-header">保險狀況</div>
+                <div className="box-divider"></div>
+                <div className="box-body">
+                  <StyledInsuranceInfoTextFields profile={profile} config={config} handlers={handlers} />
+                </div>
+              </div>
+            </div>
+
+            <div className="col-xl-6">
+              <div className="box box-default mb-3">
+                <div className="box-header">財務規劃</div>
+                <div className="box-divider"></div>
+                <div className="box-body">
+                  <StyledFinancialPlanTextFields profile={profile} config={config} handlers={handlers} />
+                </div>
+              </div>
+
+              <div className="box box-default mb-3">
+                <div className="box-header">婚姻與家庭</div>
+                <div className="box-divider"></div>
+                <div className="box-body">
+                  <StyledFamilyInfoTextFields profile={profile} config={config} handlers={handlers} clientOptions={clientOptions} />
+                </div>
+              </div>
+
+              <div className="box box-default mb-3">
+                <div className="box-header">備註</div>
+                <div className="box-divider"></div>
+                <div className="box-body">
+                  <StyledAppendixTextFields profile={profile} config={config} handlers={handlers} />
+                </div>
+              </div>
+
             </div>
           </div>
-
-          <div className="box box-default mb-3">
-            <div className="box-header">保險狀況</div>
-            <div className="box-divider"></div>
-            <div className="box-body">
-              <StyledInsuranceInfoTextFields profile={profile} config={config} handlers={handlers} />
-            </div>
-          </div>
-        </div>
-
-        <div className="col-xl-6">
-          <div className="box box-default mb-3">
-            <div className="box-header">財務規劃</div>
-            <div className="box-divider"></div>
-            <div className="box-body">
-              <StyledFinancialPlanTextFields profile={profile} config={config} handlers={handlers} />
-            </div>
-          </div>
-
-          <div className="box box-default mb-3">
-            <div className="box-header">婚姻與家庭</div>
-            <div className="box-divider"></div>
-            <div className="box-body">
-              <StyledFamilyInfoTextFields profile={profile} config={config} handlers={handlers} clientOptions={clientOptions} />
-            </div>
-          </div>
-
-          <div className="box box-default mb-3">
-            <div className="box-header">備註</div>
-            <div className="box-divider"></div>
-            <div className="box-body">
-              <StyledAppendixTextFields profile={profile} config={config} handlers={handlers} />
-            </div>
-          </div>
-
-        </div>
+        </article>
       </div>
-    </article>
-  </div>
-)
+    )
+
+    const ProfileWithLoader = () => {
+      if (isLoaded) {
+        return <LoadedProfile />
+      } else {
+        return (
+          <Grid container justify="center">
+            <div className='m-10'>
+              <Loader />
+            </div>
+          </Grid>
+        )
+      }
+    };
+
+    return (<ProfileWithLoader />)
+  }
+}
+
 
 export default Profile;

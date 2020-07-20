@@ -6,21 +6,6 @@ import SwipeableViews from 'react-swipeable-views';
 import Profile from './Profile';
 import Note from './Note';
 import TaskList from '../../task/components/TaskList';
-import "../../feedback/routes/loaders/components/loaders/loaders.scss";
-
-const Loader = () => (
-  <div className="ball-grid-pulse">
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-  </div>
-)
 
 const HEADER = {
   'Content-Type': 'application/json',
@@ -47,59 +32,26 @@ class Client extends React.Component {
   constructor(props) {
     super();
     this.props = props;
-    // get Client
+    // get Client ID
     let clientId = props.location.pathname.replace('/app/client/', '');
 
     this.state = {
       notes: [],
       todos: [],
       clientId: clientId,
-      client: {profile: {}},
-      clientOptions: [],
-      config: {},
+      name: "",
       error: null,
       isLoaded: false,
-      tabIndex: 0
+      tabIndex: 0,
+      handlers: {updateClientName: this.updateClientName}
     }
   }
 
-
-  fetchClient = (clientId) => {
-    // this is just to reload the client. we'll still have to fetch it again. 
-    if (this.props.location.state != undefined) {
-      const { client, config } = this.props.location.state;
-      if (client != null && config != null) {
-        this.setState({
-          isLoaded: true,
-          client: client,
-          config: config
-        });
-      }
-    }
-
-    fetch("https://api.cooby.co/clients/", {
-      "method": "GET",
-      mode: 'cors',
-      headers: HEADER
-    }).then(res => res.json())
-      .then(
-        (result) => {
-          let client = result.clients.filter( client => client.profile.id === clientId )[0];
-
-          this.setState({
-            isLoaded: true,
-            client: client,
-            clientOptions: result.clients.map(c => ({id: c.profile.id, name: c.profile.name} )),
-            config: result.config
-          });
-        },
-        (error) => {
-          this.setState({
-            isLoaded: true,
-            error
-          });
-        });
+  updateClientName = (name) => {
+    // only update client name
+    this.setState({name: name});
   };
+
 
   fetchTasks = () => {
     fetch("https://api.cooby.co/clients/" + this.state.clientId + "/tasks/", {
@@ -144,7 +96,6 @@ class Client extends React.Component {
   };
 
   componentDidMount() {
-    this.fetchClient(this.state.clientId);
     this.fetchNotes();
     this.fetchTasks();
   }
@@ -158,20 +109,14 @@ class Client extends React.Component {
   };
 
   render() {
-    var handlers;
-    if (this.props.location.state == undefined) {
-      handlers = {};
-    } else {
-      handlers = this.props.location.state.handlers;
-    }
 
-    const { client, config, tabIndex, isLoaded, clientOptions } = this.state;
+    const { clientId, name, tabIndex, isLoaded, handlers } = this.state;
 
     const ClientWithTabs = () => (
       <section className="page-with-tabs">
         <QueueAnim type="bottom" className="ui-animate">
           <div key="1">
-            <div className="page-header-title"> {client.profile.name} </div>
+            <div className="page-header-title"> {name} </div>
           </div>
 
           <div key="2">
@@ -184,7 +129,10 @@ class Client extends React.Component {
               index={tabIndex}
               onChangeIndex={this.handleChangeIndex}
             >
-              <Profile profile={client.profile} config={config} handlers={handlers} clientOptions={clientOptions} />
+              <Profile
+                clientId={clientId}
+                handlers={handlers}
+              />
               <TabContent2 notes={this.state.notes}/>
               <TabContent3 />
             </SwipeableViews>
@@ -193,24 +141,8 @@ class Client extends React.Component {
       </section>
     );
 
-    const ClientWithTabsAndLoader = () => {
-      if (isLoaded) {
-        return <ClientWithTabs />
-      } else {
-        return (
-          <section className="page">
-            <QueueAnim type="bottom" className="ui-animate">
-              <div key="1" className="loader-container">
-                <Loader />
-              </div>
-            </QueueAnim>
-          </section>
-        )
-      }
-    };
-
     return(
-      <ClientWithTabsAndLoader />
+      <ClientWithTabs />
     );
   }
 }

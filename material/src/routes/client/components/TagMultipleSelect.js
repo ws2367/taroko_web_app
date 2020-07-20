@@ -53,13 +53,15 @@ class MultipleSelect extends React.Component {
   }
 
   handleDelete = tagId => () => {
-    var tags = this.state.tags;
-    this.setState({ tags: tags.filter( n => n !== tagId ) });
+    var newTags = this.state.tags.filter( n => n !== tagId );
+    this.setState({ tags: newTags });
+    this.props.onChange && this.props.onChange({target: {value: newTags }}); // first part is like an if.
   }
 
   handleChange = event => {
     console.log(event.target);
     this.setState({ tags: event.target.value });
+    this.props.onChange && this.props.onChange(event); // first part is like an if.
   };
 
   render() {

@@ -43,6 +43,7 @@ class EnhancedTable extends React.Component {
   constructor(props) {
     super(props);
 
+
     // handlers
     const createClient = (profile) => {
       fetch("https://api.cooby.co/clients/", {
@@ -63,20 +64,6 @@ class EnhancedTable extends React.Component {
                 }
               })
             });
-          });
-    };
-
-    const updateClient = (profile) => {
-      // one-way only. doesn't update React data
-      fetch("https://api.cooby.co/clients/" + profile.id, {
-        "method": "PUT",
-        mode: 'cors',
-        headers: HEADER,
-        body: JSON.stringify(profile)
-      }).then(res => res.json())
-        .then(
-          (result) => {
-            console.log(result);
           });
     };
 
@@ -104,7 +91,7 @@ class EnhancedTable extends React.Component {
 
       //handlers
       handlers: {
-          createClient, updateClient,
+          createClient, 
           removeTagFromClient,
           filterByTag}
     };
