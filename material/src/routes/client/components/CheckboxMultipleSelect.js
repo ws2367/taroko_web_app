@@ -42,7 +42,7 @@ const MenuProps = {
 
 class MultipleSelect extends React.Component {
   constructor(props) {
-    super();
+    super(props);
     this.state = {
       name: [],
     };

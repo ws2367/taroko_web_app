@@ -383,7 +383,7 @@ const StyledAppendixTextFields = withStyles(styles)(AppendixTextFields);
 
 class Profile extends React.Component {
   constructor(props) {
-    super();
+    super(props);
     this.state = {
       isLoaded: false,
 

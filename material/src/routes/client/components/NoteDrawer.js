@@ -32,15 +32,9 @@ const styles = theme => ({
 
 
 
-
+// Avoid derived state from props:
+// https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html#common-bugs-when-using-derived-state
 class NoteDrawer extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      note: {}
-    };
-  }
 
   handleChange = name => event => {
     this.setState({
@@ -56,14 +50,10 @@ class NoteDrawer extends React.Component {
     });
   };
 
-  toggleDrawer = (isOpen) => () => {
-    this.setState({ isOpen });
-  };
 
   render() {
-    const { note } = this.state;
-    const { classes, isOpen, toggleDrawer, config } = this.props;
-
+    const { mode, note, classes, isOpen, closeDrawer, config } = this.props;
+    console.log(note);
 
     const ClaimNoteFields = () => (
       <>
@@ -142,7 +132,7 @@ class NoteDrawer extends React.Component {
     )
 
     const CustomNoteFields = () => {
-      switch(note.note_type) {
+      switch(String(note.note_type)) {
         case "1":
           return (<GenericNoteFields />)
           break;
@@ -192,21 +182,21 @@ class NoteDrawer extends React.Component {
     )
 
     return (
-      <Drawer anchor="right" open={isOpen} onClose={toggleDrawer(false)}>
+      <Drawer anchor="right" open={isOpen} onClose={closeDrawer()}>
           <div className={classes.divContainer}>
           <Typography variant="h1" gutterBottom>
-            新增會議記錄
+            {note.title || "未命名"}
           </Typography>
-            <Typography variant="h3" gutterBottom>
-              {config.note_type[note.note_type]}
-            </Typography>
+          <Typography variant="h3" gutterBottom>
+            {config.note_type[note.note_type]}
+          </Typography>
 
             <form className={classes.container} noValidate>
               <CommonNoteFields />
               <CustomNoteFields />
             </form>
             <div className="divider" />
-            <OutlinedButton color="secondary" className="btn-w-md" onClose={toggleDrawer(false)}>取消</OutlinedButton>
+            <OutlinedButton color="secondary" className="btn-w-md" onClose={closeDrawer()}>取消</OutlinedButton>
             <div className="divider" />
             <Button variant="contained" color="primary" className="btn-w-md" onClick={this.handleSave}>
               儲存</Button>
