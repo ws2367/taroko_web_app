@@ -55,7 +55,7 @@ const styles = theme => ({
 
 class AbstractTextFields extends React.Component {
   constructor(props) {
-    super();
+    super(props);
     this.state = {
       profile: props.profile
     };

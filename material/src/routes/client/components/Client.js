@@ -15,10 +15,9 @@ const HEADER = {
 
 class Client extends React.Component {
   constructor(props) {
-    super();
-    this.props = props;
+    super(props);
     // get Client ID
-    let clientId = props.location.pathname.replace('/app/client/', '');
+    let clientId = this.props.location.pathname.replace('/app/client/', '');
 
     this.state = {
       notes: [],
