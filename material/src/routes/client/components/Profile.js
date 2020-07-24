@@ -298,6 +298,7 @@ class FinancialPlanTextFields extends AbstractTextFields {
           onChange={this.handleChange('financial_plan')}
           className={classes.longTextField}
           margin="normal"
+          variant='outlined'
         />
       </form>
     );
@@ -362,6 +363,7 @@ class AppendixTextFields extends AbstractTextFields {
           fullWidth
           id="appendix"
           label="備註"
+          variant='outlined'
           value={profile.appendix}
           className={classes.longTextField}
           margin="normal"

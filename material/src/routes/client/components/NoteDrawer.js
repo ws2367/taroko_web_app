@@ -43,7 +43,6 @@ class NoteDrawer extends React.Component {
   };
 
   handleSave = (event) => {
-    console.log(this.state);
     const { email, birthday, company, name } = this.state;
     this.props.handlers.createClient({
       name, email, birthday, company
@@ -53,7 +52,6 @@ class NoteDrawer extends React.Component {
 
   render() {
     const { mode, note, classes, isOpen, closeDrawer, config } = this.props;
-    console.log(note);
 
     const ClaimNoteFields = () => (
       <>
@@ -174,6 +172,7 @@ class NoteDrawer extends React.Component {
           id="appendix"
           label="備註"
           value={note.appendix}
+          variant='outlined'
           className={classes.longTextField}
           onChange={this.handleChange('appendix')}
           margin="normal"

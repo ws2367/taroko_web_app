@@ -7,8 +7,10 @@ import ListSubheader from '@material-ui/core/ListSubheader';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
+import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
-import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
+import TaskDrawer from './TaskDrawer';
 
 const styles = theme => ({
   root: {
@@ -18,13 +20,25 @@ const styles = theme => ({
   },
 });
 
+const HEADER = {
+  'Content-Type': 'application/json',
+  "Authorization": "BEARER PS3eSI8zNXIa4m_bfc2P8Qh4XbQtgbX2bOz9qphHcKMinFmMtGpPkOtso1gKJDTvj0ZJmn9PzNEirnVPVcdlevTleq2mUuVPgsW0SnKR5GaQqrH-qmtwtTWkr77Mja0wzOATEevMPLuNWWh9e7aiP2Tqkw8Hc69BA41nB2ozrhg"
+};
+
+
+
 class TaskList extends React.Component {
+  collectionEndpoint = (this.props.isUnderClient) ? 'https://api.cooby.co/clients/' + this.props.clientId + '/tasks/' : 'https://api.cooby.co/tasks/';
+
   state = {
     checked: [0],
+    mode: 'create',
     tasks: [],
     dates: [],
     error: null,
-    isLoaded: false
+    selectedTask: {},
+    isLoaded: false,
+    isOpen: false
   };
   //
 
@@ -36,23 +50,18 @@ class TaskList extends React.Component {
       return uniqueDates;
     };
 
-    fetch("https://api.cooby.co/tasks/", {
+    fetch(this.collectionEndpoint, {
       "method": "GET",
       mode: 'cors',
-      "headers": {
-        'Content-Type': 'application/json',
-        "Authorization": "BEARER PS3eSI8zNXIa4m_bfc2P8Qh4XbQtgbX2bOz9qphHcKMinFmMtGpPkOtso1gKJDTvj0ZJmn9PzNEirnVPVcdlevTleq2mUuVPgsW0SnKR5GaQqrH-qmtwtTWkr77Mja0wzOATEevMPLuNWWh9e7aiP2Tqkw8Hc69BA41nB2ozrhg"
-      }
+      headers: HEADER
     }).then(res => res.json())
       .then(
         (result) => {
-
           this.setState({
             isLoaded: true,
             tasks: result.tasks,
             dates: sortDates(result.tasks)
           });
-          console.log(this.state);
         },
         (error) => {
           this.setState({
@@ -61,7 +70,6 @@ class TaskList extends React.Component {
           });
         }
       )
-
   }
 
   handleToggle = value => () => {
@@ -80,37 +88,111 @@ class TaskList extends React.Component {
     });
   };
 
+  handleCreateTaskClick = () => {
+    this.setState({
+      isOpen: true,
+      mode: 'create',
+      selectedTask: {},
+    });
+  }
+
+  handleTaskClick = (task) => (event) => {
+    console.log(task);
+    this.setState({
+      isOpen: true,
+      mode: 'edit',
+      selectedTask: task
+    });
+  }
+
+  handleClose = () => {
+    this.setState({isOpen: false});
+  }
+
+  handleSaveTask = (newTask) => {
+    console.log(newTask);
+
+    let endpoint = this.state.mode == "edit" ? 'https://api.cooby.co/tasks/' + newTask.id : this.collectionEndpoint;
+
+    fetch(endpoint, {
+      "method": ( this.state.mode == "edit" ? "put" : "post" ),
+      mode: 'cors',
+      headers: HEADER,
+      body: JSON.stringify(newTask)
+    }).then(res => res.json())
+      .then(
+        (result) => {
+          if (this.state.mode == "edit") {
+            // edit mode
+            var index = this.state.tasks.findIndex(t => t.id == newTask.id);
+
+            if (~index) {
+                var oldTask = this.state.tasks[index];
+                this.state.tasks[index] = {...oldTask, ...newTask};
+            }
+          } else {
+            // create mode
+            this.setState({
+              tasks: this.state.tasks.concat({
+                id: result.id,
+                ...newTask
+              })
+            });
+          }
+        },
+        (error) => {
+          this.setState({ error });
+        }
+    );
+    this.handleClose();
+  };
+
   render() {
     const { classes } = this.props;
-    const { dates, tasks } = this.state;
+    const { dates, tasks, selectedTask, isOpen } = this.state;
 
     return (
       <div className={classes.root}>
+        <TaskDrawer
+          isOpen={isOpen}
+          key={selectedTask.id}
+          task={selectedTask}
+          handleClose={this.handleClose}
+          handleSaveTask={this.handleSaveTask}
+        />
+        <Button
+          aria-controls="simple-menu"
+          aria-haspopup="true"
+          variant="contained"
+          color="primary"
+          className="btn-w-md"
+          onClick={this.handleCreateTaskClick}>
+          新增待辦事項
+        </Button>
         {
-          dates.map((date, index) => (
+          dates.map((date, index1) => (
             <List
               component="nav"
               subheader={<ListSubheader component="div">{date == null ? "未預定" : date}</ListSubheader>}
             >
               {
-                tasks.filter(task => task.due_date == date).map( (task, index) => (
+                tasks.filter(task => task.due_date == date).map( (task, index2) => (
                   <ListItem
-                    key={index}
-                    role={undefined}
+                    key={task.id}
                     dense
                     button
                     onClick={this.handleToggle(task.id)}
                     className={classes.listItem}
                   >
                     <Checkbox
-                      checked={this.state.checked.indexOf(index) !== -1}
+                      checked={this.state.checked.indexOf(task.id) !== -1}
                       tabIndex={-1}
                       disableRipple
                     />
                     <ListItemText primary={task.content} />
                     <ListItemSecondaryAction>
-                      <IconButton aria-label="Delete">
-                        <DeleteIcon />
+                      <IconButton aria-label="Edit" onClick={this.handleTaskClick(task)}>
+                        <EditIcon />
                       </IconButton>
                     </ListItemSecondaryAction>
                   </ListItem>

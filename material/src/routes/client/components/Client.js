@@ -112,7 +112,7 @@ class Client extends React.Component {
                 handlers={handlers}
               />
               <NoteTab />
-              <TaskTab />
+              <TaskTab clientId={this.state.clientId}/>
             </SwipeableViews>
           </div>
         </QueueAnim>
