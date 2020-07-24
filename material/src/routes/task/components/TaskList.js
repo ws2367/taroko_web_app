@@ -119,16 +119,23 @@ class TaskList extends React.Component {
       mode: 'cors',
       headers: HEADER,
       body: JSON.stringify(newTask)
-    }).then(res => res.json())
-      .then(
+    }).then(res => {
+      if (res.ok && this.state.mode == "edit") {
+        // put request returns empty string. can't call res.to_json()
+        return new Promise((resolve, reject) => {resolve({})} );
+      } else {
+        return res.json();
+      }
+    }).then(
         (result) => {
           if (this.state.mode == "edit") {
             // edit mode
             var index = this.state.tasks.findIndex(t => t.id == newTask.id);
-
-            if (~index) {
+            if (index) {
                 var oldTask = this.state.tasks[index];
-                this.state.tasks[index] = {...oldTask, ...newTask};
+                var tasks = this.state.tasks;
+                tasks[index] = {...oldTask, ...newTask};
+                this.setState({tasks: tasks});
             }
           } else {
             // create mode
@@ -141,6 +148,7 @@ class TaskList extends React.Component {
           }
         },
         (error) => {
+          console.log(error);
           this.setState({ error });
         }
     );
