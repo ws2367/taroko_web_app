@@ -42,14 +42,14 @@ class TaskList extends React.Component {
   };
   //
 
-  componentDidMount() {
-    const sortDates = (tasks) => {
-      let dates = tasks.map(task => task.due_date);
-      let uniqueDates = [...new Set(dates)];
-      uniqueDates.sort();
-      return uniqueDates;
-    };
+  sortDates = (tasks) => {
+    let dates = tasks.map(task => task.due_date);
+    let uniqueDates = [...new Set(dates)];
+    uniqueDates.sort();
+    return uniqueDates;
+  };
 
+  componentDidMount() {
     fetch(this.collectionEndpoint, {
       "method": "GET",
       mode: 'cors',
@@ -60,7 +60,7 @@ class TaskList extends React.Component {
           this.setState({
             isLoaded: true,
             tasks: result.tasks,
-            dates: sortDates(result.tasks)
+            dates: this.sortDates(result.tasks)
           });
         },
         (error) => {
@@ -72,13 +72,13 @@ class TaskList extends React.Component {
       )
   }
 
-  handleToggle = value => () => {
+  handleComplete = taskId => () => {
     const { checked } = this.state;
-    const currentIndex = checked.indexOf(value);
+    const currentIndex = checked.indexOf(taskId);
     const newChecked = [...checked];
 
     if (currentIndex === -1) {
-      newChecked.push(value);
+      newChecked.push(taskId);
     } else {
       newChecked.splice(currentIndex, 1);
     }
@@ -86,6 +86,26 @@ class TaskList extends React.Component {
     this.setState({
       checked: newChecked,
     });
+
+    let url = 'https://api.cooby.co/tasks/' + taskId + '/';
+    fetch(url, {
+      "method": "DELETE",
+      mode: 'cors',
+      headers: HEADER
+    }).then(res => {
+      if (res.ok) {
+        let tasks = this.state.tasks;
+        let index = tasks.findIndex(t => t.id == taskId);
+        tasks.splice(index, 1);
+
+        this.setState({
+          tasks: tasks,
+          dates: this.sortDates(tasks)
+        });
+      } else {
+        res.json().then(error => {console.log(error)});
+        }
+      });
   };
 
   handleCreateTaskClick = () => {
@@ -189,7 +209,7 @@ class TaskList extends React.Component {
                     key={task.id}
                     dense
                     button
-                    onClick={this.handleToggle(task.id)}
+                    onClick={this.handleComplete(task.id)}
                     className={classes.listItem}
                   >
                     <Checkbox
