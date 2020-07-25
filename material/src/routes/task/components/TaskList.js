@@ -72,6 +72,34 @@ class TaskList extends React.Component {
       )
   }
 
+  handleDeleteTask = taskId => {
+    this.deleteFromServer(taskId);
+  }
+
+  deleteFromServer = taskId => {
+    let url = 'https://api.cooby.co/tasks/' + taskId + '/';
+    fetch(url, {
+      "method": "DELETE",
+      mode: 'cors',
+      headers: HEADER
+    }).then(res => {
+      if (res.ok) {
+        let tasks = this.state.tasks;
+        let index = tasks.findIndex(t => t.id === taskId);
+        tasks.splice(index, 1);
+
+        this.setState({
+          tasks: tasks,
+          dates: this.sortDates(tasks)
+        });
+      } else {
+        res.json().then(error => {console.log(error)});
+        }
+
+        this.handleClose();
+      });
+  }
+
   handleComplete = taskId => () => {
     const { checked } = this.state;
     const currentIndex = checked.indexOf(taskId);
@@ -87,25 +115,7 @@ class TaskList extends React.Component {
       checked: newChecked,
     });
 
-    let url = 'https://api.cooby.co/tasks/' + taskId + '/';
-    fetch(url, {
-      "method": "DELETE",
-      mode: 'cors',
-      headers: HEADER
-    }).then(res => {
-      if (res.ok) {
-        let tasks = this.state.tasks;
-        let index = tasks.findIndex(t => t.id == taskId);
-        tasks.splice(index, 1);
-
-        this.setState({
-          tasks: tasks,
-          dates: this.sortDates(tasks)
-        });
-      } else {
-        res.json().then(error => {console.log(error)});
-        }
-      });
+    this.deleteFromServer(taskId);
   };
 
   handleCreateTaskClick = () => {
@@ -177,7 +187,7 @@ class TaskList extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { dates, tasks, selectedTask, isOpen } = this.state;
+    const { dates, tasks, selectedTask, isOpen, mode } = this.state;
 
     return (
       <div className={classes.root}>
@@ -185,7 +195,9 @@ class TaskList extends React.Component {
           isOpen={isOpen}
           key={selectedTask.id}
           task={selectedTask}
+          mode={mode}
           handleClose={this.handleClose}
+          handleDeleteTask={this.handleDeleteTask}
           handleSaveTask={this.handleSaveTask}
         />
         <Button

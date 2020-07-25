@@ -56,10 +56,15 @@ class TaskDrawer extends React.Component {
     });
   }
 
+  handleDelete = (taskId) => (event) => {
+    event.preventDefault();
+    this.props.handleDeleteTask(taskId);
+  }
+
   render() {
     const classes = styles();
     const { content, due_date, priority, reminder} = this.state;
-    const { isOpen, handleClose } = this.props;
+    const { mode, isOpen, handleClose } = this.props;
 
     const config = {
       "task_priority": {"0":"一般", "1":"重要"},
@@ -89,7 +94,7 @@ class TaskDrawer extends React.Component {
       <Drawer anchor="right" open={isOpen} onClose={handleClose}>
           <div style={classes.divContainer}>
           <Typography variant="title" gutterBottom>
-            新增待辦事項
+            {mode === "create" ? "新增待辦事項" : "編輯待辦事項"}
           </Typography>
             <form className={classes.container} noValidate>
               <TextField
@@ -141,6 +146,9 @@ class TaskDrawer extends React.Component {
               </TextField>
             </form>
             <div className="divider" />
+              {mode === "edit" &&
+                <Button color="primary" onClick={this.handleDelete(this.props.task.id)}>刪除</Button>
+              }
               <OutlinedButton color="secondary" className="btn-w-sm" onClose={handleClose}>取消</OutlinedButton>
               <Button variant="contained" color="primary" className="btn-w-sm" onClick={this.handleSave}>儲存</Button>
 
