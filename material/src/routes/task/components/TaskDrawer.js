@@ -59,7 +59,7 @@ class TaskDrawer extends React.Component {
   render() {
     const classes = styles();
     const { content, due_date, priority, reminder} = this.state;
-    const { isOpen, toggleDrawer, handleClose } = this.props;
+    const { isOpen, handleClose } = this.props;
 
     const config = {
       "task_priority": {"0":"一般", "1":"重要"},

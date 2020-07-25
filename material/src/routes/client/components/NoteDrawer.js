@@ -31,171 +31,204 @@ const styles = theme => ({
 });
 
 
+const QuoteNoteFields = ({note, classes, handleChange}) => (
+  <>
+    <Typography variant="subheading" gutterBottom>
+      遞送細節
+    </Typography>
+    <TextField
+      id="sent_time"
+      label="遞送日期"
+      type='date'
+      value={note.additional_data.sent_time}
+      className={classes.textField}
+      onChange={handleChange(true, 'sent_time')}
+      margin="normal"
+    />
+    <TextField
+      id="sent_content"
+      label="遞送內容"
+      value={note.additional_data.sent_content}
+      className={classes.longTextField}
+      onChange={handleChange(true, 'sent_content')}
+      margin="normal"
+    />
+  </>
+)
+
+
+const CommonNoteFields = ({note, classes, handleChange}) => (
+  <>
+    <TextField
+      label="地點"
+      className={classes.textField}
+      value={note.location}
+      onChange={handleChange(false, 'location')}
+      margin="normal"
+    />
+    <TextField
+      required
+      id="date"
+      label="日期"
+      type='date'
+      value={note.date}
+      className={classes.textField}
+      onChange={handleChange(false, 'date')}
+      margin="normal"
+    />
+    <TextField
+      id="appendix"
+      label="備註"
+      value={note.appendix}
+      variant='outlined'
+      className={classes.longTextField}
+      onChange={handleChange(false, 'appendix')}
+      margin="normal"
+    />
+  </>
+)
+
+
+const ClaimNoteFields = ({note, classes, handleChange}) => (
+  <>
+    <Typography variant="subheading" gutterBottom>
+      理賠細節
+    </Typography>
+    <TextField
+      id="claim_time"
+      label="理賠日期"
+      type='date'
+      value={note.additional_data.claim_time}
+      className={classes.textField}
+      onChange={handleChange(true, 'claim_time')}
+      margin="normal"
+    />
+    <TextField
+      id="claim_content"
+      label="理賠內容"
+      value={note.additional_data.claim_content}
+      className={classes.longTextField}
+      onChange={handleChange(true, 'claim_content')}
+      margin="normal"
+    />
+  </>
+)
+
+const SigningNoteFields = ({note, classes, handleChange}) => (
+  <>
+    <Typography variant="subheading" gutterBottom>
+      簽約細節
+    </Typography>
+    <TextField
+      id="signed_time"
+      label="簽約日期"
+      type='date'
+      value={note.additional_data.signed_time}
+      className={classes.textField}
+      onChange={handleChange(true, 'signed_time')}
+      margin="normal"
+    />
+    <TextField
+      id="signed_content"
+      label="簽約內容"
+      value={note.additional_data.signed_content}
+      className={classes.longTextField}
+      onChange={handleChange(true, 'signed_content')}
+      margin="normal"
+    />
+  </>
+)
+
+
+
+const GenericNoteFields = ({note, classes, handleChange}) => (
+  <TextField
+    id="current_insurance"
+    label="保險狀況"
+    value={note.additional_data.current_insurance}
+    className={classes.longTextField}
+    onChange={handleChange(true, 'current_insurance')}
+    margin="normal"
+  />
+)
+
+const CustomNoteFields = ({note, classes, handleChange}) => {
+  switch(String(note.note_type)) {
+    case "1":
+      return (<GenericNoteFields note={note} classes={classes} handleChange={handleChange} />)
+      break;
+    case "2":
+      return (<QuoteNoteFields note={note} classes={classes} handleChange={handleChange} />)
+      break;
+    case "3":
+      return (<SigningNoteFields note={note} classes={classes} handleChange={handleChange} />)
+      break;
+    case "4":
+      return (<ClaimNoteFields note={note} classes={classes} handleChange={handleChange} />)
+      break;
+    default:
+      // code block
+      return (<></>)
+  }
+}
+
+
+
 
 // Avoid derived state from props:
 // https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html#common-bugs-when-using-derived-state
 class NoteDrawer extends React.Component {
+  // this needs to be deep copy!
+  state = { note: ({...this.props.note, additional_data: {...this.props.note.additional_data} } || {additional_data: {}}) };
 
-  handleChange = name => event => {
-    this.setState({
-      [name]: event.target.value
-    });
+
+  handleChange = (isAdditionalData, name) => event => {
+    var note = this.state.note;
+
+    if (isAdditionalData) {
+      note.additional_data[name] = event.target.value;
+    } else {
+      note[name] = event.target.value;
+    }
+
+    this.setState({ note });
   };
 
-  handleSave = (event) => {
-    const { email, birthday, company, name } = this.state;
-    this.props.handlers.createClient({
-      name, email, birthday, company
-    });
-  };
+  handleSave = event => {
+    this.props.handleSaveNote(this.state.note);
+  }
 
 
   render() {
-    const { mode, note, classes, isOpen, closeDrawer, config } = this.props;
-
-    const ClaimNoteFields = () => (
-      <>
-        <Typography variant="h3" gutterBottom>
-          理賠細節
-        </Typography>
-        <TextField
-          id="date"
-          label="理賠日期"
-          type='date'
-          value={note.additional_data.claim_time}
-          className={classes.textField}
-          margin="normal"
-        />
-        <TextField
-          label="理賠內容"
-          value={note.additional_data.claim_content}
-          className={classes.longTextField}
-          margin="normal"
-        />
-      </>
-    )
-
-    const SigningNoteFields = () => (
-      <>
-        <Typography variant="h3" gutterBottom>
-          簽約細節
-        </Typography>
-        <TextField
-          id="date"
-          label="簽約日期"
-          type='date'
-          value={note.additional_data.signed_time}
-          className={classes.textField}
-          margin="normal"
-        />
-        <TextField
-          label="簽約內容"
-          value={note.additional_data.signed_content}
-          className={classes.longTextField}
-          margin="normal"
-        />
-      </>
-    )
-
-    const QuoteNoteFields = () => (
-      <>
-        <Typography variant="h3" gutterBottom>
-          遞送細節
-        </Typography>
-        <TextField
-          id="date"
-          label="遞送日期"
-          type='date'
-          value={note.additional_data.sent_time}
-          className={classes.textField}
-          margin="normal"
-        />
-        <TextField
-          label="遞送內容"
-          value={note.additional_data.sent_content}
-          className={classes.longTextField}
-          margin="normal"
-        />
-      </>
-    )
-
-    const GenericNoteFields = () => (
-      <TextField
-        id="current_insurance"
-        label="保險狀況"
-        value={note.additional_data.current_insurance}
-        className={classes.longTextField}
-        margin="normal"
-      />
-    )
-
-    const CustomNoteFields = () => {
-      switch(String(note.note_type)) {
-        case "1":
-          return (<GenericNoteFields />)
-          break;
-        case "2":
-          return (<QuoteNoteFields />)
-          break;
-        case "3":
-          return (<SigningNoteFields />)
-          break;
-        case "4":
-          return (<ClaimNoteFields />)
-          break;
-        default:
-          // code block
-          return (<></>)
-      }
-    }
-
-    const CommonNoteFields = () => (
-      <>
-        <TextField
-          label="地點"
-          className={classes.textField}
-          value={note.location}
-          onChange={this.handleChange('location')}
-          margin="normal"
-        />
-        <TextField
-          required
-          id="date"
-          label="日期"
-          type='date'
-          value={note.date}
-          className={classes.textField}
-          onChange={this.handleChange('date')}
-          margin="normal"
-        />
-        <TextField
-          id="appendix"
-          label="備註"
-          value={note.appendix}
-          variant='outlined'
-          className={classes.longTextField}
-          onChange={this.handleChange('appendix')}
-          margin="normal"
-        />
-      </>
-    )
+    const { note } = this.state;
+    const { mode, classes, isOpen, handleClose, config } = this.props;
 
     return (
-      <Drawer anchor="right" open={isOpen} onClose={closeDrawer()}>
+      <Drawer anchor="right" open={isOpen} onClose={handleClose}>
           <div className={classes.divContainer}>
-          <Typography variant="h1" gutterBottom>
-            {note.title || "未命名"}
-          </Typography>
-          <Typography variant="h3" gutterBottom>
+          <TextField
+            label="標題"
+            className={classes.textField}
+            InputProps={{
+              classes: {
+                input: {fontSize: 50}
+              }
+            }}
+            value={note.title}
+            onChange={this.handleChange(false, 'title')}
+            margin="normal"
+          />
+
+          <Typography variant="subheading" gutterBottom>
             {config.note_type[note.note_type]}
           </Typography>
 
             <form className={classes.container} noValidate>
-              <CommonNoteFields />
-              <CustomNoteFields />
+              <CommonNoteFields note={note} classes={classes} handleChange={this.handleChange} />
+              <CustomNoteFields note={note} classes={classes} handleChange={this.handleChange} />
             </form>
             <div className="divider" />
-            <OutlinedButton color="secondary" className="btn-w-md" onClose={closeDrawer()}>取消</OutlinedButton>
+            <OutlinedButton color="secondary" className="btn-w-md" onClick={handleClose}>取消</OutlinedButton>
             <div className="divider" />
             <Button variant="contained" color="primary" className="btn-w-md" onClick={this.handleSave}>
               儲存</Button>

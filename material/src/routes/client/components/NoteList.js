@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -28,6 +28,7 @@ const styles = theme => ({
   },
   root: {
     width: '100%',
+    backgroundColor: theme.palette.background.paper
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),
@@ -38,6 +39,11 @@ const styles = theme => ({
     fontWeight: theme.typography.fontWeightRegular,
   },
 });
+
+const HEADER = {
+  'Content-Type': 'application/json',
+  "Authorization": "BEARER PS3eSI8zNXIa4m_bfc2P8Qh4XbQtgbX2bOz9qphHcKMinFmMtGpPkOtso1gKJDTvj0ZJmn9PzNEirnVPVcdlevTleq2mUuVPgsW0SnKR5GaQqrH-qmtwtTWkr77Mja0wzOATEevMPLuNWWh9e7aiP2Tqkw8Hc69BA41nB2ozrhg"
+};
 
 
 class CreateNoteButton extends React.Component {
@@ -93,12 +99,13 @@ class CreateNoteButton extends React.Component {
 
 
 class NoteList extends React.Component {
+  collectionEndpoint = 'https://api.cooby.co/clients/' + this.props.clientId + '/notes/';
+
   state = {
     notes: [],
     mode: 'create',
-    selectedNote: {},
     openNoteDrawer: false,
-    handlers: {},
+    selectedNote: {additional_data: {}},
     config: {note_type: {
       "0":"空白筆記",
       "1":"一般筆記",
@@ -109,17 +116,14 @@ class NoteList extends React.Component {
   }
 
   componentDidMount() {
-    this.fetchNotes(this.props.clientId);
+    this.fetchNotes();
   }
 
-  fetchNotes = (clientId) => {
-    fetch("https://api.cooby.co/clients/" + clientId + "/notes/", {
+  fetchNotes = () => {
+    fetch(this.collectionEndpoint, {
       "method": "GET",
       mode: 'cors',
-      "headers": {
-        'Content-Type': 'application/json',
-        "Authorization": "BEARER PS3eSI8zNXIa4m_bfc2P8Qh4XbQtgbX2bOz9qphHcKMinFmMtGpPkOtso1gKJDTvj0ZJmn9PzNEirnVPVcdlevTleq2mUuVPgsW0SnKR5GaQqrH-qmtwtTWkr77Mja0wzOATEevMPLuNWWh9e7aiP2Tqkw8Hc69BA41nB2ozrhg"
-      }
+      headers: HEADER
     }).then(res => res.json())
       .then(
         (result) => {
@@ -138,7 +142,12 @@ class NoteList extends React.Component {
   openDrawer = (mode) => (selectedNote) => {
     console.log(selectedNote);
     console.log(mode);
-    this.setState({openNoteDrawer: true, selectedNote: selectedNote, mode: mode});
+    this.setState({
+      openNoteDrawer: true,
+      selectedNote: selectedNote,
+      mode: mode,
+      drawerKey: selectedNote.id ? selectedNote.id : Math.random()
+    });
   }
 
   handleNoteClick = (selectedNote) => (event) => {
@@ -146,36 +155,87 @@ class NoteList extends React.Component {
     this.openDrawer('edit')(selectedNote);
   }
 
-  closeDrawer = () => () => {
+  handleClose = () => {
     this.setState({openNoteDrawer: false});
   }
 
 
+  handleSaveNote = (newNote) => {
+    console.log(newNote);
+
+    let endpoint =
+      this.state.mode === "edit" ?
+      this.collectionEndpoint + newNote.id :
+      this.collectionEndpoint;
+
+    fetch(endpoint, {
+      method: ( this.state.mode === "edit" ? "put" : "post" ),
+      mode: 'cors',
+      headers: HEADER,
+      body: JSON.stringify(newNote)
+    }).then(res => {
+      if (res.ok && this.state.mode === "edit") {
+        // put request returns empty string. can't call res.to_json()
+        console.log('edittttt');
+        return new Promise((resolve, reject) => {resolve({})} );
+      } else {
+        console.log('new!');
+        return res.json();
+      }
+    }).then(
+        (result) => {
+          console.log(result);
+          if (this.state.mode === "edit") {
+            // edit mode
+            var index = this.state.notes.findIndex(t => t.id === newNote.id);
+            if (index) {
+                var oldNote = this.state.notes[index];
+                var notes = this.state.notes;
+                notes[index] = {...oldNote, ...newNote};
+                this.setState({notes: notes});
+            }
+          } else {
+            // create mode
+            this.setState({
+              notes: this.state.notes.concat({
+                id: result.id,
+                ...newNote
+              })
+            });
+          }
+        },
+        (error) => {
+          console.log(error);
+          this.setState({ error });
+        }
+    );
+    this.handleClose();
+  };
+
+
   render() {
-    const { notes, selectedNote, mode, openNoteDrawer, handlers, config } = this.state;
+    const { notes, selectedNote, mode, openNoteDrawer, config, drawerKey } = this.state;
     const { classes } = this.props;
 
 
     return (
-      <Fragment>
+      <Paper className={classes.root}>
         <CreateNoteButton noteTypes={config.note_type} openDrawer={this.openDrawer('create')}  />
-        <div className="divider" />
-        <div className={classes.root}>
 
           <NoteDrawer
+            key={drawerKey}
             isOpen={openNoteDrawer}
-            closeDrawer={this.closeDrawer}
             mode={mode}
             note={selectedNote}
-            handlers={handlers}
+            handleClose={this.handleClose}
+            handleSaveNote={this.handleSaveNote}
             config={config} />
-            <Paper style={{ width: '80%' }}>
               <List>
               {
                 notes.map((note, index) => (
                     <ListItem>
                       <ListItemText
-                        key={index}
+                        key={note.id}
                         primary={<Grid container justify="space-between">
                           <Typography
                             inline
@@ -203,9 +263,7 @@ class NoteList extends React.Component {
                 ))
               }
               </List>
-            </Paper>
-        </div>
-    </Fragment>
+    </Paper>
     );
   }
 }
