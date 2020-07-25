@@ -159,6 +159,29 @@ class NoteList extends React.Component {
     this.setState({openNoteDrawer: false});
   }
 
+  handleDeleteNote = (noteId) => {
+    let url = this.collectionEndpoint + noteId;
+    console.log(url);
+    fetch(url, {
+      "method": "DELETE",
+      mode: 'cors',
+      headers: HEADER,
+      body: JSON.stringify({})
+    }).then(res => {
+      if (res.ok) {
+        let notes = this.state.notes;
+        let index = notes.findIndex(t => t.id === noteId);
+        notes.splice(index, 1);
+
+        this.setState({
+          notes: notes
+        });
+      } else {
+        res.json().then(error => {console.log(error)});
+        }
+      this.handleClose();
+      });
+  }
 
   handleSaveNote = (newNote) => {
     console.log(newNote);
@@ -203,13 +226,14 @@ class NoteList extends React.Component {
               })
             });
           }
+          this.handleClose();
         },
         (error) => {
           console.log(error);
           this.setState({ error });
         }
     );
-    this.handleClose();
+
   };
 
 
@@ -229,6 +253,7 @@ class NoteList extends React.Component {
             note={selectedNote}
             handleClose={this.handleClose}
             handleSaveNote={this.handleSaveNote}
+            handleDeleteNote={this.handleDeleteNote}
             config={config} />
               <List>
               {

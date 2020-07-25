@@ -199,6 +199,12 @@ class NoteDrawer extends React.Component {
   }
 
 
+  handleDelete = (event) => {
+    event.preventDefault();
+    this.props.handleDeleteNote(this.state.note.id);
+  }
+
+
   render() {
     const { note } = this.state;
     const { mode, classes, isOpen, handleClose, config } = this.props;
@@ -206,6 +212,9 @@ class NoteDrawer extends React.Component {
     return (
       <Drawer anchor="right" open={isOpen} onClose={handleClose}>
           <div className={classes.divContainer}>
+          <Typography variant="title" gutterBottom>
+            {mode === "create" ? "新增會議記錄" : "編輯會議記錄"}
+          </Typography>
           <TextField
             label="標題"
             className={classes.textField}
@@ -228,6 +237,9 @@ class NoteDrawer extends React.Component {
               <CustomNoteFields note={note} classes={classes} handleChange={this.handleChange} />
             </form>
             <div className="divider" />
+            {mode === "edit" &&
+              <Button color="primary" onClick={this.handleDelete}>刪除</Button>
+            }
             <OutlinedButton color="secondary" className="btn-w-md" onClick={handleClose}>取消</OutlinedButton>
             <div className="divider" />
             <Button variant="contained" color="primary" className="btn-w-md" onClick={this.handleSave}>
