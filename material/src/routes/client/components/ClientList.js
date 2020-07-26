@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
@@ -305,4 +306,4 @@ const EnhancedTable1 = withStyles(styles)(EnhancedTable);
 
 
 
-export default EnhancedTable1;
+export default withRouter(EnhancedTable1);

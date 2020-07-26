@@ -18,8 +18,8 @@ import AUTH from 'auth/Auth';
 class NormalForm extends React.Component {
 
   state = {
-    email: null,
-    password: null,
+    email: "",
+    password: "",
     remember: true,
     error: null
   }
@@ -69,8 +69,8 @@ class NormalForm extends React.Component {
 
   handleClose = event => {
     this.setState({
-      password: null,
-      error: null
+      password: "",
+      error: ""
     });
   }
 
