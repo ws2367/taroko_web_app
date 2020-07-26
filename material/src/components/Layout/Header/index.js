@@ -57,32 +57,22 @@ class AppHeader extends React.Component {
         >
           <div className="header-left">
             <div className="list-unstyled list-inline">
-              {showLogo && [
-                <Logo key="logo" />,
-                <div key="divider" className="divider-vertical"></div>
-              ]}
               <a href={DEMO.link} className="list-inline-item d-none d-md-inline-block" onClick={this.onToggleCollapsedNav}>
                 <MaterialIcon icon="menu" className="list-icon" />
               </a>
               <a href={DEMO.link} className="list-inline-item d-md-none" onClick={this.onToggleOffCanvasMobileNav}>
                 <MaterialIcon icon="menu" className="list-icon" />
               </a>
-              
+              {showLogo && [
+                <Logo key="logo" />,
+                <div key="divider" className="divider-vertical"></div>
+              ]}
             </div>
           </div>
 
           <div className="header-right">
             <div className="list-unstyled list-inline">
-              <li className="list-inline-item search-box seach-box-right d-none d-md-inline-block">
-                <div className="search-box-inner">
-                  <div className="search-box-icon"><MaterialIcon icon="search" /></div>
-                  <input type="text" placeholder="search..." />
-                  <span className="input-bar"></span>
-                </div>
-              </li>
-              <Popover placement="bottomRight" content={<Notifications />} trigger="click" overlayClassName="app-header-popover">
-                <a href={DEMO.link} className="list-inline-item"><Badge className="header-badge" badgeContent={11}><MaterialIcon icon="notifications_none" className="header-icon-notification" /></Badge></a>
-              </Popover>
+              
               <a className="list-inline-item" href={DEMO.link}>
                 <div
                   className="avatar"
