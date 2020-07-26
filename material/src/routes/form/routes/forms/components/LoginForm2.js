@@ -45,11 +45,11 @@ class NormalForm extends React.Component {
       if (res.status == 401) {
         this.setState({error: 'unauthorized'});
       } else {
-        return res.josn().then(res => {
+        return res.json().then(res => {
             this.setState({
               id: res.id,
               token: res.token,
-              redirect: '#app/client'
+              redirect: '#/app/client'
             });
           },
           (error) => {
