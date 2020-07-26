@@ -1,7 +1,7 @@
 import React from 'react';
 import APPCONFIG from 'constants/appConfig';
 import DEMO from 'constants/demoData';
-import { withRouter, Redirect } from "react-router-dom";
+import { withRouter, useHistory } from "react-router-dom";
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -13,14 +13,14 @@ import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import MaterialIcon from 'components/MaterialIcon';
 import { Icon } from 'antd';
-
+import AUTH from 'auth/Auth';
 
 class NormalForm extends React.Component {
+
   state = {
     email: null,
     password: null,
     remember: true,
-    redirect: null,
     error: null
   }
 
@@ -48,9 +48,14 @@ class NormalForm extends React.Component {
         return res.json().then(res => {
             this.setState({
               id: res.id,
-              token: res.token,
-              redirect: '#/app/client'
+              token: res.token
             });
+
+            AUTH({userId: res.id, token: res.token});
+            // AUTH.userId = res.id;
+            // AUTH.token = res.token;
+
+            this.props.history.push('/app/client');
           },
           (error) => {
             this.setState({
@@ -72,9 +77,7 @@ class NormalForm extends React.Component {
 
   render() {
     const {email, password, remember, error} = this.state;
-    if (this.state.redirect) {
-      return <Redirect to={this.state.redirect} />
-    } else if (error != null) {
+    if (error != null) {
       return (<Dialog
         open={error != null}
         onClose={this.handleClose}

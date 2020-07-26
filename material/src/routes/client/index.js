@@ -20,22 +20,13 @@ export default class ClientsPage extends React.Component {
   constructor() {
     super();
     this.state = {
-      clients: [],
-      error: null,
-      isLoaded: false,
-      openClientDrawer: false
     }
-
   }
 
-
-  toggleClientDrawer = (state) => () => {
-    this.setState({openClientDrawer: state});
-  }
 
   render() {
     const { match } = this.props;
-    const { error, isLoaded, clients, openClientDrawer } = this.state;
+    const { openClientDrawer } = this.state;
 
     return (
         <div>
@@ -45,13 +36,9 @@ export default class ClientsPage extends React.Component {
             <Route path={match.path}>
               <div className="container-fluid no-breadcrumb page-dashboard">
                 <QueueAnim type="bottom" className="ui-animate">
-                    <Button variant="contained" color="primary" className="btn-w-md" onClick={this.toggleClientDrawer(true)}>
-                      新增客戶</Button>
-                    <div className="divider" />
                     <div key="1"><StatBoxes1 /></div>
                     <div key="2">
                       <ClientList
-                        clients={clients}
                         toggleClientDrawer={this.toggleClientDrawer}
                         openClientDrawer={openClientDrawer}/>
                     </div>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -12,7 +13,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import {EnhancedTableHead, EnhancedTableToolbar} from './EnhancedTableElements';
 import ClientDrawer from './ClientDrawer';
 import Tag from './Tag';
-
+import AUTH from 'auth/Auth';
 
 function getSorting(order, orderBy) {
   return order === 'desc'
@@ -33,23 +34,25 @@ const styles = theme => ({
   },
 });
 
-const HEADER = {
-  'Content-Type': 'application/json',
-  "Authorization": "BEARER PS3eSI8zNXIa4m_bfc2P8Qh4XbQtgbX2bOz9qphHcKMinFmMtGpPkOtso1gKJDTvj0ZJmn9PzNEirnVPVcdlevTleq2mUuVPgsW0SnKR5GaQqrH-qmtwtTWkr77Mja0wzOATEevMPLuNWWh9e7aiP2Tqkw8Hc69BA41nB2ozrhg"
-};
+const TEST_TOKEN = "PS3eSI8zNXIa4m_bfc2P8Qh4XbQtgbX2bOz9qphHcKMinFmMtGpPkOtso1gKJDTvj0ZJmn9PzNEirnVPVcdlevTleq2mUuVPgsW0SnKR5GaQqrH-qmtwtTWkr77Mja0wzOATEevMPLuNWWh9e7aiP2Tqkw8Hc69BA41nB2ozrhg";
+
 
 class EnhancedTable extends React.Component {
 
+  headers = {
+    'Content-Type': 'application/json',
+    "Authorization": "BEARER " + (AUTH().token ? AUTH().token : TEST_TOKEN )
+  }
+
   constructor(props) {
     super(props);
-
-
+    console.log(this.headers);
     // handlers
     const createClient = (profile) => {
       fetch("https://api.cooby.co/clients/", {
         "method": "POST",
         mode: 'cors',
-        headers: HEADER,
+        headers: this.headers,
         body: JSON.stringify(profile)
       }).then(res => res.json())
         .then(
@@ -77,6 +80,7 @@ class EnhancedTable extends React.Component {
 
     // state variables
     this.state = {
+      openClientDrawer: false,
       // ui state
       order: 'asc',
       orderBy: 'name',
@@ -103,7 +107,7 @@ class EnhancedTable extends React.Component {
     fetch("https://api.cooby.co/clients/", {
       "method": "GET",
       mode: 'cors',
-      headers: HEADER
+      headers: this.headers
     }).then(res => res.json())
       .then(
         (result) => {
@@ -124,6 +128,10 @@ class EnhancedTable extends React.Component {
           });
         }
       )
+  }
+
+  toggleClientDrawer = (state) => () => {
+    this.setState({openClientDrawer: state});
   }
 
 
@@ -172,7 +180,7 @@ class EnhancedTable extends React.Component {
     // search name, company, note_summary and income
     let searchFields = [client.profile.name, client.profile.company, client.note_summary, incomeConfig[String(client.profile.income)]];
     return searchFields.reduce((sum, value) => (
-        sum || (value && value.toLowerCase().includes(query.toLowerCase())) // make sure value isn't null; otherwise .includes breaks. 
+        sum || (value && value.toLowerCase().includes(query.toLowerCase())) // make sure value isn't null; otherwise .includes breaks.
     ), false);
   }
 
@@ -201,85 +209,90 @@ class EnhancedTable extends React.Component {
   isSelected = id => this.state.selected.indexOf(id) !== -1;
 
   render() {
-    const { classes, toggleClientDrawer, openClientDrawer } = this.props;
-    const { clients, order, orderBy, selected, rowsPerPage, page, config, handlers } = this.state;
+    const { classes } = this.props;
+    const { clients, order, orderBy, selected, rowsPerPage, page, config, handlers, openClientDrawer } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, clients.length - page * rowsPerPage);
 
     return (
-      <Paper className={classes.root}>
-        <ClientDrawer isOpen={openClientDrawer} toggleClientDrawer={toggleClientDrawer} handlers={handlers} />
-        <EnhancedTableToolbar numSelected={selected.length} handleQueryChange={this.handleQueryChange} />
-        <div className={classes.tableWrapper}>
-          <Table className={classes.table} aria-labelledby="tableTitle">
-            <EnhancedTableHead
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={this.handleSelectAllClick}
-              onRequestSort={this.handleRequestSort}
-              rowCount={clients.length}
-            />
-            <TableBody>
-              {clients
-                .sort(getSorting(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map(n => {
-                  const isSelected = this.isSelected(n.profile.id);
-                  return (
-                    <TableRow
-                      hover
-                      onClick={event => this.handleClick(event, n.profile.id)}
-                      role="checkbox"
-                      aria-checked={isSelected}
-                      tabIndex={-1}
-                      key={n.profile.id}
-                      selected={isSelected}
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox checked={isSelected} />
-                      </TableCell>
-                      <TableCell component="th" scope="row" padding="none">
-                      <Link to={{
-                          pathname: "/app/client/" + n.profile.id,
-                          state: {
-                            client: n,
-                            config: config,
-                            handlers: handlers
-                          }
-                        }} className="link-cta link-animated-hover link-hover-v1 text-primary">{n.profile.name}
-                      </Link></TableCell>
-                      <TableCell><Tag tags={n.profile.tags} config={config} handlers={handlers} /></TableCell>
-                      <TableCell>{n.profile.company}</TableCell>
-                      <TableCell>{config.income[n.profile.income]}</TableCell>
-                      <TableCell>{n.note_summary}</TableCell>
-                      <TableCell>{n.profile.updated}</TableCell>
-                    </TableRow>
-                  );
-                })}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 49 * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
-        <TablePagination
-          component="div"
-          count={clients.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          labelRowsPerPage="每頁數目"
-          backIconButtonProps={{
-            'aria-label': '上一頁',
-          }}
-          nextIconButtonProps={{
-            'aria-label': '下一頁',
-          }}
-          onChangePage={this.handleChangePage}
-          onChangeRowsPerPage={this.handleChangeRowsPerPage}
-        />
-      </Paper>
+      <>
+        <Button variant="contained" color="primary" className="btn-w-md" onClick={this.toggleClientDrawer(true)}>
+          新增客戶</Button>
+        <div className="divider" />
+        <Paper className={classes.root}>
+          <ClientDrawer isOpen={openClientDrawer} toggleClientDrawer={this.toggleClientDrawer} handlers={handlers} />
+          <EnhancedTableToolbar numSelected={selected.length} handleQueryChange={this.handleQueryChange} />
+          <div className={classes.tableWrapper}>
+            <Table className={classes.table} aria-labelledby="tableTitle">
+              <EnhancedTableHead
+                numSelected={selected.length}
+                order={order}
+                orderBy={orderBy}
+                onSelectAllClick={this.handleSelectAllClick}
+                onRequestSort={this.handleRequestSort}
+                rowCount={clients.length}
+              />
+              <TableBody>
+                {clients
+                  .sort(getSorting(order, orderBy))
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map(n => {
+                    const isSelected = this.isSelected(n.profile.id);
+                    return (
+                      <TableRow
+                        hover
+                        onClick={event => this.handleClick(event, n.profile.id)}
+                        role="checkbox"
+                        aria-checked={isSelected}
+                        tabIndex={-1}
+                        key={n.profile.id}
+                        selected={isSelected}
+                      >
+                        <TableCell padding="checkbox">
+                          <Checkbox checked={isSelected} />
+                        </TableCell>
+                        <TableCell component="th" scope="row" padding="none">
+                        <Link to={{
+                            pathname: "/app/client/" + n.profile.id,
+                            state: {
+                              client: n,
+                              config: config,
+                              handlers: handlers
+                            }
+                          }} className="link-cta link-animated-hover link-hover-v1 text-primary">{n.profile.name}
+                        </Link></TableCell>
+                        <TableCell><Tag tags={n.profile.tags} config={config} handlers={handlers} /></TableCell>
+                        <TableCell>{n.profile.company}</TableCell>
+                        <TableCell>{config.income[n.profile.income]}</TableCell>
+                        <TableCell>{n.note_summary}</TableCell>
+                        <TableCell>{n.profile.updated}</TableCell>
+                      </TableRow>
+                    );
+                  })}
+                {emptyRows > 0 && (
+                  <TableRow style={{ height: 49 * emptyRows }}>
+                    <TableCell colSpan={6} />
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
+          <TablePagination
+            component="div"
+            count={clients.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            labelRowsPerPage="每頁數目"
+            backIconButtonProps={{
+              'aria-label': '上一頁',
+            }}
+            nextIconButtonProps={{
+              'aria-label': '下一頁',
+            }}
+            onChangePage={this.handleChangePage}
+            onChangeRowsPerPage={this.handleChangeRowsPerPage}
+          />
+        </Paper>
+      </>
     );
   }
 }

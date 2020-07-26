@@ -1,6 +1,5 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
-
 import Login from './routes/Login';
 import SignUp from './routes/SignUp';
 import ForgotPassword from './routes/ForgotPassword';
