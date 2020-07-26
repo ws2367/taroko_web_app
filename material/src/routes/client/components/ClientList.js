@@ -87,11 +87,12 @@ class EnhancedTable extends React.Component {
       isLoaded: false,
       // app data
       clients: [],
+      filteredClients: [],
       config: {},
 
       //handlers
       handlers: {
-          createClient, 
+          createClient,
           removeTagFromClient,
           filterByTag}
     };
@@ -109,6 +110,7 @@ class EnhancedTable extends React.Component {
           this.setState({
             isLoaded: true,
             clients: result.clients,
+            unfilteredClients: result.clients,
             config: result.config
           });
         },
@@ -165,6 +167,29 @@ class EnhancedTable extends React.Component {
     this.setState({ selected: newSelected });
   };
 
+  clientSearchMatch = (query, client) => {
+    let incomeConfig = this.state.config.income || {};
+    // search name, company, note_summary and income
+    let searchFields = [client.profile.name, client.profile.company, client.note_summary, incomeConfig[String(client.profile.income)]];
+    return searchFields.reduce((sum, value) => (
+        sum || (value && value.toLowerCase().includes(query.toLowerCase())) // make sure value isn't null; otherwise .includes breaks. 
+    ), false);
+  }
+
+  handleQueryChange = (event) => {
+    console.log(event.target.value);
+    if (event.target.value.length > 0) {
+      this.setState({
+        clients: this.state.unfilteredClients.filter(client => this.clientSearchMatch(event.target.value, client))
+      });
+    } else {
+      this.setState({
+        clients: this.state.unfilteredClients
+      });
+    }
+
+  }
+
   handleChangePage = (event, page) => {
     this.setState({ page });
   };
@@ -183,7 +208,7 @@ class EnhancedTable extends React.Component {
     return (
       <Paper className={classes.root}>
         <ClientDrawer isOpen={openClientDrawer} toggleClientDrawer={toggleClientDrawer} handlers={handlers} />
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar numSelected={selected.length} handleQueryChange={this.handleQueryChange} />
         <div className={classes.tableWrapper}>
           <Table className={classes.table} aria-labelledby="tableTitle">
             <EnhancedTableHead
@@ -226,7 +251,7 @@ class EnhancedTable extends React.Component {
                       <TableCell><Tag tags={n.profile.tags} config={config} handlers={handlers} /></TableCell>
                       <TableCell>{n.profile.company}</TableCell>
                       <TableCell>{config.income[n.profile.income]}</TableCell>
-                      <TableCell>{n.profile.note_summary}</TableCell>
+                      <TableCell>{n.note_summary}</TableCell>
                       <TableCell>{n.profile.updated}</TableCell>
                     </TableRow>
                   );

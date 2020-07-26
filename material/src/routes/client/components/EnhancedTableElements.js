@@ -2,15 +2,18 @@ import React from 'react';
 import MaterialIcon from 'components/MaterialIcon';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import { withStyles } from '@material-ui/core/styles';
 import TableHead from '@material-ui/core/TableHead';
 import Toolbar from '@material-ui/core/Toolbar';
+import TextField from '@material-ui/core/TextField';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Typography from '@material-ui/core/Typography';
 import Checkbox from '@material-ui/core/Checkbox';
 import IconButton from '@material-ui/core/IconButton';
+import SearchIcon from '@material-ui/icons/Search';
 import Tooltip from '@material-ui/core/Tooltip';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
@@ -108,7 +111,7 @@ const toolbarStyles = theme => ({
 });
 
 let EnhancedTableToolbar = props => {
-  const { numSelected, classes } = props;
+  const { numSelected, classes, handleQueryChange } = props;
 
   return (
     <Toolbar
@@ -143,13 +146,20 @@ let EnhancedTableToolbar = props => {
               </IconButton>
             </Tooltip>
             <Tooltip>
-              <div className="search-box">
-                <div className="search-box-inner">
-                  <div className="search-box-icon"><MaterialIcon icon="search" /></div>
-                  <input type="text" placeholder="search..." />
-                  <span className="input-bar"></span>
-                </div>
-              </div>
+              <TextField
+                type="search"
+                id="search-bar"
+                variant="outlined"
+                placeholder="搜尋客戶"
+                onChange={handleQueryChange}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon />
+                    </InputAdornment>
+                  ),
+                }}
+              />
             </Tooltip>
           </>
         )}
