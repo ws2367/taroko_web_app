@@ -72,7 +72,7 @@ class AppHeader extends React.Component {
 
           <div className="header-right">
             <div className="list-unstyled list-inline">
-              
+
               <a className="list-inline-item" href={DEMO.link}>
                 <div
                   className="avatar"
