@@ -7,6 +7,13 @@ let _auth = {
   userId: null,
 }
 
+export const requestHeaders = () => {
+  return {
+    'Content-Type': 'application/json',
+    "Authorization": "BEARER " + _auth.token
+  }
+}
+
 export const clearAuth = () => {
   Cookies.remove('userId');
   Cookies.remove('token');

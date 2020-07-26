@@ -9,6 +9,7 @@ import TagMultipleSelect from './TagMultipleSelect.js';
 import AddIcon from '@material-ui/icons/Add';
 import Button from '@material-ui/core/Button';
 import "../../feedback/routes/loaders/components/loaders/loaders.scss";
+import {requestHeaders} from 'auth/Auth';
 
 const Loader = () => (
   <div className="ball-grid-pulse">
@@ -24,11 +25,6 @@ const Loader = () => (
   </div>
 )
 
-
-const HEADER = {
-  'Content-Type': 'application/json',
-  "Authorization": "BEARER PS3eSI8zNXIa4m_bfc2P8Qh4XbQtgbX2bOz9qphHcKMinFmMtGpPkOtso1gKJDTvj0ZJmn9PzNEirnVPVcdlevTleq2mUuVPgsW0SnKR5GaQqrH-qmtwtTWkr77Mja0wzOATEevMPLuNWWh9e7aiP2Tqkw8Hc69BA41nB2ozrhg"
-};
 
 const styles = theme => ({
   container: {
@@ -94,7 +90,7 @@ class AbstractTextFields extends React.Component {
     fetch("https://api.cooby.co/clients/" + profile.id, {
       "method": "PUT",
       mode: 'cors',
-      headers: HEADER,
+      headers: requestHeaders(),
       body: JSON.stringify(profile)
     }).then(res => res.json())
       .then(
@@ -400,7 +396,7 @@ class Profile extends React.Component {
     fetch("https://api.cooby.co/clients/", {
       "method": "GET",
       mode: 'cors',
-      headers: HEADER
+      headers: requestHeaders()
     }).then(res => res.json())
       .then(
         (result) => {

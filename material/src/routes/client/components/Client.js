@@ -6,11 +6,7 @@ import SwipeableViews from 'react-swipeable-views';
 import Profile from './Profile';
 import NoteList from './NoteList';
 import TaskList from '../../task/components/TaskList';
-
-const HEADER = {
-  'Content-Type': 'application/json',
-  "Authorization": "BEARER PS3eSI8zNXIa4m_bfc2P8Qh4XbQtgbX2bOz9qphHcKMinFmMtGpPkOtso1gKJDTvj0ZJmn9PzNEirnVPVcdlevTleq2mUuVPgsW0SnKR5GaQqrH-qmtwtTWkr77Mja0wzOATEevMPLuNWWh9e7aiP2Tqkw8Hc69BA41nB2ozrhg"
-};
+import {requestHeaders} from 'auth/Auth';
 
 
 class Client extends React.Component {
@@ -41,7 +37,7 @@ class Client extends React.Component {
     fetch("https://api.cooby.co/clients/" + this.state.clientId + "/tasks/", {
       "method": "GET",
       mode: 'cors',
-      headers: HEADER
+      headers: requestHeaders()
     }).then(res => res.json())
       .then(
         (result) => {

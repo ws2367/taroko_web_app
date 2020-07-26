@@ -14,7 +14,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import {EnhancedTableHead, EnhancedTableToolbar} from './EnhancedTableElements';
 import ClientDrawer from './ClientDrawer';
 import Tag from './Tag';
-import AUTH from 'auth/Auth';
+import {requestHeaders} from 'auth/Auth';
 
 function getSorting(order, orderBy) {
   return order === 'desc'
@@ -40,20 +40,16 @@ const TEST_TOKEN = "PS3eSI8zNXIa4m_bfc2P8Qh4XbQtgbX2bOz9qphHcKMinFmMtGpPkOtso1gK
 
 class EnhancedTable extends React.Component {
 
-  headers = {
-    'Content-Type': 'application/json',
-    "Authorization": "BEARER " + (AUTH().token ? AUTH().token : TEST_TOKEN )
-  }
 
   constructor(props) {
     super(props);
-    console.log(this.headers);
+    console.log(requestHeaders());
     // handlers
     const createClient = (profile) => {
       fetch("https://api.cooby.co/clients/", {
         "method": "POST",
         mode: 'cors',
-        headers: this.headers,
+        headers: requestHeaders(),
         body: JSON.stringify(profile)
       }).then(res => res.json())
         .then(
@@ -108,7 +104,7 @@ class EnhancedTable extends React.Component {
     fetch("https://api.cooby.co/clients/", {
       "method": "GET",
       mode: 'cors',
-      headers: this.headers
+      headers: requestHeaders()
     }).then(res => res.json())
       .then(
         (result) => {

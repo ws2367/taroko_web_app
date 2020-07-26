@@ -11,6 +11,7 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import TaskDrawer from './TaskDrawer';
+import {requestHeaders} from 'auth/Auth';
 
 const styles = theme => ({
   root: {
@@ -53,7 +54,7 @@ class TaskList extends React.Component {
     fetch(this.collectionEndpoint, {
       "method": "GET",
       mode: 'cors',
-      headers: HEADER
+      headers: requestHeaders()
     }).then(res => res.json())
       .then(
         (result) => {
@@ -81,7 +82,7 @@ class TaskList extends React.Component {
     fetch(url, {
       "method": "DELETE",
       mode: 'cors',
-      headers: HEADER
+      headers: requestHeaders()
     }).then(res => {
       if (res.ok) {
         let tasks = this.state.tasks;
@@ -147,7 +148,7 @@ class TaskList extends React.Component {
     fetch(endpoint, {
       "method": ( this.state.mode == "edit" ? "put" : "post" ),
       mode: 'cors',
-      headers: HEADER,
+      headers: requestHeaders(),
       body: JSON.stringify(newTask)
     }).then(res => {
       if (res.ok && this.state.mode == "edit") {

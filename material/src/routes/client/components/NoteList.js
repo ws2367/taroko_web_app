@@ -14,6 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import NoteDrawer from './NoteDrawer';
+import {requestHeaders} from 'auth/Auth';
 
 
 const styles = theme => ({
@@ -40,10 +41,6 @@ const styles = theme => ({
   },
 });
 
-const HEADER = {
-  'Content-Type': 'application/json',
-  "Authorization": "BEARER PS3eSI8zNXIa4m_bfc2P8Qh4XbQtgbX2bOz9qphHcKMinFmMtGpPkOtso1gKJDTvj0ZJmn9PzNEirnVPVcdlevTleq2mUuVPgsW0SnKR5GaQqrH-qmtwtTWkr77Mja0wzOATEevMPLuNWWh9e7aiP2Tqkw8Hc69BA41nB2ozrhg"
-};
 
 
 class CreateNoteButton extends React.Component {
@@ -123,7 +120,7 @@ class NoteList extends React.Component {
     fetch(this.collectionEndpoint, {
       "method": "GET",
       mode: 'cors',
-      headers: HEADER
+      headers: requestHeaders()
     }).then(res => res.json())
       .then(
         (result) => {
@@ -165,7 +162,7 @@ class NoteList extends React.Component {
     fetch(url, {
       "method": "DELETE",
       mode: 'cors',
-      headers: HEADER,
+      headers: requestHeaders(),
       body: JSON.stringify({})
     }).then(res => {
       if (res.ok) {
@@ -194,7 +191,7 @@ class NoteList extends React.Component {
     fetch(endpoint, {
       method: ( this.state.mode === "edit" ? "put" : "post" ),
       mode: 'cors',
-      headers: HEADER,
+      headers: requestHeaders(),
       body: JSON.stringify(newNote)
     }).then(res => {
       if (res.ok && this.state.mode === "edit") {
