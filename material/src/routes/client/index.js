@@ -1,6 +1,5 @@
 import React from 'react';
 import QueueAnim from 'rc-queue-anim';
-import Button from '@material-ui/core/Button';
 
 import {
   BrowserRouter as Router,
@@ -12,7 +11,7 @@ import StatBoxes1 from './components/StatBoxes1';
   import StatBoxes2 from './components/StatBoxes2';
 import ClientList from './components/ClientList';
 import './components/styles.scss';
-
+import {getAuthfromCookie} from 'auth/Auth';
 
 
 
@@ -20,6 +19,13 @@ export default class ClientsPage extends React.Component {
   constructor() {
     super();
     this.state = {
+    }
+  }
+
+  componentDidMount() {
+    if (!getAuthfromCookie()) {
+      console.log('go login');
+      this.props.history.push('/user/login');
     }
   }
 

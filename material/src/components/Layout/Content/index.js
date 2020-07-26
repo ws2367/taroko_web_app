@@ -4,7 +4,11 @@ import { withRouter } from 'react-router'
 import loadable from 'react-loadable';
 import LoadingComponent from 'components/Loading';
 import { Layout } from 'antd';
+import { CookiesProvider } from 'react-cookie';
+
 const { Content } = Layout;
+
+
 
 let ClientList = loadable({
   loader: () => import('routes/client/'),
@@ -71,24 +75,17 @@ class AppContent extends React.Component {
     const { match } = this.props;
 
     return (
-      <Content id='app-content'>
-        <Route path={`${match.url}/client`} component={ClientList} />
-        <Route path={`${match.url}/task`} component={Task} />
+      <CookiesProvider>
+        <Content id='app-content'>
+          <Route path={`${match.url}/client`} component={ClientList} />
+          <Route path={`${match.url}/task`} component={Task} />
 
-        <Route path={`${match.url}/calendar`} component={Calendar} />
-        <Route path={`${match.url}/card`} component={Card}/>
-        <Route path={`${match.url}/chart`} component={Chart} />
-        <Route path={`${match.url}/ecommerce`} component={ECommerce} />
-        <Route path={`${match.url}/exception`} component={Exception} />
-        <Route path={`${match.url}/feedback`} component={Feedback}/>
-        <Route path={`${match.url}/form`} component={Form} />
-        <Route path={`${match.url}/foundation`} component={Foundation} />
-        <Route path={`${match.url}/layout`} component={AppLayout} />
-        <Route path={`${match.url}/page`} component={Page} />
-        <Route path={`${match.url}/table`} component={Table} />
-        <Route path={`${match.url}/ui`} component={UI} />
+          <Route path={`${match.url}/calendar`} component={Calendar} />
+          <Route path={`${match.url}/card`} component={Card}/>
+          <Route path={`${match.url}/chart`} component={Chart} />
 
-      </Content>
+        </Content>
+      </CookiesProvider>
     );
   }
 }

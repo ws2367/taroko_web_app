@@ -1,10 +1,10 @@
 import React from 'react';
 import QueueAnim from 'rc-queue-anim';
-import AUTH from 'auth/Auth';
+import AUTH, {clearAuth} from 'auth/Auth';
 
 const Page = () => {
   console.log("logging out");
-  AUTH({userId: null, token: null});
+  clearAuth();
 
   return (
     <QueueAnim type="bottom" className="ui-animate">

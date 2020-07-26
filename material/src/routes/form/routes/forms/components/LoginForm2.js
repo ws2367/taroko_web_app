@@ -13,7 +13,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import MaterialIcon from 'components/MaterialIcon';
 import { Icon } from 'antd';
-import AUTH from 'auth/Auth';
+import AUTH, {getAuthfromCookie} from 'auth/Auth';
 
 class NormalForm extends React.Component {
 
@@ -23,6 +23,13 @@ class NormalForm extends React.Component {
     remember: true,
     error: null
   }
+
+  componentDidMount() {
+    if (getAuthfromCookie()) {
+      this.props.history.push('/app/client');
+    }
+  }
+
 
   handleChange = (name) => (event) => {
     if (name === 'remember') {
@@ -52,8 +59,6 @@ class NormalForm extends React.Component {
             });
 
             AUTH({userId: res.id, token: res.token});
-            // AUTH.userId = res.id;
-            // AUTH.token = res.token;
 
             this.props.history.push('/app/client');
           },
@@ -70,36 +75,34 @@ class NormalForm extends React.Component {
   handleClose = event => {
     this.setState({
       password: "",
-      error: ""
+      error: null
     });
   }
 
 
   render() {
     const {email, password, remember, error} = this.state;
-    if (error != null) {
-      return (<Dialog
-        open={error != null}
-        onClose={this.handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">{"登入資訊錯誤"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            請檢查你的Email或密碼，其中一項錯誤。
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={this.handleClose} color="primary" autoFocus>
-            好
-          </Button>
-        </DialogActions>
-      </Dialog>)
-    } else {
       return (
 
         <section className="form-v1-container">
+        <Dialog
+          open={error != null}
+          onClose={this.handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">{"登入資訊錯誤"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              請檢查你的Email或密碼，其中一項錯誤。
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.handleClose} color="primary" autoFocus>
+              好
+            </Button>
+          </DialogActions>
+        </Dialog>
           <h2>登入{APPCONFIG.brand}</h2>
           <p className="lead">歡迎回來！請登入你的{APPCONFIG.brand}帳號</p>
           <form onSubmit={this.handleSubmit} className="form-v1">
@@ -158,7 +161,7 @@ class NormalForm extends React.Component {
           <p className="additional-info">忘記密碼？<a href={DEMO.forgotPassword}>由此重設密碼</a></p>
         </section>
       );
-    }
+    
   }
 }
 
