@@ -1,5 +1,5 @@
 const DEMO = {
-  prefix: 'Material ', // note: with space at end
+  prefix: 'Cooby ', // note: with space at end
   link: 'javascript:;', // javascript:;
   home: '#/app/dashboard',
   home2: '/app/dashboard',
@@ -31,17 +31,17 @@ DEMO.list = {
       icon: 'star',
       iconColor: 'bg-warning text-body-reverse',
       title: 'New collection saved',
-      datetime: '5 hour ago'      
+      datetime: '5 hour ago'
     }, {
       icon: 'add',
       iconColor: 'bg-success text-body-reverse',
       title: 'Task added successfully',
-      datetime: 'Yesterday'      
+      datetime: 'Yesterday'
     }, {
       icon: 'delete',
       iconColor: 'bg-danger text-body-reverse',
       title: 'Member Jason removed',
-      datetime: 'A week ago'      
+      datetime: 'A week ago'
     }
   ],
   messages: [
@@ -72,22 +72,22 @@ DEMO.list = {
       tag: 'Stopped',
       tagColor: 'red',
       title: 'New material design',
-      desc: 'Duis aute irure dolor in reprehenderit in'      
+      desc: 'Duis aute irure dolor in reprehenderit in'
     }, {
       tag: 'Waiting',
       tagColor: '',
       title: 'Better documentation',
-      desc: 'Cillum dolore eu fugiat nulla pariatur'      
+      desc: 'Cillum dolore eu fugiat nulla pariatur'
     }, {
       tag: 'A week past',
       tagColor: 'green',
       title: 'Start public beta test',
-      desc: 'Sunt in culpa qui officia deserunt mollit'      
+      desc: 'Sunt in culpa qui officia deserunt mollit'
     }
   ]
 }
 
-// used on Blog Cards, 
+// used on Blog Cards,
 DEMO.articles = [
   {
     img: 'assets/images-demo/assets/600_400-1.jpg',
@@ -134,7 +134,7 @@ DEMO.articles = [
   }
 ];
 
-// used on Profile Cards, 
+// used on Profile Cards,
 DEMO.profiles = [
   {
     avatar: 'assets/images-demo/avatars/1.jpg',
@@ -164,7 +164,7 @@ DEMO.profiles = [
   }
 ]
 
-// Used on Portfolio, 
+// Used on Portfolio,
 DEMO.projects = [
   {
     img: `assets/images-demo/assets/600_400-1.jpg`,

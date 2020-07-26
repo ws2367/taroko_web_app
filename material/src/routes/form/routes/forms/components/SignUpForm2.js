@@ -1,5 +1,6 @@
 import React from 'react';
 import DEMO from 'constants/demoData';
+import APPCONFIG from 'constants/appConfig';
 import { withRouter } from "react-router-dom";
 
 import Button from '@material-ui/core/Button';
@@ -7,7 +8,6 @@ import TextField from '@material-ui/core/TextField';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import MaterialIcon from 'components/MaterialIcon';
-import { Icon } from 'antd';
 
 class NormalForm extends React.Component {
   handleSubmit = (e) => {
@@ -18,11 +18,8 @@ class NormalForm extends React.Component {
   render() {
     return (
       <section className="form-v1-container">
-        <h2>Create an Account</h2>
-        <p className="lead col-lg-10 mx-lg-auto">Discovering and connecting with creative talent around the globe.</p>
-        <a href={DEMO.link} className="btn btn-block icon-btn-v2 bg-facebook mb-2"><Icon type="facebook" /><span className="btn-text">Sign up with Facebook</span></a>
-        <a href={DEMO.link} className="btn btn-block icon-btn-v2 bg-twitter"><Icon type="twitter" /><span className="btn-text">Sign up with Twitter</span></a>
-        <div className="divider divider-with-content my-4"><span className="divider-inner-content">OR</span></div>
+        <h2>建立新的{APPCONFIG.brand}帳號</h2>
+        <p className="lead col-lg-10 mx-lg-auto">輕鬆管理客戶關係</p>
         <form onSubmit={this.handleSubmit} className="form-v1">
           <div className="form-group">
             <div className="input-group-v1">
@@ -31,7 +28,7 @@ class NormalForm extends React.Component {
               </div>
               <TextField
                 id="signup2-name"
-                label="Name"
+                label="姓名"
                 fullWidth
                 autoComplete="off"
               />
@@ -57,7 +54,7 @@ class NormalForm extends React.Component {
               </div>
               <TextField
                 id="signup2-password"
-                label="Password"
+                label="密碼"
                 type="password"
                 fullWidth
                 autoComplete="off"
@@ -73,16 +70,16 @@ class NormalForm extends React.Component {
                   color="primary"
                 />
               }
-              label={<div>I have read the <a href={DEMO.link}>agreement</a></div>}
+              label={<div>我已讀過<a href={DEMO.link}>用戶條款</a></div>}
             />
           </div>
           <div className="form-group">
             <Button variant="contained" color="primary" type="submit" className="btn-cta btn-block">
-              Sign Up
+              註冊
             </Button>
           </div>
         </form>
-        <p className="additional-info">Already have an account? <a href={DEMO.login}>Login</a></p>
+        <p className="additional-info">已經有帳號了嗎?<a href={DEMO.login}>由此登入</a></p>
       </section>
     );
   }

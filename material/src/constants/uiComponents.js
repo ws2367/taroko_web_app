@@ -101,7 +101,7 @@ export const LAYOUTS = [
     menuName: 'Page (Fullscreen)',
     desc: 'A fullscreen page, without App header, footer or sidenav',
     path: '/app/layout/page-fullscreen'
-  }, 
+  },
   {
     name: 'Layout - Page with Tabs',
     menuName: 'Page (with Tabs)',
@@ -673,25 +673,35 @@ export const ECOMMERCE = [
 
 export const USER = [
   {
-    name: 'Login',
-    path: '/user/login'
+    name: '登出',
+    path: '/user/logout'
   }, {
-    name: 'Login v2',
-    path: '/user/login-v2'
-  }, {
-    name: 'Sign Up',
-    path: '/user/sign-up'
-  }, {
-    name: 'Sign Up v2',
-    path: '/user/sign-up-v2'
-  }, {
-    name: 'Forgot Password',
-    path: '/user/forgot-password'
-  }, {
-    name: 'Forgot Password v2',
-    path: '/user/forgot-password-v2'
+    name: '帳號資訊',
+    path: '/user/account'
   }
 ]
+
+// export const USER = [
+//   {
+//     name: 'Login',
+//     path: '/user/login'
+//   }, {
+//     name: 'Login v2',
+//     path: '/user/login-v2'
+//   }, {
+//     name: 'Sign Up',
+//     path: '/user/sign-up'
+//   }, {
+//     name: 'Sign Up v2',
+//     path: '/user/sign-up-v2'
+//   }, {
+//     name: 'Forgot Password',
+//     path: '/user/forgot-password'
+//   }, {
+//     name: 'Forgot Password v2',
+//     path: '/user/forgot-password-v2'
+//   }
+// ]
 
 export const EXCEPTION = [
   {
@@ -712,7 +722,7 @@ export const EXCEPTION = [
   }, {
     name: '500 Error (Fullscreen)',
     path: '/exception/500'
-  }, 
+  },
 ]
 
 
@@ -730,4 +740,3 @@ const COMPONENTS = [
 ];
 
 export default COMPONENTS;
-
