@@ -135,7 +135,7 @@ class AppMenu extends React.Component {
           <Button className="nav-item" href="#/app/client">
             <MaterialIcon icon="dashboard" />
             <span className="nav-text">客戶列表</span>
-            <span className="nav-badge nav-badge-icon badge-right ml-1"><MaterialIcon icon="stars" className="m-0 text-warning" /></span>
+            <span className="nav-badge nav-badge-icon badge-right ml-1"></span>
           </Button>
         </Menu.Item>
         <Menu.Item key="/app/task">
@@ -144,10 +144,10 @@ class AppMenu extends React.Component {
             <span className="nav-text">待辦事項</span>
           </Button>
         </Menu.Item>
-
+        <Menu.Divider />
         <SubMenu
           key="/app/chart"
-          title={<Button className="nav-item"><MaterialIcon icon="bar_chart" /><span className="nav-text">活動量</span></Button>}
+          title={<Button className="nav-item"><MaterialIcon icon="bar_chart" /><span className="nav-text">業績報告</span></Button>}
         >
           { this.getNavMenuItems(CHARTS) }
         </SubMenu>
@@ -157,17 +157,6 @@ class AppMenu extends React.Component {
             <span className="nav-text">行事曆</span>
           </Button>
         </Menu.Item>
-        <Menu.Divider />
-
-        <SubMenu
-          key="/user"
-          title={<Button className="nav-item"><MaterialIcon icon="person_outline" /><span className="nav-text">帳號</span></Button>}
-        >
-          { this.getNavMenuItems(USER) }
-        </SubMenu>
-
-
-
       </Menu>
     )
   }

@@ -67,11 +67,7 @@ class AppHeader extends React.Component {
               <a href={DEMO.link} className="list-inline-item d-md-none" onClick={this.onToggleOffCanvasMobileNav}>
                 <MaterialIcon icon="menu" className="list-icon" />
               </a>
-              <Tooltip placement="bottom" title="待辦事項">
-                <a href="#/app/task" className="list-inline-item d-none d-md-inline-block">
-                  <MaterialIcon icon="store" className="list-icon" />
-                </a>
-              </Tooltip>
+              
             </div>
           </div>
 
@@ -104,13 +100,12 @@ class AppHeader extends React.Component {
                   open={Boolean(anchorEl)}
                   onClose={this.handleClose}
                 >
-                  <MenuItem onClick={this.handleClose} className="d-block d-md-none"> <div>Signed in as <strong>{DEMO.user}</strong></div> </MenuItem>
+                  <MenuItem onClick={this.handleClose} className="d-block d-md-none"> <div>登入為<strong>{DEMO.user}</strong></div> </MenuItem>
                   <div className="divider divider-solid my-1 d-block d-md-none"></div>
-                  <MenuItem disabled> <a href={DEMO.link}><MaterialIcon icon="settings" />Settings</a> </MenuItem>
-                  <MenuItem onClick={this.handleClose}> <a href={DEMO.headerLink.about}><MaterialIcon icon="info" />About</a> </MenuItem>
-                  <MenuItem onClick={this.handleClose}> <a href={DEMO.headerLink.help}><MaterialIcon icon="help" />Need Help?</a> </MenuItem>
+                  <MenuItem onClick={this.handleClose}> <a href='#/user/profile'><MaterialIcon icon="account_circle" />帳號資訊</a> </MenuItem>
+                  <MenuItem onClick={this.handleClose}> <a href='#/help'><MaterialIcon icon="help" />Cooby支援</a> </MenuItem>
                   <div className="divider divider-solid my-1"></div>
-                  <MenuItem onClick={this.handleClose}> <a href={DEMO.headerLink.signOut}><MaterialIcon icon="forward" />Sign out</a> </MenuItem>
+                  <MenuItem onClick={this.handleClose}> <a href='#/user/logout'><MaterialIcon icon="forward" />登出</a> </MenuItem>
                 </Menu>
               </a>
             </div>
