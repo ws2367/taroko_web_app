@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import { withStyles } from '@material-ui/core/styles';
+import TagMultipleSelect from './TagMultipleSelect';
 import TableHead from '@material-ui/core/TableHead';
 import Toolbar from '@material-ui/core/Toolbar';
 import TextField from '@material-ui/core/TextField';
@@ -55,7 +56,7 @@ class EnhancedTableHead extends React.Component {
                 sortDirection={orderBy === column.id ? order : false}
               >
                 <Tooltip
-                  title="Sort"
+                  title="排序"
                   placement={column.numeric ? 'bottom-end' : 'bottom-start'}
                   enterDelay={300}
                 >
@@ -111,7 +112,7 @@ const toolbarStyles = theme => ({
 });
 
 let EnhancedTableToolbar = props => {
-  const { numSelected, classes, handleQueryChange } = props;
+  const { classes, numSelected, filters, config, handleDeleteClients, handleQueryChange, handleFilterChange } = props;
 
   return (
     <Toolbar
@@ -135,15 +136,18 @@ let EnhancedTableToolbar = props => {
         {numSelected > 0 ? (
           <Tooltip title="刪除">
             <IconButton aria-label="Delete">
-              <DeleteIcon />
+              <DeleteIcon onClick={handleDeleteClients}/>
             </IconButton>
           </Tooltip>
         ) : (
           <>
-            <Tooltip title="篩選列表">
-              <IconButton aria-label="Filter list">
-                <FilterListIcon />
-              </IconButton>
+            <Tooltip>
+              <TagMultipleSelect
+                id="tag_filter"
+                tags={filters}
+                tagOptions={config.tags || []}
+                onChange={handleFilterChange}
+              />
             </Tooltip>
             <Tooltip>
               <TextField

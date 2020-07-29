@@ -13,7 +13,7 @@ function Tag({tags, config}) {
   }
 
   return (
-      tags.map((tagId, i) => (
+      (tags || [] ).map((tagId, i) => (
         <Chip
           key={i}
           label={getTagName(tagId)}

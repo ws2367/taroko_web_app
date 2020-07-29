@@ -38,6 +38,7 @@ class ClientDrawer extends React.Component {
     this.props.handlers.createClient({
       name, email, birthday, company
     });
+    this.props.toggleClientDrawer(false)();
   };
 
   toggleDrawer = (isOpen) => () => {

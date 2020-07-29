@@ -72,7 +72,7 @@ class MultipleSelect extends React.Component {
     return (
       <div className={classes.root}>
         <FormControl className={classes.formControl}>
-          <InputLabel htmlFor="select-multiple-chip">{title}</InputLabel>
+          {title && <InputLabel htmlFor="select-multiple-chip">{title}</InputLabel>}
           <Select
             multiple
             value={tags}

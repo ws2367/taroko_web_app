@@ -16,10 +16,14 @@ import ClientDrawer from './ClientDrawer';
 import Tag from './Tag';
 import {requestHeaders} from 'auth/Auth';
 
+function getClientData(client, field) {
+  return (field in client) ? client[field] : (field in client.profile ? client.profile[field] : null);
+}
+
 function getSorting(order, orderBy) {
   return order === 'desc'
-    ? (a, b) => (b[orderBy] < a[orderBy] ? -1 : 1)
-    : (a, b) => (a[orderBy] < b[orderBy] ? -1 : 1);
+    ? (a, b) => ( getClientData(b, orderBy) < getClientData(a, orderBy) ? -1 : 1)
+    : (a, b) => ( getClientData(a, orderBy) < getClientData(b, orderBy) ? -1 : 1);
 }
 
 const styles = theme => ({
@@ -35,18 +39,16 @@ const styles = theme => ({
   },
 });
 
-const TEST_TOKEN = "PS3eSI8zNXIa4m_bfc2P8Qh4XbQtgbX2bOz9qphHcKMinFmMtGpPkOtso1gKJDTvj0ZJmn9PzNEirnVPVcdlevTleq2mUuVPgsW0SnKR5GaQqrH-qmtwtTWkr77Mja0wzOATEevMPLuNWWh9e7aiP2Tqkw8Hc69BA41nB2ozrhg";
 
-
-class EnhancedTable extends React.Component {
-
+class ClientList extends React.Component {
+  url = "https://api.cooby.co/clients/";
 
   constructor(props) {
     super(props);
     console.log(requestHeaders());
     // handlers
     const createClient = (profile) => {
-      fetch("https://api.cooby.co/clients/", {
+      fetch(this.url, {
         "method": "POST",
         mode: 'cors',
         headers: requestHeaders(),
@@ -86,6 +88,7 @@ class EnhancedTable extends React.Component {
       rowsPerPage: 10,
       error: null,
       isLoaded: false,
+      filters: [],
       // app data
       clients: [],
       filteredClients: [],
@@ -101,7 +104,7 @@ class EnhancedTable extends React.Component {
 
 
   componentDidMount() {
-    fetch("https://api.cooby.co/clients/", {
+    fetch(this.url, {
       "method": "GET",
       mode: 'cors',
       headers: requestHeaders()
@@ -145,7 +148,7 @@ class EnhancedTable extends React.Component {
 
   handleSelectAllClick = (event, checked) => {
     if (checked) {
-      this.setState(state => ({ selected: state.clients.map(n => n.id) }));
+      this.setState(state => ({ selected: state.clients.map(n => n.profile.id) }));
       return;
     }
     this.setState({ selected: [] });
@@ -181,6 +184,47 @@ class EnhancedTable extends React.Component {
     ), false);
   }
 
+  handleDeleteClients = (event) => {
+
+    var promises = [];
+    this.state.selected.forEach(clientId => {
+      let endpoint = this.url + clientId;
+      promises.push(new Promise((resolve, reject) => {
+        fetch(endpoint, {
+          method: "DELETE",
+          mode: 'cors',
+          headers: requestHeaders()
+        }).then(res => {
+          if (res.ok) {
+            resolve(clientId);
+          } else {
+            res.json().then(error => {
+              console.log(error);
+              reject(error);
+            });
+            }
+          });
+      }));
+    });
+
+    Promise.all(promises).then((clientIds) => {
+      let clients = this.state.clients;
+      let selected = this.state.selected;
+      clientIds.forEach((clientId) => {
+        let index = clients.findIndex(c => c.profile.id === clientId);
+        clients.splice(index, 1);
+
+        let selectedIndex = selected.indexOf(clientId);
+        selected.splice(selectedIndex, 1);
+      });
+
+      this.setState({
+        clients: clients,
+        selected: selected
+      });
+    });
+  }
+
   handleQueryChange = (event) => {
     console.log(event.target.value);
     if (event.target.value.length > 0) {
@@ -192,7 +236,27 @@ class EnhancedTable extends React.Component {
         clients: this.state.unfilteredClients
       });
     }
+  }
 
+  clientFilterMatch = (tagIds, client) => {
+    return tagIds.reduce((foundMatch, tagId) => {
+      return foundMatch || client.profile.tags.includes(tagId);
+    }, false);
+  }
+
+  handleFilterChange = (event) => {
+    let tagIds = event.target.value;
+    if (event.target.value.length > 0) {
+      let filteredClients = this.state.unfilteredClients.filter(client => this.clientFilterMatch(tagIds, client));
+      console.log(filteredClients);
+      this.setState({
+        clients: filteredClients
+      });
+    } else {
+      this.setState({
+        clients: this.state.unfilteredClients
+      });
+    }
   }
 
   handleChangePage = (event, page) => {
@@ -207,7 +271,7 @@ class EnhancedTable extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { clients, order, orderBy, selected, rowsPerPage, page, config, handlers, openClientDrawer } = this.state;
+    const { clients, order, orderBy, selected, rowsPerPage, page, filters, config, handlers, openClientDrawer } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, clients.length - page * rowsPerPage);
 
     return (
@@ -217,7 +281,13 @@ class EnhancedTable extends React.Component {
         <div className="divider" />
         <Paper className={classes.root}>
           <ClientDrawer isOpen={openClientDrawer} toggleClientDrawer={this.toggleClientDrawer} handlers={handlers} />
-          <EnhancedTableToolbar numSelected={selected.length} handleQueryChange={this.handleQueryChange} />
+          <EnhancedTableToolbar
+            numSelected={selected.length}
+            filters={filters}
+            config={config}
+            handleDeleteClients={this.handleDeleteClients}
+            handleQueryChange={this.handleQueryChange}
+            handleFilterChange={this.handleFilterChange} />
           <div className={classes.tableWrapper}>
             <Table className={classes.table} aria-labelledby="tableTitle">
               <EnhancedTableHead
@@ -294,12 +364,12 @@ class EnhancedTable extends React.Component {
   }
 }
 
-EnhancedTable.propTypes = {
+ClientList.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-const EnhancedTable1 = withStyles(styles)(EnhancedTable);
+const StyledClientList = withStyles(styles)(ClientList);
 
 
 
-export default withRouter(EnhancedTable1);
+export default withRouter(StyledClientList);
