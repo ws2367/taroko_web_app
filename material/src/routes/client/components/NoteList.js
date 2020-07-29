@@ -255,26 +255,25 @@ class NoteList extends React.Component {
               <List>
               {
                 notes.map((note, index) => (
-                    <ListItem>
+                    <ListItem key={note.id}>
                       <ListItemText
-                        key={note.id}
                         primary={<Grid container justify="space-between">
                           <Typography
-                            inline
+                            display='inline'
                             align='left'
                             color="textPrimary"
                             variant="body1">
                             {note.title}
                           </Typography>
                           <Typography
-                            inline
+                            display='inline'
                             align='right'
                             variant='body1'
                             color='textSecondary'>
                             {note.date}
                           </Typography>
                         </Grid>}
-                        secondary={<Typography noWrap='true'>{note.appendix}</Typography>}
+                        secondary={<Typography noWrap={true}>{note.appendix}</Typography>}
                       />
                       <ListItemSecondaryAction>
                         <IconButton edge="end" aria-label="view" onClick={this.handleNoteClick(note)}>

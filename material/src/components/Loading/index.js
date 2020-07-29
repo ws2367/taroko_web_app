@@ -3,6 +3,7 @@ import Loader from './Loader';
 
 function Loading(props) {
   if (props.error) {
+    console.log(props.error);
     return <div className="loader-container">Error! Please refresh the page</div>;
   } else if (props.pastDelay) {
     return <div className="loader-container"> <Loader /> </div>;

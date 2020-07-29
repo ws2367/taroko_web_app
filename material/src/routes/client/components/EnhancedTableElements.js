@@ -141,7 +141,7 @@ let EnhancedTableToolbar = props => {
           </Tooltip>
         ) : (
           <>
-            <Tooltip>
+            <Tooltip title="標籤過濾">
               <TagMultipleSelect
                 id="tag_filter"
                 tags={filters}

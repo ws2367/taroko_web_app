@@ -60,7 +60,7 @@ export default class CreatableMultiTagAutocomplete extends Component<*, State> {
   render() {
     const { isLoading, value } = this.state;
     // CreateableSelect assumes the structure of label and value
-    const options = this.props.options.map(option => ({label: option.name, value: option.id}) );
+    const options = this.convertTagsToOptions(this.props.options);
 
     return (
       <CreatableSelect

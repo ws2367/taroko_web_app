@@ -119,7 +119,7 @@ class TaskDrawer extends React.Component {
                 <RadioGroup row aria-label="priority" name="priority" value={String(priority)} onChange={this.handleChange('priority')}>
                   {
                     Object.keys(config.task_priority).map( (key) => (
-                      <FormControlLabel value={key} control={<Radio />} label={config.task_priority[key]} />
+                      <FormControlLabel key={key} value={key} control={<Radio />} label={config.task_priority[key]} />
                     ))
                   }
                 </RadioGroup>

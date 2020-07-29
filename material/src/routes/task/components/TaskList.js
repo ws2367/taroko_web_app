@@ -21,11 +21,6 @@ const styles = theme => ({
   },
 });
 
-const HEADER = {
-  'Content-Type': 'application/json',
-  "Authorization": "BEARER PS3eSI8zNXIa4m_bfc2P8Qh4XbQtgbX2bOz9qphHcKMinFmMtGpPkOtso1gKJDTvj0ZJmn9PzNEirnVPVcdlevTleq2mUuVPgsW0SnKR5GaQqrH-qmtwtTWkr77Mja0wzOATEevMPLuNWWh9e7aiP2Tqkw8Hc69BA41nB2ozrhg"
-};
-
 
 
 class TaskList extends React.Component {
@@ -213,6 +208,7 @@ class TaskList extends React.Component {
         {
           dates.map((date, index1) => (
             <List
+              key={index1}
               component="nav"
               subheader={<ListSubheader component="div">{date == null ? "未預定" : date}</ListSubheader>}
             >

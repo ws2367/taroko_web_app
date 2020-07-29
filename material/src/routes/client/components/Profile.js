@@ -7,6 +7,7 @@ import { DatePicker } from 'material-ui-pickers';
 import { Grid } from '@material-ui/core';
 import TagMultipleSelect from './TagMultipleSelect';
 import CreatableMultiTagAutocomplete from './CreatableMultiTagAutocomplete';
+import RelatedClientField from './RelatedClientField';
 import "../../feedback/routes/loaders/components/loaders/loaders.scss";
 import {requestHeaders} from 'auth/Auth';
 
@@ -245,7 +246,7 @@ class FinancialPlanTextFields extends React.Component {
           }}
           fullWidth
           id="financial_plan"
-          value={profile.financial_plan}
+          value={profile.financial_plan || undefined}
           onChange={handleChange('financial_plan')}
           className={classes.longTextField}
           margin="normal"
@@ -261,7 +262,7 @@ class FamilyInfoTextFields extends React.Component {
 
 
   render() {
-    const { classes, config, profile, clientOptions, handleChange, handleCreateTag, addToConfig } = this.props;
+    const { classes, config, profile, clientOptions, handleChange, createClient, addToConfig } = this.props;
 
     return (
       <form className={classes.container} noValidate autoComplete="off">
@@ -285,12 +286,14 @@ class FamilyInfoTextFields extends React.Component {
             </MenuItem>
           ))}
         </TextField>
-        <TagMultipleSelect
+        <RelatedClientField
           title='延伸親友名單'
-          tags={profile.related_clients}
-          tagOptions={clientOptions}
+          relatedClients={profile.related_clients}
+          relations={config.client_relation}
+          options={clientOptions}
+          createClient={createClient}
           onChange={handleChange('related_clients')}
-          label="related_clients"
+          id="related_clients"
         />
 
       </form>
@@ -314,7 +317,7 @@ class AppendixTextFields extends React.Component {
           id="appendix"
           label="備註"
           variant='outlined'
-          value={profile.appendix}
+          value={profile.appendix || undefined}
           className={classes.longTextField}
           margin="normal"
         />
@@ -378,6 +381,35 @@ class Profile extends React.Component {
         });
   };
 
+  createClient = (profile) => {
+    var oldClientOptions = this.state.clientOptions;
+    return new Promise((resolve, reject) => {
+      fetch("https://api.cooby.co/clients", {
+        method: "POST",
+        mode: 'cors',
+        headers: requestHeaders(),
+        body: JSON.stringify(profile)
+      }).then(res => res.json())
+        .then(
+          (result) => {
+            console.log(result);
+            let newClientOption = {
+              id: result.id,
+              name: profile.name
+            };
+            let clientOptions = oldClientOptions.concat();
+            this.setState({ clientOptions });
+            resolve(newClientOption);
+          },
+         (error) => {
+           console.log(error);
+           reject(error);
+        }
+       );
+    });
+
+  };
+
   handleCreateTag = (key) => (newTag) => {
       let url = "https://api.cooby.co/" + key + "/";
       return new Promise((resolve, reject) => {
@@ -417,6 +449,7 @@ class Profile extends React.Component {
       id: this.state.profile.id,
       [name]: value
     }
+    
     // one-way only. doesn't update React data
     fetch("https://api.cooby.co/clients/" + profile.id, {
       "method": "PUT",
@@ -516,7 +549,7 @@ class Profile extends React.Component {
                       clientOptions={clientOptions}
                       handleChange={this.handleChange}
                       addToConfig={this.addToConfig}
-                      handleCreateTag={this.handleCreateTag}
+                      createClient={this.createClient}
                     />
                   </div>
                 </div>
