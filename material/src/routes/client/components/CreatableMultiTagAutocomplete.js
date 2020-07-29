@@ -21,6 +21,14 @@ export default class CreatableMultiTagAutocomplete extends Component<*, State> {
     }) )
   };
 
+  convertTagsToOptions = (tags) => {
+    // restructure tags as options
+    return tags.map(tag => ({label: tag.name, value: tag.id}) );
+  }
+
+  convertOptionsToTags = (options) => {
+    return (options && options.map(o => o.value)) || [];
+  }
 
   handleChange = (newValue: any, actionMeta: any) => {
     console.group('Value Changed');
@@ -28,7 +36,7 @@ export default class CreatableMultiTagAutocomplete extends Component<*, State> {
     console.log(`action: ${actionMeta.action}`);
     console.groupEnd();
     this.setState({ value: newValue });
-    this.props.handleChange({target: {value: (newValue && newValue.map(o => o.value)) || []}});
+    this.props.handleChange( {target: {value: this.convertOptionsToTags(newValue)} });
   };
 
   handleCreate = (inputValue: any) => {
@@ -36,7 +44,17 @@ export default class CreatableMultiTagAutocomplete extends Component<*, State> {
     console.group('Creating option');
     console.log(inputValue);
     console.groupEnd();
-    this.props.handleCreateTag(inputValue);
+    this.props.handleCreateTag(inputValue).then(
+      (newTag) => {
+        console.log(newTag);
+        this.setState({ isLoading: false });
+        // fake it like internal input
+        var newValue = this.state.value;
+        this.handleChange(newValue.concat(this.convertTagsToOptions([newTag])), {action: 'create-option'});
+      },
+      (error) => {}
+    )
+
   };
 
   render() {

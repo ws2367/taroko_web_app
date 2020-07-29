@@ -16,8 +16,6 @@ class Client extends React.Component {
     let clientId = this.props.location.pathname.replace('/app/client/', '');
 
     this.state = {
-      notes: [],
-      todos: [],
       clientId: clientId,
       name: null,
       error: null,
@@ -67,7 +65,7 @@ class Client extends React.Component {
 
   render() {
 
-    const { clientId, name, tabIndex, isLoaded, handlers, notes } = this.state;
+    const { clientId, name, tabIndex, isLoaded, handlers } = this.state;
 
 
     const NoteTab = () => (
