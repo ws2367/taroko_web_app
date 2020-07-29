@@ -121,7 +121,14 @@ export default class RelatedClientField extends Component<*, State> {
     this.props.onChange({target: {value: this.convertValueToTags(newValue)} });
   }
 
-  handleCloseDialog = event => {this.setState({openDialog: false, newClientName: null});};
+  handleCloseDialog = event => {
+    this.setState({
+      openDialog: false,
+      isLoading: false,
+      newClientName: null,
+      newRelation: false});
+  };
+
   handleClickDialog = relationId => {
     // create client if needed
     if (this.state.newClientName && this.state.newClientName.length > 0) {
@@ -136,7 +143,7 @@ export default class RelatedClientField extends Component<*, State> {
           this.updateRelation({
             relation: relationId,
             value: newClientOption.id,
-            label: this.getOptionLabel(newClientOption.id, relationId)
+            label: this.state.newClientName + "(" + this.props.relations[relationId] + ")"
           });
         }
       );
@@ -165,7 +172,7 @@ export default class RelatedClientField extends Component<*, State> {
         <RelationDialog
           open={openDialog}
           relations={relations}
-          handleClose={this.handleClickDialog}
+          handleClose={this.handleCloseDialog}
           handleClick={this.handleClickDialog}
         />
         <CreatableSelect

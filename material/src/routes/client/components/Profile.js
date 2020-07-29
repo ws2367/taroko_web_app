@@ -384,7 +384,7 @@ class Profile extends React.Component {
   createClient = (profile) => {
     var oldClientOptions = this.state.clientOptions;
     return new Promise((resolve, reject) => {
-      fetch("https://api.cooby.co/clients", {
+      fetch("https://api.cooby.co/clients/", {
         method: "POST",
         mode: 'cors',
         headers: requestHeaders(),
@@ -449,7 +449,7 @@ class Profile extends React.Component {
       id: this.state.profile.id,
       [name]: value
     }
-    
+
     // one-way only. doesn't update React data
     fetch("https://api.cooby.co/clients/" + profile.id, {
       "method": "PUT",
