@@ -6,6 +6,7 @@ import { Layout, Tooltip, Popover } from 'antd';
 import Badge from '@material-ui/core/Badge';
 import Logo from 'components/Logo';
 import { toggleCollapsedNav, toggleOffCanvasMobileNav } from 'actions/settingsActions';
+import SettingsIcon from '@material-ui/icons/Settings';
 import Notifications from 'routes/layout/routes/header/components/Notifications';
 import MaterialIcon from 'components/MaterialIcon';
 import Menu from '@material-ui/core/Menu';
@@ -80,8 +81,7 @@ class AppHeader extends React.Component {
                   aria-haspopup="true"
                   onClick={this.handleClick}
                 >
-                  <img src="assets/images-demo/g1-sm.jpg" alt="avatar" className="avatar-img" />
-                  <span className="avatar-text d-none d-md-inline">{DEMO.user}</span>
+                  <SettingsIcon />
                 </div>
                 <Menu
                   id="app-header-menu"
