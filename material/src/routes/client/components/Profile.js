@@ -5,7 +5,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 import { DatePicker } from 'material-ui-pickers';
 import { Grid } from '@material-ui/core';
-import TagMultipleSelect from './TagMultipleSelect.js';
+import TagMultipleSelect from './TagMultipleSelect';
+import CreatableMultiTagAutocomplete from './CreatableMultiTagAutocomplete';
 import AddIcon from '@material-ui/icons/Add';
 import Button from '@material-ui/core/Button';
 import "../../feedback/routes/loaders/components/loaders/loaders.scss";
@@ -104,9 +105,28 @@ class AbstractTextFields extends React.Component {
 
 class BasicInfoTextFields extends AbstractTextFields {
 
+  handleCreateTag = (key) => (newTag) => {
+      let url = "https://api.cooby.co/" + key + "/";
+      fetch(url, {
+        method: "POST",
+        mode: 'cors',
+        headers: requestHeaders(),
+        body: JSON.stringify({name: newTag})
+      }).then(res => res.json())
+        .then(
+          (result) => {
+            this.props.addToConfig(key, {id: result.id, name: newTag});
+            // var tags = this.state.profile.tags;
+            // tags.push(result.id);
+            // this.handleChange('tags')({target: {value: tags}});
+          },
+          (error) => {
+            this.setState({error});
+          });
+  }
 
   render() {
-    const { profile } = this.state;
+    const { profile, open } = this.state;
     const { classes, config } = this.props;
 
     return (
@@ -123,6 +143,8 @@ class BasicInfoTextFields extends AbstractTextFields {
         />
         <div className="picker">
           <TextField
+            InputLabelProps={{ shrink: true }}
+            placeholder="請選生日"
             type='date'
             label="生日"
             value={profile.birthday}
@@ -130,18 +152,17 @@ class BasicInfoTextFields extends AbstractTextFields {
             margin="normal"
           />
         </div>
-        <TagMultipleSelect
-          title='標籤'
-          tags={profile.tags}
-          tagOptions={config.tags}
-          onChange={this.handleChange('tags')}
-          label="Tag"
-        />
 
-        <Button variant="contained" color="secondary">
-          <AddIcon className={classes.leftIcon} />
-          新增標籤
-        </Button><div className="divider" />
+        <CreatableMultiTagAutocomplete
+        title='標籤'
+        formatCreateLabel={(inputValue) => ("新增標籤：" + inputValue)}
+        tags={profile.tags}
+        options={config.tags}
+        handleCreateTag={this.handleCreateTag('tags')}
+        handleChange={this.handleChange('tags')}
+        label="Tag"
+        />
+        <div className="divider" />
         <TextField
           id="email"
           label="Email"
@@ -217,6 +238,16 @@ class BasicInfoTextFields extends AbstractTextFields {
             </MenuItem>
           ))}
         </TextField>
+        <CreatableMultiTagAutocomplete
+          id="interests"
+          title='休閒興趣'
+          formatCreateLabel={(inputValue) => ("新增休閒興趣：" + inputValue)}
+          tags={profile.interests}
+          options={config.interests}
+          handleCreateTag={this.handleCreateTag('interests')}
+          handleChange={this.handleChange('interests')}
+          label="Interests"
+        />
       </form>
       </Fragment>
     );
@@ -338,6 +369,7 @@ class FamilyInfoTextFields extends AbstractTextFields {
           onChange={this.handleChange('related_clients')}
           label="related_clients"
         />
+
       </form>
     );
   }
@@ -392,6 +424,12 @@ class Profile extends React.Component {
     this.fetchClient(this.props.clientId);
   }
 
+  addToConfig = (key, item) => {
+    let config = this.state.config;
+    config[key].push(item);
+    this.setState({config: config});
+  }
+
   fetchClient = (clientId) => {
     fetch("https://api.cooby.co/clients/", {
       "method": "GET",
@@ -433,7 +471,7 @@ class Profile extends React.Component {
                 <div className="box-header">基本資料</div>
                 <div className="box-divider"></div>
                 <div className="box-body">
-                  <StyledBasicInfoTextFields profile={profile} config={config} handlers={handlers} />
+                  <StyledBasicInfoTextFields profile={profile} config={config} addToConfig={this.addToConfig} handlers={handlers} />
                 </div>
               </div>
 
@@ -441,7 +479,7 @@ class Profile extends React.Component {
                 <div className="box-header">保險狀況</div>
                 <div className="box-divider"></div>
                 <div className="box-body">
-                  <StyledInsuranceInfoTextFields profile={profile} config={config} handlers={handlers} />
+                  <StyledInsuranceInfoTextFields profile={profile} config={config} addToConfig={this.addToConfig} handlers={handlers} />
                 </div>
               </div>
             </div>

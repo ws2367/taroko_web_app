@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Input from '@material-ui/core/Input';
+import TextField from '@material-ui/core/TextField';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
@@ -95,6 +96,7 @@ class MultipleSelect extends React.Component {
                       : theme.typography.fontWeightMedium,
                 }}
               >
+                <Checkbox checked={tags.indexOf(tag.id) > -1} />
                 {tag.name}
               </MenuItem>
             ))}
