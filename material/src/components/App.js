@@ -28,6 +28,10 @@ let Account = loadable({
   loader: () => import('routes/user/'),
   loading: LoadingComponent
 })
+let Onboarding = loadable({
+  loader: () => import('routes/onboarding/'),
+  loading: LoadingComponent
+})
 
 
 class App extends React.Component {
@@ -60,6 +64,7 @@ class App extends React.Component {
           <Route path={`${match.url}app`} component={AppLayout} />
           <Route path={`${match.url}exception`} component={Exception} />
           <Route path={`${match.url}user`} component={Account} />
+          <Route path={`${match.url}onboarding`} component={Onboarding} />
         </div>
       </MuiThemeProvider>
     );

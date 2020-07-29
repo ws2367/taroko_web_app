@@ -50,16 +50,6 @@ const styles = theme => ({
 
 
 class BasicInfoTextFields extends React.Component {
-  handleDateChange = date => {
-    console.log(date);
-    this.props.handleChange('birthday')({
-      event: {
-        target: {
-          value: date
-        }
-      }
-    });
-  };
 
   render() {
     const { classes, config, profile, handleChange, handleCreateTag, addToConfig } = this.props;
@@ -83,7 +73,7 @@ class BasicInfoTextFields extends React.Component {
               type='date'
               label="生日"
               value={profile.birthday}
-              onChange={this.handleDateChange}
+              onChange={handleChange('birthday')}
               margin="normal"
             />
           </div>
@@ -353,7 +343,6 @@ class Profile extends React.Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    console.log(this.props.clientId !== nextProps.clientId || nextState !== this.state);
     return this.props.clientId !== nextProps.clientId || nextState !== this.state;
   }
 
@@ -378,7 +367,7 @@ class Profile extends React.Component {
             clientOptions: result.clients.map(c => ({id: c.profile.id, name: c.profile.name} )),
             config: result.config
           });
-          
+
           this.props.handlers.updateClientName(client.profile.name);
         },
         (error) => {
@@ -400,7 +389,6 @@ class Profile extends React.Component {
         }).then(res => res.json())
           .then(
             (result) => {
-              console.log(result);
               var newTagObject = {id: result.id, name: newTag};
               this.addToConfig(key, newTagObject);
               resolve(newTagObject);
@@ -414,7 +402,6 @@ class Profile extends React.Component {
 
   handleChange = name => event => {
     var value = event.target.value;
-    console.log(event.target);
     this.setState( state => {
       var p = state.profile;
 
@@ -448,7 +435,6 @@ class Profile extends React.Component {
   addToConfig = (key, item) => {
     let config = this.state.config;
     config[key].push(item);
-    console.log(config[key]);
     this.setState({config: config});
   }
 
