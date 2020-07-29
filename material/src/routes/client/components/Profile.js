@@ -353,6 +353,7 @@ class Profile extends React.Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
+    console.log(this.props.clientId !== nextProps.clientId || nextState !== this.state);
     return this.props.clientId !== nextProps.clientId || nextState !== this.state;
   }
 
@@ -377,9 +378,8 @@ class Profile extends React.Component {
             clientOptions: result.clients.map(c => ({id: c.profile.id, name: c.profile.name} )),
             config: result.config
           });
-
-          //TODO: figure out how to update name without refreshing all components
-          // this.props.handlers.updateClientName(client.profile.name);
+          
+          this.props.handlers.updateClientName(client.profile.name);
         },
         (error) => {
           this.setState({

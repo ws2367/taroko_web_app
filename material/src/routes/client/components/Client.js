@@ -84,7 +84,7 @@ class Client extends React.Component {
       </div>
     )
 
-    const ClientWithTabs = () => (
+    return (
       <section className="page-with-tabs">
         <QueueAnim type="bottom" className="ui-animate">
           <div key="1">
@@ -111,10 +111,6 @@ class Client extends React.Component {
           </div>
         </QueueAnim>
       </section>
-    );
-
-    return(
-      <ClientWithTabs />
     );
   }
 }
