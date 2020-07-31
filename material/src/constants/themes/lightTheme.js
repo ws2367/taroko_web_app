@@ -7,11 +7,11 @@ const theme = createMuiTheme({
     primary: {
       // light: will be calculated from palette.primary.main,
       main: '#5124EF',
-      dark: "#190078", // Cooby color: same as chip text 
+      dark: "#5124EF", // Cooby color: same as chip text
       contrastText: '#fff',
     },
     secondary: {
-      main: "#7F22FD",
+      main: "#5124EF",
       // dark: will be calculated from palette.secondary.main,
       contrastText: '#fff',
     },

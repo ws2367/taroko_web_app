@@ -327,7 +327,8 @@ class ClientList extends React.Component {
                             }
                           }} className="link-cta link-animated-hover link-hover-v1 text-primary">{n.profile.name}
                         </Link></TableCell>
-                        <TableCell><Tag tags={n.profile.tags} config={config} handlers={handlers} /></TableCell>
+                        <TableCell>
+                          <Tag tags={n.profile.tags} config={config} handlers={handlers} /></TableCell>
                         <TableCell>{n.profile.company}</TableCell>
                         <TableCell>{config.income[n.profile.income]}</TableCell>
                         <TableCell>{n.note_summary}</TableCell>

@@ -32,7 +32,7 @@ class AppSidenav extends React.Component {
             'bg-danger': ['16', '26', '36'].indexOf(colorOption) >= 0 })}
         >
           <Logo />
-          <a href="#/" className="brand">{APPCONFIG.brand}</a>
+          <a href="#/" className="brand"><img src="assets/branding/cooby-brand-light.png" /></a>
         </section>
 
         <div className="sidenav-content" ref="sidenavContent">

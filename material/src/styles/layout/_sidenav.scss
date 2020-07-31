@@ -38,6 +38,8 @@
   .brand {
     font-size: 20px;
     margin-left: 13px;
+      > img {
+        height: 55%;
+      }
   }
 }
-

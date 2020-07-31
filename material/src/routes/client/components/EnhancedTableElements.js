@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import { withStyles } from '@material-ui/core/styles';
-import TagMultipleSelect from './TagMultipleSelect';
+import ClientListFilters from './ClientListFilters';
 import TableHead from '@material-ui/core/TableHead';
 import Toolbar from '@material-ui/core/Toolbar';
 import TextField from '@material-ui/core/TextField';
@@ -17,7 +17,6 @@ import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from '@material-ui/icons/Search';
 import Tooltip from '@material-ui/core/Tooltip';
 import DeleteIcon from '@material-ui/icons/Delete';
-import FilterListIcon from '@material-ui/icons/FilterList';
 import { lighten } from '@material-ui/core/styles/colorManipulator';
 
 const columnData = [
@@ -105,10 +104,17 @@ const toolbarStyles = theme => ({
   },
   actions: {
     color: theme.palette.text.secondary,
+    width: 500
   },
   title: {
     flex: '0 0 auto',
   },
+  filterField: {
+    width: 150
+  },
+  searchField: {
+    width: 150
+  }
 });
 
 let EnhancedTableToolbar = props => {
@@ -141,30 +147,28 @@ let EnhancedTableToolbar = props => {
           </Tooltip>
         ) : (
           <>
-            <Tooltip title="標籤過濾">
-              <TagMultipleSelect
-                id="tag_filter"
-                tags={filters}
-                tagOptions={config.tags || []}
-                onChange={handleFilterChange}
-              />
-            </Tooltip>
-            <Tooltip>
-              <TextField
-                type="search"
-                id="search-bar"
-                variant="outlined"
-                placeholder="搜尋客戶"
-                onChange={handleQueryChange}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SearchIcon />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </Tooltip>
+            <ClientListFilters
+              className={classes.filterField}
+              id="tag_filter"
+              tags={filters}
+              tagOptions={config.tags || []}
+              onChange={handleFilterChange}
+            />
+            <TextField
+              type="search"
+              className={classes.searchField}
+              id="search-bar"
+              variant="outlined"
+              placeholder="搜尋客戶"
+              onChange={handleQueryChange}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              }}
+            />
           </>
         )}
       </div>

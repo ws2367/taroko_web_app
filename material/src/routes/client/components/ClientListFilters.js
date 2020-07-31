@@ -43,7 +43,7 @@ const MenuProps = {
   },
 };
 
-class MultipleSelect extends React.Component {
+class ClientListFilters extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -118,11 +118,11 @@ class MultipleSelect extends React.Component {
 }
 
 
-MultipleSelect.propTypes = {
+ClientListFilters.propTypes = {
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
 };
 
-const TagMultipleSelect = withStyles(styles, { withTheme: true })(MultipleSelect);
+const ClientListFilters1 = withStyles(styles, { withTheme: true })(ClientListFilters);
 
-export default TagMultipleSelect;
+export default ClientListFilters1;

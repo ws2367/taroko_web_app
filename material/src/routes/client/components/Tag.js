@@ -1,7 +1,14 @@
 import React from 'react';
 import Chip from '@material-ui/core/Chip';
+import { withStyles } from '@material-ui/core/styles';
 
-function Tag({tags, config}) {
+const styles = (theme) => ({
+  chip: {
+    margin: theme.spacing.unit,
+  }
+});
+
+function Tag({tags, config, classes}) {
 
   const handleClick = () => {
 
@@ -15,6 +22,7 @@ function Tag({tags, config}) {
   return (
       (tags || [] ).map((tagId, i) => (
         <Chip
+          className={classes.chip}
           key={i}
           label={getTagName(tagId)}
           className="table-chip bg-info px-2"
@@ -24,4 +32,4 @@ function Tag({tags, config}) {
   );
 }
 
-export default Tag;
+export default withStyles(styles)(Tag);
