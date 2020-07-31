@@ -1,5 +1,6 @@
 import React from 'react';
 import classnames from 'classnames';
+import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import { Layout } from 'antd';
 import Logo from 'components/Logo';
@@ -10,9 +11,15 @@ import MaterialIcon from 'components/MaterialIcon';
 import AppMenu from './Menu';
 const { Sider } = Layout;
 
+const styles = theme => ({
+  logo: {
+    height: '55%'
+  }
+});
+
 class AppSidenav extends React.Component {
   render() {
-    const { collapsedNav, offCanvasNav, sidenavWidth, headerShadow, sidenavShadow, colorOption } = this.props;
+    const { classes, collapsedNav, offCanvasNav, sidenavWidth, headerShadow, sidenavShadow, colorOption } = this.props;
     const collapsedWidth = offCanvasNav ? 0 : 80;
 
     return (
@@ -40,7 +47,7 @@ class AppSidenav extends React.Component {
             'bg-danger': ['16', '26', '36'].indexOf(colorOption) >= 0 })}
         >
           <Logo />
-          <a href="#/" className="brand">{APPCONFIG.brand}</a>
+          <a href="#/" className="brand"><img src="assets/branding/cooby-brand-light.png" className={classes.logo}/></a>
         </section>
 
         <div className="sidenav-content" ref="sidenavContent">
@@ -81,4 +88,4 @@ const mapDispatchToProps = (dispatch) => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(AppSidenav);
+)( withStyles(styles)(AppSidenav) );
