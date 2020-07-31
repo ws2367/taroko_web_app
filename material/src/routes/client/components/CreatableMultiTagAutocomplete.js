@@ -64,6 +64,7 @@ export default class CreatableMultiTagAutocomplete extends Component<*, State> {
 
     return (
       <CreatableSelect
+        title={this.props.title}
         variant='standard'
         isClearable
         isMulti

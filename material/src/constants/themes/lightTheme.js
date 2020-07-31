@@ -6,12 +6,12 @@ const theme = createMuiTheme({
     type: 'light',
     primary: {
       // light: will be calculated from palette.primary.main,
-      main: cyan[500],
-      dark: cyan[700],
+      main: '#5124EF',
+      dark: "#190078", // Cooby color: same as chip text 
       contrastText: '#fff',
     },
     secondary: {
-      main: green[400],
+      main: "#7F22FD",
       // dark: will be calculated from palette.secondary.main,
       contrastText: '#fff',
     },

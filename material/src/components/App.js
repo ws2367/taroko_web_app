@@ -18,7 +18,7 @@ import 'styles/bootstrap/bootstrap.scss'
 import "styles/layout.scss"
 import "styles/theme.scss"
 import "styles/ui.scss"
-
+import "styles/custom.scss"
 
 let Exception = loadable({
   loader: () => import('routes/exception/'),

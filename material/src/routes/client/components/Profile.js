@@ -34,7 +34,7 @@ const styles = theme => ({
   textField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
-    width: '40%',
+    width: '90%',
   },
   longTextField: {
     marginLeft: theme.spacing.unit,
@@ -57,18 +57,22 @@ class BasicInfoTextFields extends React.Component {
 
     return (
       <Fragment>
-        <form className={classes.container} noValidate autoComplete="off">
-          <TextField
-            required
-            id="name"
-            label="姓名"
-            className={classes.textField}
-            value={profile.name}
-            onChange={handleChange('name')}
-            margin="normal"
-          />
+          <Grid container spacing={2}>
+            <Grid item xs={6}>
+              <TextField
+                required
+                id="name"
+                label="姓名"
+                className={classes.textField}
+                value={profile.name}
+                onChange={handleChange('name')}
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={6}>
           <div className="picker">
             <TextField
+              className={classes.textField}
               InputLabelProps={{ shrink: true }}
               placeholder="請選生日"
               type='date'
@@ -78,7 +82,10 @@ class BasicInfoTextFields extends React.Component {
               margin="normal"
             />
           </div>
+          </Grid>
+          </Grid>
           <CreatableMultiTagAutocomplete
+          className={classes.textField}
           title='標籤'
           formatCreateLabel={(inputValue) => ("新增標籤：" + inputValue)}
           tags={profile.tags}
@@ -165,6 +172,7 @@ class BasicInfoTextFields extends React.Component {
             ))}
           </TextField>
           <CreatableMultiTagAutocomplete
+            className={classes.textField}
             id="interests"
             title='休閒興趣'
             formatCreateLabel={(inputValue) => ("新增休閒興趣：" + inputValue)}
@@ -174,7 +182,6 @@ class BasicInfoTextFields extends React.Component {
             handleChange={handleChange('interests')}
             label="Interests"
           />
-        </form>
       </Fragment>
     );
   }
@@ -480,9 +487,11 @@ class Profile extends React.Component {
     if (!isLoaded) {
        return (
          <Grid container justify="center">
-           <div className='m-10'>
-             <Loader />
-           </div>
+          <Grid item xs={3}>
+            <div className='m-10'>
+              <Loader />
+            </div>
+          </Grid>
          </Grid>
        )
      } else {

@@ -1,0 +1,16 @@
+/* The following block can be included in a custom.scss */
+
+$primary:       #5124EF !default;
+$success:       #5124EF !default;
+$info:          rgba(81, 36, 239, 0.1) !default;
+
+/* make the customizations */
+$theme-colors: (
+  "primary":    #5124EF, // cooby purple
+  "secondary":  #7F22FD, // cooby light purple
+  "success":    #5124EF,
+  "info":       rgba(81, 36, 239, 0.1)
+);
+
+/* import bootstrap to set changes */
+@import "~bootstrap/scss/bootstrap";
