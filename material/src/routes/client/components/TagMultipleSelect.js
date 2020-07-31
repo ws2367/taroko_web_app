@@ -11,9 +11,6 @@ import Select from '@material-ui/core/Select';
 import Checkbox from '@material-ui/core/Checkbox';
 import Chip from '@material-ui/core/Chip';
 
-import InputAdornment from '@material-ui/core/InputAdornment';
-import FilterListIcon from '@material-ui/icons/FilterList';
-
 const styles = theme => ({
   root: {
     display: 'flex',
@@ -21,7 +18,8 @@ const styles = theme => ({
   },
   formControl: {
     margin: theme.spacing.unit,
-    width: 150
+    minWidth: 400,
+    maxWidth: '80%',
   },
   chips: {
     display: 'flex',
@@ -52,7 +50,7 @@ class MultipleSelect extends React.Component {
   }
 
   getTagName = id => {
-    return this.props.tagOptions.find(tag => tag.id === id).name;
+    return this.props.tagOptions.find(tag => tag.id == id).name;
   }
 
   handleDelete = tagId => () => {
@@ -79,20 +77,12 @@ class MultipleSelect extends React.Component {
             multiple
             value={tags}
             onChange={this.handleChange}
-            IconComponent={() => (<span></span>)}
-            input={
-                <Input
-                  id="select-multiple-chip"
-                  startAdornment={
-                    <InputAdornment position="start">
-                      <FilterListIcon />
-                    </InputAdornment>}
-                />}
+            input={<Input id="select-multiple-chip" />}
             renderValue={selected => (
-                    <div className={classes.chips}>
-                      {selected.map(tagId => <Chip key={tagId} label={this.getTagName(tagId)} className={classes.chip} onDelete={this.handleDelete(tagId)} />)}
-                    </div>
-                  )}
+              <div className={classes.chips}>
+                {selected.map(tagId => <Chip key={tagId} label={this.getTagName(tagId)} className={classes.chip} onDelete={this.handleDelete(tagId)} />)}
+              </div>
+            )}
             MenuProps={MenuProps}
           >
             {tagOptions.map(tag => (
