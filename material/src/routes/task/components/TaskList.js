@@ -12,7 +12,10 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import TaskDrawer from './TaskDrawer';
+import Chip from '@material-ui/core/Chip';
 import {requestHeaders} from 'auth/Auth';
+
+
 
 const styles = theme => ({
   root: {
@@ -22,8 +25,49 @@ const styles = theme => ({
   },
   button: {
     marginBottom: theme.spacing.unit * 2
+  },
+  chip: {
+    marginLeft: theme.spacing.unit / 4,
+    marginRight: theme.spacing.unit / 4,
+    backgroundColor: theme.palette.warning
   }
 });
+
+const UnstyledTaskListItem = ({classes, task, checked, handleTaskClick, handleComplete}) => (
+  <ListItem
+    key={task.id}
+    dense
+    divider
+    button
+    onClick={handleTaskClick(task)}
+    className={classes.listItem}
+  >
+    <ListItemIcon>
+    <Checkbox
+      checked={checked.indexOf(task.id) !== -1}
+      tabIndex={-1}
+      disableRipple
+      onClick={handleComplete(task.id)}
+    />
+    </ListItemIcon>
+    <ListItemText primary={
+      (<>
+        {task.content}
+        {task.priority === 1 && <Chip
+          className={classes.chip}
+          label="重要"
+        />}
+      </>)}
+    />
+    <ListItemSecondaryAction>
+      <IconButton aria-label="Edit" onClick={handleTaskClick(task)}>
+        <EditIcon />
+      </IconButton>
+    </ListItemSecondaryAction>
+  </ListItem>
+);
+
+const TaskListItem = withStyles(styles)(UnstyledTaskListItem);
 
 
 
@@ -147,7 +191,6 @@ class TaskList extends React.Component {
   }
 
   handleTaskClick = (task) => (event) => {
-    console.log(task);
     this.setState({
       isOpen: true,
       mode: 'edit',
@@ -185,7 +228,7 @@ class TaskList extends React.Component {
                 var oldTask = this.state.tasks[index];
                 var tasks = this.state.tasks;
                 tasks[index] = {...oldTask, ...newTask};
-                this.setState({tasks: tasks});
+                this.setState({tasks: tasks, dates: this.sortDates(tasks)});
             }
           } else {
             // create mode
@@ -236,35 +279,18 @@ class TaskList extends React.Component {
               { // future tasks first
                 dates.filter(d => d && !this.isInPast(d)).map((date, index1) => (
                   <List
-                    key={index1}
                     component="nav"
                     subheader={<ListSubheader component="div">{date == null ? "未預定" : date}</ListSubheader>}
                   >
                     {
                       tasks.filter(task => task.due_date == date).map( (task, index2) => (
-                        <ListItem
-                          key={task.id}
-                          dense
-                          divider
-                          button
-                          onClick={this.handleTaskClick(task)}
-                          className={classes.listItem}
-                        >
-                          <ListItemIcon>
-                          <Checkbox
-                            checked={this.state.checked.indexOf(task.id) !== -1}
-                            tabIndex={-1}
-                            disableRipple
-                            onClick={this.handleComplete(task.id)}
-                          />
-                          </ListItemIcon>
-                          <ListItemText primary={task.content} />
-                          <ListItemSecondaryAction>
-                            <IconButton aria-label="Edit" onClick={this.handleTaskClick(task)}>
-                              <EditIcon />
-                            </IconButton>
-                          </ListItemSecondaryAction>
-                        </ListItem>
+                        <TaskListItem
+                          classes={classes}
+                          task={task}
+                          checked={this.state.checked}
+                          handleTaskClick={this.handleTaskClick}
+                          handleComplete={this.handleComplete}
+                        />
                       ))
                     }
                   </List>
@@ -279,35 +305,17 @@ class TaskList extends React.Component {
                 { // future tasks first
                   dates.filter(d => d && this.isInPast(d)).map((date, index1) => (
                     <List
-                      key={index1}
                       component="nav"
                       subheader={<ListSubheader component="div">{date == null ? "未預定" : date}</ListSubheader>}
                     >
                       {
                         tasks.filter(task => task.due_date == date).map( (task, index2) => (
-                          <ListItem
-                            key={task.id}
-                            dense
-                            divider
-                            button
-                            onClick={this.handleTaskClick(task)}
-                            className={classes.listItem}
-                          >
-                            <ListItemIcon>
-                            <Checkbox
-                              checked={this.state.checked.indexOf(task.id) !== -1}
-                              tabIndex={-1}
-                              disableRipple
-                              onClick={this.handleComplete(task.id)}
-                            />
-                            </ListItemIcon>
-                            <ListItemText primary={task.content} />
-                            <ListItemSecondaryAction>
-                              <IconButton aria-label="Edit" onClick={this.handleTaskClick(task)}>
-                                <EditIcon />
-                              </IconButton>
-                            </ListItemSecondaryAction>
-                          </ListItem>
+                          <TaskListItem
+                            task={task}
+                            checked={this.state.checked}
+                            handleTaskClick={this.handleTaskClick}
+                            handleComplete={this.handleComplete}
+                          />
                         ))
                       }
                     </List>
@@ -320,32 +328,17 @@ class TaskList extends React.Component {
                 <div className="box-divider"></div>
                 <div className="box-body">
                   <List
-                    key={'undated'}
                     component="nav"
                   >
                     {
                       tasks.filter(task => !task.due_date).map( (task, index2) => (
-                        <ListItem
-                          key={task.id}
-                          dense
-                          divider
-                          button
-                          onClick={this.handleTaskClick(task)}
-                          className={classes.listItem}
-                        >
-                          <Checkbox
-                            checked={this.state.checked.indexOf(task.id) !== -1}
-                            tabIndex={-1}
-                            disableRipple
-                            onClick={this.handleComplete(task.id)}
-                          />
-                          <ListItemText primary={task.content} />
-                          <ListItemSecondaryAction>
-                            <IconButton aria-label="Edit" onClick={this.handleTaskClick(task)}>
-                              <EditIcon />
-                            </IconButton>
-                          </ListItemSecondaryAction>
-                        </ListItem>
+                        <TaskListItem
+                          classes={classes}
+                          task={task}
+                          checked={this.state.checked}
+                          handleTaskClick={this.handleTaskClick}
+                          handleComplete={this.handleComplete}
+                        />
                       ))
                     }
                   </List>

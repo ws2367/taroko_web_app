@@ -25,6 +25,8 @@ const columnData = [
   { id: 'tags', numeric: false, disablePadding: false, label: '標籤' },
   { id: 'company', numeric: false, disablePadding: false, label: '任職公司' },
   { id: 'income', numeric: false, disablePadding: false, label: '收入' },
+  { id: 'num_of_tasks', numeric: false, disablePadding: false, label: '待辦數' },
+  { id: 'num_of_notes', numeric: false, disablePadding: false, label: '筆記數' },
   { id: 'note_summary', numeric: false, disablePadding: false, label: '筆記摘要' },
   { id: 'updated', numeric: false, disablePadding: false, label: '更新時間' },
 ];
@@ -144,7 +146,7 @@ let EnhancedTableToolbar = props => {
             </IconButton>
           </Tooltip>
         ) : (
-            <Grid container spacing={4} direction="row">
+            <Grid container spacing={2} direction="row">
               <Grid item xs={6}>
                 <ClientListFilters
                   className={classes.filterField}

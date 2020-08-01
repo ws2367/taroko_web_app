@@ -26,7 +26,8 @@ const styles = theme => ({
     width: '80%',
   },
   button: {
-    margin: theme.spacing.unit / 2
+    marginLeft: theme.spacing.unit / 2,
+    marginRight: theme.spacing.unit / 2
   },
   drawerActionButtons: {
     width: 270,

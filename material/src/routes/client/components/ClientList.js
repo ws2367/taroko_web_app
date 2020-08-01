@@ -17,7 +17,12 @@ import Tag from './Tag';
 import {requestHeaders} from 'auth/Auth';
 
 function getClientData(client, field) {
-  return (field in client) ? client[field] : (field in client.profile ? client.profile[field] : null);
+  if (field === 'num_of_tasks') {
+    return client.profile.tasks && client.profile.tasks.length;
+  } else {
+    return (field in client) ? client[field] : (field in client.profile ? client.profile[field] : null);
+  }
+
 }
 
 function getSorting(order, orderBy) {
@@ -69,14 +74,6 @@ class ClientList extends React.Component {
           });
     };
 
-    const removeTagFromClient = (tag, client) => {
-
-    };
-
-    const filterByTag = (tag) => {
-
-    };
-
     // state variables
     this.state = {
       openClientDrawer: false,
@@ -95,10 +92,7 @@ class ClientList extends React.Component {
       config: {},
 
       //handlers
-      handlers: {
-          createClient,
-          removeTagFromClient,
-          filterByTag}
+      handlers: {createClient}
     };
   }
 
@@ -273,12 +267,11 @@ class ClientList extends React.Component {
     const { classes } = this.props;
     const { clients, order, orderBy, selected, rowsPerPage, page, filters, config, handlers, openClientDrawer } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, clients.length - page * rowsPerPage);
-
+    console.log(clients[0]);
     return (
       <>
         <Button variant="contained" color="primary" className="btn-w-md" onClick={this.toggleClientDrawer(true)}>
           新增客戶</Button>
-        <div className="divider" />
         <Paper className={classes.root}>
           <ClientDrawer isOpen={openClientDrawer} toggleClientDrawer={this.toggleClientDrawer} handlers={handlers} />
           <EnhancedTableToolbar
@@ -331,8 +324,10 @@ class ClientList extends React.Component {
                           <Tag tags={n.profile.tags} config={config} handlers={handlers} /></TableCell>
                         <TableCell>{n.profile.company}</TableCell>
                         <TableCell>{config.income[n.profile.income]}</TableCell>
+                        <TableCell>{n.profile.tasks.length}</TableCell>
+                        <TableCell>{n.num_of_notes}</TableCell>
                         <TableCell>{n.note_summary}</TableCell>
-                        <TableCell>{n.profile.updated}</TableCell>
+                        <TableCell>{n.profile.updated.substring(0, 10)}</TableCell>
                       </TableRow>
                     );
                   })}

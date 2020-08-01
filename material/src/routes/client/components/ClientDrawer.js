@@ -16,7 +16,8 @@ const styles = theme => ({
     width: '80%'
   },
   button: {
-    margin: theme.spacing.unit / 2
+    marginLeft: theme.spacing.unit / 2,
+    marginRight: theme.spacing.unit / 2
   },
   drawerActionButtons: {
     width: 270,
@@ -110,7 +111,7 @@ class ClientDrawer extends React.Component {
                 <div className="divider divider-solid border-dark mb-4"></div>
                 <Grid container justify="flex-end">
                   <Grid item>
-                    <OutlinedButton color="secondary" className={classes.button} onClose={toggleClientDrawer(false)}>取消</OutlinedButton>
+                    <OutlinedButton color="secondary" className={classes.button} onClick={toggleClientDrawer(false)}>取消</OutlinedButton>
                     <Button variant="contained" color="primary" className={classes.button} onClick={this.handleSave}>儲存</Button>
                   </Grid>
                 </Grid>

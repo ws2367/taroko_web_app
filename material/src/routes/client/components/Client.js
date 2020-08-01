@@ -80,7 +80,7 @@ class Client extends React.Component {
 
     const TaskTab = () => (
       <div className="container-fluid pt-3">
-        <TaskList />
+        <TaskList clientId={clientId} isUnderClient={true}/>
       </div>
     )
 
@@ -106,7 +106,7 @@ class Client extends React.Component {
                 handlers={handlers}
               />
               <NoteTab />
-              <TaskTab clientId={this.state.clientId}/>
+              <TaskTab />
             </SwipeableViews>
           </div>
         </QueueAnim>
