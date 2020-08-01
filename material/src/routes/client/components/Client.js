@@ -102,11 +102,12 @@ class Client extends React.Component {
               onChangeIndex={this.handleChangeIndex}
             >
               <Profile
+                key={clientId + "-profile"}
                 clientId={clientId}
                 handlers={handlers}
               />
-              <NoteTab />
-              <TaskTab />
+              <NoteTab key={clientId + "-note"}/>
+              <TaskTab key={clientId + "-task"}/>
             </SwipeableViews>
           </div>
         </QueueAnim>

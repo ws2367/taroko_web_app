@@ -16,7 +16,11 @@ import { withStyles } from '@material-ui/core/styles';
 const styles = theme => ({
   dialog: {
     width: 300
-  }
+  },
+  tagField: {
+    margin: theme.spacing.unit,
+    width: '90%',
+  },
 });
 
 function RelationDialog(props) {
@@ -50,7 +54,7 @@ type State = {
 const StyledRelationDialog = withStyles(styles)(RelationDialog);
 
 
-export default class RelatedClientField extends Component<*, State> {
+class RelatedClientField extends Component<*, State> {
   getOptionLabel = (clientId, relationId) => {
     let relatedClient = this.props.options.find(option => option.id === clientId);
     return relatedClient.name + "(" + this.props.relations[relationId] + ")";
@@ -170,7 +174,7 @@ export default class RelatedClientField extends Component<*, State> {
 
   render() {
     const { isLoading, value, openDialog } = this.state;
-    const { relations } = this.props;
+    const { classes, relations } = this.props;
     // CreateableSelect assumes the structure of label and value
     const options = this.convertTagsToOptions(this.props.options);
     console.log(this.props.relatedClients);
@@ -184,6 +188,8 @@ export default class RelatedClientField extends Component<*, State> {
         />
         <CreatableSelect
           variant='standard'
+          className={classes.tagField}
+          placeholder="選擇相關客戶"
           isClearable
           isMulti
           formatCreateLabel={this.props.formatCreateLabel}
@@ -198,3 +204,5 @@ export default class RelatedClientField extends Component<*, State> {
     );
   }
 }
+
+export default withStyles(styles)(RelatedClientField);

@@ -1,13 +1,31 @@
 import React, { Component } from 'react';
-
+import { withStyles } from '@material-ui/core/styles';
 import CreatableSelect from 'react-select/creatable';
+
+
+const customStyles = {
+  container: (provided, state) => ({
+    // none of react-select's styles are passed to <Control />
+    ...provided,
+    borderTop: '0px',
+    borderLeft: '0px',
+    borderRight: '0px'
+  })
+};
+
+const styles = theme => ({
+  tagField: {
+    margin: theme.spacing.unit,
+    width: '90%',
+  }
+});
 
 type State = {
   value: string | void,
 };
 
 
-export default class CreatableMultiTagAutocomplete extends Component<*, State> {
+class CreatableMultiTagAutocomplete extends Component<*, State> {
   getOptionLabel = (id) => {
     let option = this.props.options.find(option => option.id === id);
     return option ? option.name : id;
@@ -62,10 +80,24 @@ export default class CreatableMultiTagAutocomplete extends Component<*, State> {
     // CreateableSelect assumes the structure of label and value
     const options = this.convertTagsToOptions(this.props.options);
 
+    const customizeTheme = theme => ({
+      ...theme,
+      colors: {
+        ...theme.colors,
+        primary25: '#eceafc',
+        primary50: '#eceafc',
+        primary75: '#eceafc',
+        primary: '#5124EF'
+      }
+    });
+
     return (
       <CreatableSelect
+        className={this.props.classes.tagField}
         title={this.props.title}
         variant='standard'
+        placeholder={this.props.placeholder}
+        styles={customStyles}
         isClearable
         isMulti
         formatCreateLabel={this.props.formatCreateLabel}
@@ -75,7 +107,10 @@ export default class CreatableMultiTagAutocomplete extends Component<*, State> {
         onCreateOption={this.handleCreate}
         options={options}
         value={value}
+        theme={customizeTheme}
       />
     );
   }
 }
+
+export default withStyles(styles)(CreatableMultiTagAutocomplete);

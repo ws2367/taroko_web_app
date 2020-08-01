@@ -122,7 +122,7 @@ const UnstyledNoteCard = ({title, appendix, date, classes}) => {
   return (
     <Card className={classes.root}>
       <CardContent>
-        <Typography className={classes.title} variant="h5" gutterBottom>
+        <Typography className={classes.title} variant="subheading" gutterBottom>
           {title}
         </Typography>
         <Typography className={classes.pos} color="textSecondary">

@@ -36,14 +36,6 @@ const styles = theme => ({
     marginRight: theme.spacing.unit,
     width: '90%',
   },
-  longTextField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    width: '90%',
-  },
-  menu: {
-    width: 200,
-  },
   leftIcon: {
     marginRight: theme.spacing.unit,
   },
@@ -56,20 +48,19 @@ class BasicInfoTextFields extends React.Component {
     const { classes, config, profile, handleChange, handleCreateTag, addToConfig } = this.props;
 
     return (
-      <Fragment>
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
-              <TextField
-                required
-                id="name"
-                label="姓名"
-                className={classes.textField}
-                value={profile.name}
-                onChange={handleChange('name')}
-                margin="normal"
-              />
-            </Grid>
-            <Grid item xs={6}>
+      <Grid container spacing={2}>
+        <Grid item xs={6}>
+          <TextField
+            required
+            id="name"
+            label="姓名"
+            className={classes.textField}
+            value={profile.name}
+            onChange={handleChange('name')}
+            margin="normal"
+          />
+        </Grid>
+        <Grid item xs={6}>
           <div className="picker">
             <TextField
               className={classes.textField}
@@ -82,11 +73,11 @@ class BasicInfoTextFields extends React.Component {
               margin="normal"
             />
           </div>
-          </Grid>
-          </Grid>
+        </Grid>
+        <Grid item xs={12}>
           <CreatableMultiTagAutocomplete
-          className={classes.textField}
           title='標籤'
+          placeholder="選擇標籤"
           formatCreateLabel={(inputValue) => ("新增標籤：" + inputValue)}
           tags={profile.tags}
           options={config.tags}
@@ -94,7 +85,8 @@ class BasicInfoTextFields extends React.Component {
           handleChange={handleChange('tags')}
           label="Tag"
           />
-          <div className="divider" />
+        </Grid>
+        <Grid item xs={12}>
           <TextField
             id="email"
             label="Email"
@@ -104,15 +96,19 @@ class BasicInfoTextFields extends React.Component {
             onChange={handleChange('email')}
             margin="normal"
           />
-          <TextField
-            id="cell_phone"
-            label="電話號碼"
-            className={classes.textField}
-            onChange={handleChange('cell_phone')}
-            value={profile.cell_phone}
-            type="tel"
-            margin="normal"
-          />
+        </Grid>
+        <Grid item xs={12}>
+        <TextField
+          id="cell_phone"
+          label="電話號碼"
+          className={classes.textField}
+          onChange={handleChange('cell_phone')}
+          value={profile.cell_phone}
+          type="tel"
+          margin="normal"
+        />
+        </Grid>
+        <Grid item xs={12}>
           <TextField
             id="company"
             label="任職公司/職稱"
@@ -121,6 +117,8 @@ class BasicInfoTextFields extends React.Component {
             onChange={handleChange('company')}
             margin="normal"
           />
+        </Grid>
+        <Grid item xs={12}>
           <TextField
             id="address"
             label="地址"
@@ -129,6 +127,8 @@ class BasicInfoTextFields extends React.Component {
             onChange={handleChange('address')}
             margin="normal"
           />
+        </Grid>
+        <Grid item xs={6}>
           <TextField
             id="income"
             select
@@ -136,11 +136,6 @@ class BasicInfoTextFields extends React.Component {
             className={classes.textField}
             value={String(profile.income)}
             onChange={handleChange('income')}
-            SelectProps={{
-              MenuProps: {
-                className: classes.menu,
-              },
-            }}
             helperText="請選擇收入"
             margin="normal"
           >
@@ -150,6 +145,8 @@ class BasicInfoTextFields extends React.Component {
               </MenuItem>
             ))}
           </TextField>
+        </Grid>
+        <Grid item xs={6}>
           <TextField
             id="source"
             select
@@ -171,10 +168,12 @@ class BasicInfoTextFields extends React.Component {
               </MenuItem>
             ))}
           </TextField>
+        </Grid>
+        <Grid item xs={12}>
           <CreatableMultiTagAutocomplete
-            className={classes.textField}
             id="interests"
             title='休閒興趣'
+            placeholder="選擇休閒興趣"
             formatCreateLabel={(inputValue) => ("新增休閒興趣：" + inputValue)}
             tags={profile.interests}
             options={config.interests}
@@ -182,7 +181,8 @@ class BasicInfoTextFields extends React.Component {
             handleChange={handleChange('interests')}
             label="Interests"
           />
-      </Fragment>
+        </Grid>
+      </Grid>
     );
   }
 }
@@ -255,7 +255,7 @@ class FinancialPlanTextFields extends React.Component {
           id="financial_plan"
           value={profile.financial_plan || undefined}
           onChange={handleChange('financial_plan')}
-          className={classes.longTextField}
+          className={classes.textField}
           margin="normal"
           variant='outlined'
         />
@@ -278,7 +278,7 @@ class FamilyInfoTextFields extends React.Component {
           id="marital_status"
           label="婚姻狀況"
           value={String(profile.marital_status)}
-          className={classes.longTextField}
+          className={classes.textField}
           onChange={handleChange('marital_status')}
           SelectProps={{
             MenuProps: {
@@ -295,7 +295,9 @@ class FamilyInfoTextFields extends React.Component {
         </TextField>
         <RelatedClientField
           title='延伸親友名單'
+          className={classes.tagField}
           relatedClients={profile.related_clients}
+          formatCreateLabel={(inputValue) => ("新增客戶：" + inputValue)}
           relations={config.client_relation}
           options={clientOptions}
           createClient={createClient}
@@ -325,7 +327,7 @@ class AppendixTextFields extends React.Component {
           label="備註"
           variant='outlined'
           value={profile.appendix || undefined}
-          className={classes.longTextField}
+          className={classes.textField}
           margin="normal"
         />
       </form>
