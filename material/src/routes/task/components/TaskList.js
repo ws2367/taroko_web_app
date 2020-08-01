@@ -6,6 +6,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
 import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
@@ -19,6 +20,9 @@ const styles = theme => ({
     // maxWidth: 360,
     backgroundColor: theme.palette.background.paper,
   },
+  button: {
+    marginBottom: theme.spacing.unit * 2
+  }
 });
 
 
@@ -44,6 +48,26 @@ class TaskList extends React.Component {
     uniqueDates.sort();
     return uniqueDates;
   };
+
+  // expect yyyy-mm-dd format
+  isInPast = (dateStr) => {
+    let parts = dateStr.split("-");
+    let d1 = new Date(parts[0], (Number(parts[1]) - 1), parts[2]);
+    let today = (new Date()).setHours(0,0,0,0);
+    return d1.valueOf() < today.valueOf();
+  }
+
+  groupTasksByType = (tasks) => {
+    let pastTasks    = tasks.filter(t => t.due_date && this.isInPast(t));
+    let futureTasks  = tasks.filter(t => t.due_date && !this.isInPast(t));
+    let undatedTasks = tasks.filter(t => !t.due_date);
+
+    return {
+      past: {tasks: pastTasks, dates: this.sortDates(pastTasks)},
+      future: {tasks: pastTasks, dates: this.sortDates(futureTasks)},
+      undated: {tasks: undatedTasks}
+    };
+  }
 
   componentDidMount() {
     fetch(this.collectionEndpoint, {
@@ -186,77 +210,154 @@ class TaskList extends React.Component {
     const { dates, tasks, selectedTask, isOpen, mode } = this.state;
 
     return (
-      <div className={classes.root}>
-        <TaskDrawer
-          isOpen={isOpen}
-          key={selectedTask.id}
-          task={selectedTask}
-          mode={mode}
-          handleClose={this.handleClose}
-          handleDeleteTask={this.handleDeleteTask}
-          handleSaveTask={this.handleSaveTask}
-        />
-        <Button
-          aria-controls="simple-menu"
-          aria-haspopup="true"
-          variant="contained"
-          color="primary"
-          className="btn-w-md"
-          onClick={this.handleCreateTaskClick}>
-          新增待辦事項
-        </Button>
-        {
-          dates.map((date, index1) => (
-            <List
-              key={index1}
-              component="nav"
-              subheader={<ListSubheader component="div">{date == null ? "未預定" : date}</ListSubheader>}
-            >
-              {
-                tasks.filter(task => task.due_date == date).map( (task, index2) => (
-                  <ListItem
-                    key={task.id}
-                    dense
-                    button
-                    onClick={this.handleComplete(task.id)}
-                    className={classes.listItem}
+      <>
+          <TaskDrawer
+            isOpen={isOpen}
+            key={selectedTask.id}
+            task={selectedTask}
+            mode={mode}
+            handleClose={this.handleClose}
+            handleDeleteTask={this.handleDeleteTask}
+            handleSaveTask={this.handleSaveTask}
+          />
+          <Button
+            aria-controls="simple-menu"
+            aria-haspopup="true"
+            variant="contained"
+            color="primary"
+            className={classes.button}
+            onClick={this.handleCreateTaskClick}>
+            新增待辦事項
+          </Button>
+          <div className="box box-default mb-4">
+            <div className="box-header">未來待辦事項</div>
+            <div className="box-divider"></div>
+            <div className="box-body">
+              { // future tasks first
+                dates.filter(d => d && !this.isInPast(d)).map((date, index1) => (
+                  <List
+                    key={index1}
+                    component="nav"
+                    subheader={<ListSubheader component="div">{date == null ? "未預定" : date}</ListSubheader>}
                   >
-                    <Checkbox
-                      checked={this.state.checked.indexOf(task.id) !== -1}
-                      tabIndex={-1}
-                      disableRipple
-                    />
-                    <ListItemText primary={task.content} />
-                    <ListItemSecondaryAction>
-                      <IconButton aria-label="Edit" onClick={this.handleTaskClick(task)}>
-                        <EditIcon />
-                      </IconButton>
-                    </ListItemSecondaryAction>
-                  </ListItem>
+                    {
+                      tasks.filter(task => task.due_date == date).map( (task, index2) => (
+                        <ListItem
+                          key={task.id}
+                          dense
+                          divider
+                          button
+                          onClick={this.handleTaskClick(task)}
+                          className={classes.listItem}
+                        >
+                          <ListItemIcon>
+                          <Checkbox
+                            checked={this.state.checked.indexOf(task.id) !== -1}
+                            tabIndex={-1}
+                            disableRipple
+                            onClick={this.handleComplete(task.id)}
+                          />
+                          </ListItemIcon>
+                          <ListItemText primary={task.content} />
+                          <ListItemSecondaryAction>
+                            <IconButton aria-label="Edit" onClick={this.handleTaskClick(task)}>
+                              <EditIcon />
+                            </IconButton>
+                          </ListItemSecondaryAction>
+                        </ListItem>
+                      ))
+                    }
+                  </List>
                 ))
               }
-            </List>
-          ))
-        }
-
-      </div>
+              </div>
+            </div>
+            <div className="box box-default mb-4">
+              <div className="box-header">逾期待辦事項</div>
+              <div className="box-divider"></div>
+              <div className="box-body">
+                { // future tasks first
+                  dates.filter(d => d && this.isInPast(d)).map((date, index1) => (
+                    <List
+                      key={index1}
+                      component="nav"
+                      subheader={<ListSubheader component="div">{date == null ? "未預定" : date}</ListSubheader>}
+                    >
+                      {
+                        tasks.filter(task => task.due_date == date).map( (task, index2) => (
+                          <ListItem
+                            key={task.id}
+                            dense
+                            divider
+                            button
+                            onClick={this.handleTaskClick(task)}
+                            className={classes.listItem}
+                          >
+                            <ListItemIcon>
+                            <Checkbox
+                              checked={this.state.checked.indexOf(task.id) !== -1}
+                              tabIndex={-1}
+                              disableRipple
+                              onClick={this.handleComplete(task.id)}
+                            />
+                            </ListItemIcon>
+                            <ListItemText primary={task.content} />
+                            <ListItemSecondaryAction>
+                              <IconButton aria-label="Edit" onClick={this.handleTaskClick(task)}>
+                                <EditIcon />
+                              </IconButton>
+                            </ListItemSecondaryAction>
+                          </ListItem>
+                        ))
+                      }
+                    </List>
+                  ))
+                }
+                </div>
+              </div>
+              <div className="box box-default mb-4">
+                <div className="box-header">未預定待辦事項</div>
+                <div className="box-divider"></div>
+                <div className="box-body">
+                  <List
+                    key={'undated'}
+                    component="nav"
+                  >
+                    {
+                      tasks.filter(task => !task.due_date).map( (task, index2) => (
+                        <ListItem
+                          key={task.id}
+                          dense
+                          divider
+                          button
+                          onClick={this.handleTaskClick(task)}
+                          className={classes.listItem}
+                        >
+                          <Checkbox
+                            checked={this.state.checked.indexOf(task.id) !== -1}
+                            tabIndex={-1}
+                            disableRipple
+                            onClick={this.handleComplete(task.id)}
+                          />
+                          <ListItemText primary={task.content} />
+                          <ListItemSecondaryAction>
+                            <IconButton aria-label="Edit" onClick={this.handleTaskClick(task)}>
+                              <EditIcon />
+                            </IconButton>
+                          </ListItemSecondaryAction>
+                        </ListItem>
+                      ))
+                    }
+                  </List>
+                </div>
+              </div>
+      </>
     );
   }
 }
 
 TaskList.propTypes = {
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired
 };
 
-const TaskList1 = withStyles(styles)(TaskList);
-
-const ListExample = () => (
-  <section className="box box-default">
-    <div className="box-header">待辦事項</div>
-    <div className="box-body">
-      <TaskList1 />
-    </div>
-  </section>
-);
-
-export default ListExample;
+export default withStyles(styles)(TaskList);

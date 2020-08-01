@@ -20,8 +20,9 @@ const styles = theme => ({
     flexWrap: 'wrap',
   },
   formControl: {
-    margin: theme.spacing.unit,
-    width: 150
+    margin: 0,
+    minWidth: 150,
+    maxWidth: 600
   },
   chips: {
     display: 'flex',

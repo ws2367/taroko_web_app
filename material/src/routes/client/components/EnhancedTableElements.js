@@ -17,6 +17,7 @@ import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from '@material-ui/icons/Search';
 import Tooltip from '@material-ui/core/Tooltip';
 import DeleteIcon from '@material-ui/icons/Delete';
+import { Grid } from '@material-ui/core';
 import { lighten } from '@material-ui/core/styles/colorManipulator';
 
 const columnData = [
@@ -104,13 +105,10 @@ const toolbarStyles = theme => ({
   },
   actions: {
     color: theme.palette.text.secondary,
-    width: 500
+    minWidth: 800
   },
   title: {
     flex: '0 0 auto',
-  },
-  filterField: {
-    width: 150
   },
   searchField: {
     width: 150
@@ -146,30 +144,34 @@ let EnhancedTableToolbar = props => {
             </IconButton>
           </Tooltip>
         ) : (
-          <>
-            <ClientListFilters
-              className={classes.filterField}
-              id="tag_filter"
-              tags={filters}
-              tagOptions={config.tags || []}
-              onChange={handleFilterChange}
-            />
-            <TextField
-              type="search"
-              className={classes.searchField}
-              id="search-bar"
-              variant="outlined"
-              placeholder="搜尋客戶"
-              onChange={handleQueryChange}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon />
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </>
+            <Grid container spacing={4} direction="row">
+              <Grid item xs={6}>
+                <ClientListFilters
+                  className={classes.filterField}
+                  id="tag_filter"
+                  tags={filters}
+                  tagOptions={config.tags || []}
+                  onChange={handleFilterChange}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  type="search"
+                  className={classes.searchField}
+                  id="search-bar"
+                  variant="outlined"
+                  placeholder="搜尋客戶"
+                  onChange={handleQueryChange}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Grid>
+            </Grid>
         )}
       </div>
     </Toolbar>

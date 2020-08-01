@@ -18,8 +18,8 @@
   transition: $l_transition_antd;
 
   .logo-img {
-    float: left; // fix its position affect other list items
-    margin: 18px 15px 0; // ($l_header_height - height) / 2 = (60 - 24)/2
+    
+    margin-left: 15px; // ($l_header_height - height) / 2 = (60 - 24)/2
   }
 
   .avatar {
@@ -122,7 +122,7 @@
   }
 }
 
-// 
+//
 .app-header-popover {
   max-width: 300px;
   @media screen and (min-width: map-get($grid-breakpoints, md)) {
@@ -229,10 +229,10 @@
     }
   }
 
-  // 
-  .input-bar { 
-    position: absolute; 
-    display: block; 
+  //
+  .input-bar {
+    position: absolute;
+    display: block;
     width: 90%;
     bottom: 0;
     left: 5%;
@@ -241,23 +241,23 @@
   .input-bar:after {
     position: absolute;
     content: '';
-    height: 1px; 
+    height: 1px;
     width: 0;
-    bottom: 1px; 
-    background: $body-color; 
+    bottom: 1px;
+    background: $body-color;
     transition: all .25s;
   }
   .input-bar:before {
     left: 50%;
   }
   .input-bar:after {
-    right: 50%; 
-  }  
+    right: 50%;
+  }
   input {
     &:focus ~ .input-bar:before,
     &:focus ~ .input-bar:after {
       width: 50%;
-    }                    
+    }
   }
 }
 // Hack for vetical centering when .search-box is place on the right

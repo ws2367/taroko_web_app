@@ -11,13 +11,19 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 import Typography from '@material-ui/core/Typography';
 import { blue } from '@material-ui/core/colors';
+import { withStyles } from '@material-ui/core/styles';
 
+const styles = theme => ({
+  dialog: {
+    width: 300
+  }
+});
 
 function RelationDialog(props) {
-  const { handleClose, handleClick, open, relations } = props;
+  const { handleClose, handleClick, open, relations, classes } = props;
 
   return (
-    <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
+    <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open} className={classes.dialog}>
       <DialogTitle id="simple-dialog-title">選擇關係</DialogTitle>
       <List>
         {Object.keys(relations).map((relationId) => (
@@ -40,6 +46,8 @@ RelationDialog.propTypes = {
 type State = {
   value: string | void,
 };
+
+const StyledRelationDialog = withStyles(styles)(RelationDialog);
 
 
 export default class RelatedClientField extends Component<*, State> {
@@ -168,7 +176,7 @@ export default class RelatedClientField extends Component<*, State> {
     console.log(this.props.relatedClients);
     return (
       <>
-        <RelationDialog
+        <StyledRelationDialog
           open={openDialog}
           relations={relations}
           handleClose={this.handleCloseDialog}

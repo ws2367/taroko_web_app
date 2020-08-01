@@ -1,4 +1,6 @@
 import React from 'react';
+import { withStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
 import Drawer from '@material-ui/core/Drawer';
 import OutlinedButton from 'components/OutlinedButton';
 import TextField from '@material-ui/core/TextField';
@@ -10,22 +12,27 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import MenuItem from '@material-ui/core/MenuItem';
+import Divider from '@material-ui/core/Divider';
 
 const styles = theme => ({
   divContainer: {
-    width: '180px',
-    margin: '20px'
+    width: 300,
+    padding: theme.spacing.unit*2
   },
-  container: {
-    display: 'flex',
-    flexWrap: 'wrap'
+  priorityForm: {
+    marginTop: theme.spacing.unit*2
   },
   textField: {
-    width: '100px',
+    width: '80%',
   },
-  menu: {
-    width: '100px',
+  button: {
+    margin: theme.spacing.unit / 2
   },
+  drawerActionButtons: {
+    width: 270,
+    position: "fixed",
+    bottom: theme.spacing.unit * 2
+  }
 });
 
 class TaskDrawer extends React.Component {
@@ -62,9 +69,8 @@ class TaskDrawer extends React.Component {
   }
 
   render() {
-    const classes = styles();
     const { content, due_date, priority, reminder} = this.state;
-    const { mode, isOpen, handleClose } = this.props;
+    const { classes, mode, isOpen, handleClose } = this.props;
 
     const config = {
       "task_priority": {"0":"一般", "1":"重要"},
@@ -92,11 +98,14 @@ class TaskDrawer extends React.Component {
 
     return (
       <Drawer anchor="right" open={isOpen} onClose={handleClose}>
-          <div style={classes.divContainer}>
-          <Typography variant="title" gutterBottom>
-            {mode === "create" ? "新增待辦事項" : "編輯待辦事項"}
-          </Typography>
-            <form className={classes.container} noValidate>
+        <div className={classes.divContainer}>
+          <Grid container spacing={2} justify="center">
+            <Grid item xs={12}>
+              <Typography variant="title" gutterBottom>
+                {mode === "create" ? "新增待辦事項" : "編輯待辦事項"}
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
               <TextField
                 required
                 label="內容"
@@ -105,16 +114,21 @@ class TaskDrawer extends React.Component {
                 onChange={this.handleChange('content')}
                 margin="normal"
               />
+            </Grid>
+            <Grid item xs={12} justify="center">
               <TextField
                 id="due_date"
                 type='date'
                 label="截止日期"
+                InputLabelProps={{ shrink: true }}
                 value={due_date}
                 className={classes.textField}
                 onChange={this.handleChange('due_date')}
                 margin="normal"
               />
-              <FormControl component="fieldset">
+            </Grid>
+            <Grid item xs={12}>
+              <FormControl component="fieldset" className={classes.priorityForm}>
                 <FormLabel component="legend">優先順序</FormLabel>
                 <RadioGroup row aria-label="priority" name="priority" value={String(priority)} onChange={this.handleChange('priority')}>
                   {
@@ -124,6 +138,8 @@ class TaskDrawer extends React.Component {
                   }
                 </RadioGroup>
               </FormControl>
+            </Grid>
+            <Grid item xs={12}>
               <TextField
                 id="reminder"
                 select
@@ -131,11 +147,6 @@ class TaskDrawer extends React.Component {
                 className={classes.textField}
                 value={String(reminder)}
                 onChange={this.handleChange('reminder')}
-                SelectProps={{
-                  MenuProps: {
-                    className: classes.menu,
-                  },
-                }}
                 margin="normal"
               >
                 {Object.keys(config.task_remind_at).map( k => (
@@ -144,18 +155,28 @@ class TaskDrawer extends React.Component {
                   </MenuItem>
                 ))}
               </TextField>
-            </form>
-            <div className="divider" />
-              {mode === "edit" &&
-                <Button color="primary" onClick={this.handleDelete(this.props.task.id)}>刪除</Button>
-              }
-              <OutlinedButton color="secondary" className="btn-w-sm" onClose={handleClose}>取消</OutlinedButton>
-              <Button variant="contained" color="primary" className="btn-w-sm" onClick={this.handleSave}>儲存</Button>
-
+            </Grid>
+            <Grid item xs={12}>
+              <div className={classes.drawerActionButtons}>
+                <div className="divider divider-solid border-dark"></div>
+                <Grid container justify="space-between">
+                  <Grid item>
+                  {mode === "edit" &&
+                    <Button color="primary" className={classes.button} onClick={this.handleDelete(this.props.task.id)}>刪除</Button>
+                  }
+                  </Grid>
+                  <Grid item>
+                    <OutlinedButton size="medium" color="secondary" className={classes.button} onClick={handleClose}>取消</OutlinedButton>
+                    <Button variant="contained" size="medium" color="primary" className={classes.button} onClick={this.handleSave}>儲存</Button>
+                  </Grid>
+                </Grid>
+              </div>
+            </Grid>
+          </Grid>
           </div>
       </Drawer>
     )
   };
 }
 
-export default TaskDrawer;
+export default withStyles(styles)(TaskDrawer);

@@ -14,10 +14,18 @@ import Typography from '@material-ui/core/Typography';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import NoteDrawer from './NoteDrawer';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
 import {requestHeaders} from 'auth/Auth';
 
 
 const styles = theme => ({
+  row: {
+    minWidth: 200,
+    maxWidth: 600,
+    margin: theme.spacing.unit
+  },
   container: {
     display: 'flex',
     flexWrap: 'wrap',
@@ -93,6 +101,45 @@ class CreateNoteButton extends React.Component {
     )
   }
 };
+
+
+const cardStyles = theme => ({
+  root: {
+    minWidth: 200,
+    maxWidth: 600,
+    margin: theme.spacing.unit
+  },
+  title: {
+    fontSize: 14,
+  },
+  pos: {
+    marginBottom: 12,
+  },
+});
+
+const UnstyledNoteCard = ({title, appendix, date, classes}) => {
+
+  return (
+    <Card className={classes.root}>
+      <CardContent>
+        <Typography className={classes.title} variant="h5" gutterBottom>
+          {title}
+        </Typography>
+        <Typography className={classes.pos} color="textSecondary">
+          {date}
+        </Typography>
+        <Typography variant="body2" component="p">
+          {appendix}
+        </Typography>
+      </CardContent>
+      <CardActions>
+        <Button size="small">編輯</Button>
+      </CardActions>
+    </Card>
+  );
+};
+
+const NoteCard = withStyles(cardStyles)(UnstyledNoteCard);
 
 
 class NoteList extends React.Component {
@@ -238,53 +285,32 @@ class NoteList extends React.Component {
     const { notes, selectedNote, mode, openNoteDrawer, config, drawerKey } = this.state;
     const { classes } = this.props;
 
-
     return (
-      <Paper className={classes.root}>
-        <CreateNoteButton noteTypes={config.note_type} openDrawer={this.openDrawer('create')}  />
-
-          <NoteDrawer
-            key={drawerKey}
-            isOpen={openNoteDrawer}
-            mode={mode}
-            note={selectedNote}
-            handleClose={this.handleClose}
-            handleSaveNote={this.handleSaveNote}
-            handleDeleteNote={this.handleDeleteNote}
-            config={config} />
-              <List>
-              {
-                notes.map((note, index) => (
-                    <ListItem key={note.id}>
-                      <ListItemText
-                        primary={<Grid container justify="space-between">
-                          <Typography
-                            display='inline'
-                            align='left'
-                            color="textPrimary"
-                            variant="body1">
-                            {note.title}
-                          </Typography>
-                          <Typography
-                            display='inline'
-                            align='right'
-                            variant='body1'
-                            color='textSecondary'>
-                            {note.date}
-                          </Typography>
-                        </Grid>}
-                        secondary={<Typography noWrap={true}>{note.appendix}</Typography>}
-                      />
-                      <ListItemSecondaryAction>
-                        <IconButton edge="end" aria-label="view" onClick={this.handleNoteClick(note)}>
-                          <VisibilityIcon />
-                        </IconButton>
-                      </ListItemSecondaryAction>
-                    </ListItem>
-                ))
-              }
-              </List>
-    </Paper>
+      <>
+        <NoteDrawer
+          key={drawerKey}
+          isOpen={openNoteDrawer}
+          mode={mode}
+          note={selectedNote}
+          handleClose={this.handleClose}
+          handleSaveNote={this.handleSaveNote}
+          handleDeleteNote={this.handleDeleteNote}
+          config={config} />
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <div className={classes.row}>
+              <CreateNoteButton noteTypes={config.note_type} openDrawer={this.openDrawer('create')}  />
+            </div>
+          </Grid>
+            {
+              notes.map((note, index) => (
+                <Grid item xs={12} key={note.id}>
+                  <NoteCard title={note.title} appendix={note.appendix} date={note.date} />
+                </Grid>
+              ))
+            }
+        </Grid>
+      </>
     );
   }
 }
