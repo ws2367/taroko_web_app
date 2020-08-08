@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 const styles = (theme) => ({
   chip: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing.unit * 3,
   }
 });
 
@@ -25,7 +25,7 @@ function Tag({tags, config, classes}) {
           className={classes.chip}
           key={i}
           label={getTagName(tagId)}
-          className="table-chip bg-info px-2"
+          className="table-chip bg-info px-2 mr-1 mb-1"
           onClick={handleClick}
         />
       ))

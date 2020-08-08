@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { components } from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
@@ -12,6 +13,62 @@ import Dialog from '@material-ui/core/Dialog';
 import Typography from '@material-ui/core/Typography';
 import { blue } from '@material-ui/core/colors';
 import { withStyles } from '@material-ui/core/styles';
+
+
+const customStyles = {
+  control: (provided, state) => ({
+    // none of react-select's styles are passed to <Control />
+    ...provided,
+    borderTop: 0,
+    borderLeft: 0,
+    borderRight: 0,
+    borderBottom: "1px solid #949494",
+    borderRadius: 0,
+    '&:hover': {
+      borderTop: 0,
+      borderLeft: 0,
+      borderRight: 0,
+      borderBottom: "1px solid",
+    }
+  }),
+  input: provided => ({
+    ...provided,
+    '&:focus': {
+      borderTop: 0,
+      borderLeft: 0,
+      borderRight: 0,
+    }
+  }),
+  container: provided => ({
+    ...provided,
+    '&:hover': {
+      borderBottom: "1px solid",
+    }
+  }),
+  multiValue: (provided, state) => ({
+    ...provided,
+    color: "#190078",
+    paddingLeft: 5,
+    paddingRight: 5,
+    backgroundColor: "#eceafc",
+    borderRadius: 20
+  }),
+  MultiValueLabel: (provided, state) => ({
+    ...provided,
+    color: "#190078",
+    backgroundColor: "#eceafc"
+  }),
+  MultiValueRemove: (provided, state) => ({
+    ...provided,
+    '&:hover': {
+      backgroundColor: "#190078",
+      color: "#190078",
+    }
+  }),
+};
+
+
+
 
 const styles = theme => ({
   dialog: {
@@ -178,6 +235,26 @@ class RelatedClientField extends Component<*, State> {
     // CreateableSelect assumes the structure of label and value
     const options = this.convertTagsToOptions(this.props.options);
     console.log(this.props.relatedClients);
+
+    const ControlComponent = props => (
+      <div>
+        {(this.props.title && <p style={{fontSize: "16px", color: `rgba(0, 0, 0, 0.54)`}}>{this.props.title}</p>)}
+        <components.Control {...props} />
+      </div>
+    );
+
+
+    const customizeTheme = theme => ({
+      ...theme,
+      colors: {
+        ...theme.colors,
+        primary25: '#eceafc',
+        primary50: '#eceafc',
+        primary75: '#eceafc',
+        primary: '#5124EF'
+      }
+    });
+
     return (
       <>
         <StyledRelationDialog
@@ -189,6 +266,9 @@ class RelatedClientField extends Component<*, State> {
         <CreatableSelect
           variant='standard'
           className={classes.tagField}
+          theme={customizeTheme}
+          components={{ Control: ControlComponent }}
+          styles={customStyles}
           placeholder="選擇相關客戶"
           isClearable
           isMulti
