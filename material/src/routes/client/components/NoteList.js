@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
+import EditIcon from '@material-ui/icons/Edit';
 import { withStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -21,10 +22,8 @@ import {requestHeaders} from 'auth/Auth';
 
 
 const styles = theme => ({
-  row: {
-    minWidth: 200,
-    maxWidth: 600,
-    margin: theme.spacing.unit
+  button: {
+    marginBottom: theme.spacing.unit * 2
   },
   container: {
     display: 'flex',
@@ -105,7 +104,7 @@ class CreateNoteButton extends React.Component {
 
 const cardStyles = theme => ({
   root: {
-    width: '100%',
+    width: 1000,
     margin: theme.spacing.unit
   },
   title: {
@@ -116,25 +115,33 @@ const cardStyles = theme => ({
   },
 });
 
-const UnstyledNoteCard = ({title, appendix, date, classes}) => {
+const UnstyledNoteCard = ({note, classes, handleEditClick}) => {
 
   return (
-    <Card className={classes.root}>
-      <CardContent>
-        <Typography className={classes.title} variant="subheading" gutterBottom>
-          {title}
-        </Typography>
-        <Typography className={classes.pos} color="textSecondary">
-          {date}
-        </Typography>
-        <Typography variant="body2" component="p">
-          {appendix}
-        </Typography>
-      </CardContent>
-      <CardActions>
-        <Button size="small">編輯</Button>
-      </CardActions>
-    </Card>
+    <div className="box box-default mb-4">
+      <div className="box-header">{note.title}</div>
+      <div className="box-divider"></div>
+      <div className="box-body">
+      <Grid container justify="space-between">
+        <Grid item xs={11}>
+          {note.date &&
+            (<Typography className={classes.pos} color="textSecondary">
+              日期：{note.date}
+            </Typography>)
+          }
+          <Typography variant="body2" component="p">
+            {note.appendix}
+          </Typography>
+        </Grid>
+        <Grid item xs={1}>
+          <IconButton aria-label="Edit" onClick={handleEditClick}>
+            <EditIcon />
+          </IconButton>
+        </Grid>
+      </Grid>
+
+      </div>
+    </div>
   );
 };
 
@@ -276,7 +283,6 @@ class NoteList extends React.Component {
           this.setState({ error });
         }
     );
-
   };
 
 
@@ -295,20 +301,16 @@ class NoteList extends React.Component {
           handleSaveNote={this.handleSaveNote}
           handleDeleteNote={this.handleDeleteNote}
           config={config} />
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <div className={classes.row}>
-              <CreateNoteButton noteTypes={config.note_type} openDrawer={this.openDrawer('create')}  />
-            </div>
-          </Grid>
-            {
-              notes.map((note, index) => (
-                <Grid item xs={12} key={note.id}>
-                  <NoteCard title={note.title} appendix={note.appendix} date={note.date} />
-                </Grid>
-              ))
-            }
-        </Grid>
+          <div className={classes.button}>
+            <CreateNoteButton noteTypes={config.note_type} openDrawer={this.openDrawer('create')}  />
+          </div>
+          {
+            notes.map((note, index) => (
+              <NoteCard
+                note={note}
+                handleEditClick={this.handleNoteClick(note)} />
+            ))
+          }
       </>
     );
   }

@@ -69,12 +69,8 @@ class Client extends React.Component {
 
 
     const NoteTab = () => (
-      <div className="container-fluid no-breadcrumb container-mw-md chapter">
-        <article className="article">
-          <QueueAnim type="bottom" className="ui-animate">
-            <div key="1" className="mb-3"> <NoteList clientId={clientId}/> </div>
-          </QueueAnim>
-        </article>
+      <div className="container-fluid pt-3">
+          <NoteList clientId={clientId}/>
       </div>
     )
 

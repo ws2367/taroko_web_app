@@ -106,9 +106,9 @@ class AppHeader extends React.Component {
                   open={Boolean(anchorEl)}
                   onClose={this.handleClose}
                 >
-                  <MenuItem onClick={this.handleClose} className="d-block d-md-none"> <div>登入為<strong>{DEMO.user}</strong></div> </MenuItem>
-                  <div className="divider divider-solid my-1 d-block d-md-none"></div>
-                  <MenuItem onClick={this.handleClose}> <a href='#/user/profile'><MaterialIcon icon="account_circle" />帳號資訊</a> </MenuItem>
+                  <MenuItem onClick={this.handleClose} className="d-none"> <div>登入為<strong>{DEMO.user}</strong></div> </MenuItem>
+                  <div className="divider divider-solid my-1 d-none"></div>
+                  <MenuItem onClick={this.handleClose} className="d-none"> <a href='#/user/profile'><MaterialIcon icon="account_circle" />帳號資訊</a> </MenuItem>
                   <MenuItem onClick={this.handleClose}> <a href='#/help'><MaterialIcon icon="help" />Cooby支援</a> </MenuItem>
                   <div className="divider divider-solid my-1"></div>
                   <MenuItem onClick={this.handleClose}> <a onClick={this.openLogoutDialog}><MaterialIcon icon="forward" />登出</a> </MenuItem>
