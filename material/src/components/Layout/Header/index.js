@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import classnames from 'classnames';
 import DEMO from 'constants/demoData';
 import { Layout, Tooltip, Popover } from 'antd';
@@ -11,6 +12,8 @@ import Notifications from 'routes/layout/routes/header/components/Notifications'
 import MaterialIcon from 'components/MaterialIcon';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import LogoutConfirmDialog from './components/LogoutConfirmDialog';
+import AUTH, {clearAuth} from 'auth/Auth';
 const { Header } = Layout;
 
 
@@ -18,6 +21,7 @@ const { Header } = Layout;
 class AppHeader extends React.Component {
   state = {
     anchorEl: null,
+    openLogout: false
   };
 
   handleClick = event => {
@@ -26,6 +30,18 @@ class AppHeader extends React.Component {
   handleClose = () => {
     this.setState({ anchorEl: null });
   };
+
+  handleCloseLogout = (toLogout) => () => {
+    if (toLogout) {
+      clearAuth();
+      this.props.history.push('/user/login');
+    }
+    this.setState({openLogout: false});
+  }
+
+  openLogoutDialog = () => {
+    this.setState({openLogout: true});
+  }
 
 
   onToggleCollapsedNav = () => {
@@ -40,7 +56,7 @@ class AppHeader extends React.Component {
 
   render() {
     const { headerShadow, colorOption, showLogo } = this.props;
-    const { anchorEl } = this.state;
+    const { anchorEl, openLogout } = this.state;
 
     return (
       <Header className={classnames('app-header', {
@@ -95,12 +111,13 @@ class AppHeader extends React.Component {
                   <MenuItem onClick={this.handleClose}> <a href='#/user/profile'><MaterialIcon icon="account_circle" />帳號資訊</a> </MenuItem>
                   <MenuItem onClick={this.handleClose}> <a href='#/help'><MaterialIcon icon="help" />Cooby支援</a> </MenuItem>
                   <div className="divider divider-solid my-1"></div>
-                  <MenuItem onClick={this.handleClose}> <a href='#/user/logout'><MaterialIcon icon="forward" />登出</a> </MenuItem>
+                  <MenuItem onClick={this.handleClose}> <a onClick={this.openLogoutDialog}><MaterialIcon icon="forward" />登出</a> </MenuItem>
                 </Menu>
               </a>
             </div>
           </div>
         </div>
+        <LogoutConfirmDialog open={openLogout} handleClose={this.handleCloseLogout} />
       </Header>
     );
   }
@@ -125,4 +142,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(AppHeader);
+)(withRouter(AppHeader));
