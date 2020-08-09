@@ -1,3 +1,7 @@
+const COOBY = {
+  supportLink: "https://lin.ee/4WscYE4Cq"
+}
+
 const DEMO = {
   prefix: 'Cooby ', // note: with space at end
   link: 'javascript:;', // javascript:;

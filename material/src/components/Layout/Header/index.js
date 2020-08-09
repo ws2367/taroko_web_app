@@ -58,10 +58,10 @@ class AppHeader extends React.Component {
         >
           <div className="header-left">
             <div className="list-unstyled list-inline">
-              <a href={DEMO.link} className="list-inline-item d-none d-md-inline-block" onClick={this.onToggleCollapsedNav}>
+              <a className="list-inline-item d-none d-md-inline-block" onClick={this.onToggleCollapsedNav}>
                 <MaterialIcon icon="menu" className="list-icon" />
               </a>
-              <a href={DEMO.link} className="list-inline-item d-md-none" onClick={this.onToggleOffCanvasMobileNav}>
+              <a className="list-inline-item d-md-none" onClick={this.onToggleOffCanvasMobileNav}>
                 <MaterialIcon icon="menu" className="list-icon" />
               </a>
               {showLogo && [
@@ -74,7 +74,7 @@ class AppHeader extends React.Component {
           <div className="header-right">
             <div className="list-unstyled list-inline">
 
-              <a className="list-inline-item" href={DEMO.link}>
+              <a className="list-inline-item">
                 <div
                   className="avatar"
                   aria-owns={anchorEl ? 'app-header-menu' : null}

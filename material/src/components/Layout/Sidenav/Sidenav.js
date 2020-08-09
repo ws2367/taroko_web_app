@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Layout } from 'antd';
 import Logo from 'components/Logo';
 import APPCONFIG from 'constants/appConfig';
-import DEMO from 'constants/demoData';
+import COOBY from 'constants/demoData';
 import { toggleCollapsedNav, toggleOffCanvasNav } from 'actions/settingsActions';
 import MaterialIcon from 'components/MaterialIcon';
 import AppMenu from './Menu';
@@ -39,6 +39,7 @@ class AppSidenav extends React.Component {
             'bg-warning': ['15', '25', '35'].indexOf(colorOption) >= 0,
             'bg-danger': ['16', '26', '36'].indexOf(colorOption) >= 0 })}
         >
+        
           <Logo />
           <a href="#/" className="brand"><img src="assets/branding/cooby-brand-light.png" /></a>
         </section>
@@ -48,7 +49,7 @@ class AppSidenav extends React.Component {
         </div>
 
         <div className="sidenav-footer">
-          <a target="_blank" href={DEMO.productLink}>
+          <a target="_blank" href={COOBY.supportLink}>
             <MaterialIcon icon="help" className="nav-icon" />
             <span className="nav-text"><span>協助與支援</span></span>
           </a>

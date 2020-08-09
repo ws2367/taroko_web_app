@@ -2,9 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Menu } from 'antd';
 import APPCONFIG from 'constants/appConfig';
-import DEMO from 'constants/demoData';
 import { toggleOffCanvasMobileNav } from 'actions/settingsActions';
-import { CARDS, LAYOUTS, FOUNDATION, UIKIT, FORMS, FEEDBACKS, TABELS, CHARTS, PAGES, ECOMMERCE, USER, EXCEPTION } from 'constants/uiComponents';
+import { CHARTS } from 'constants/uiComponents';
 import Button from '@material-ui/core/Button';
 import MaterialIcon from 'components/MaterialIcon';
 
@@ -133,21 +132,21 @@ class AppMenu extends React.Component {
       >
         <Menu.Item key="/app/client">
           <Button className="nav-item" href="#/app/client">
-            <MaterialIcon icon="dashboard" />
+            <MaterialIcon icon="group" />
             <span className="nav-text">客戶列表</span>
             <span className="nav-badge nav-badge-icon badge-right ml-1"></span>
           </Button>
         </Menu.Item>
         <Menu.Item key="/app/task">
           <Button className="nav-item" href="#/app/task">
-            <MaterialIcon icon="store" />
+            <MaterialIcon icon="assignment" />
             <span className="nav-text">待辦事項</span>
           </Button>
         </Menu.Item>
         <Menu.Divider />
         <SubMenu
           key="/app/chart"
-          title={<Button className="nav-item"><MaterialIcon icon="bar_chart" /><span className="nav-text">業績報告</span></Button>}
+          title={<Button className="nav-item"><MaterialIcon icon="dashboard" /><span className="nav-text">業績報告</span></Button>}
         >
           { this.getNavMenuItems(CHARTS) }
         </SubMenu>
