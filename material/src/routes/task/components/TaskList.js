@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
+import Typography from '@material-ui/core/Typography';
 import ListItem from '@material-ui/core/ListItem';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
@@ -251,6 +252,9 @@ class TaskList extends React.Component {
   render() {
     const { classes } = this.props;
     const { dates, tasks, selectedTask, isOpen, mode } = this.state;
+    let futureTasks  = dates.filter(d => d && !this.isInPast(d));
+    let dueTasks     = dates.filter(d => d && this.isInPast(d));
+    let undatedTasks = tasks.filter(task => !task.due_date);
 
     return (
       <>
@@ -277,10 +281,10 @@ class TaskList extends React.Component {
             <div className="box-divider"></div>
             <div className="box-body">
               { // future tasks first
-                dates.filter(d => d && !this.isInPast(d)).map((date, index1) => (
+                futureTasks.map((date, index1) => (
                   <List
                     component="nav"
-                    subheader={<ListSubheader component="div">{date == null ? "未預定" : date}</ListSubheader>}
+                    subheader={<ListSubheader component="div">{date}</ListSubheader>}
                   >
                     {
                       tasks.filter(task => task.due_date == date).map( (task, index2) => (
@@ -296,14 +300,21 @@ class TaskList extends React.Component {
                   </List>
                 ))
               }
+              {
+                futureTasks.length === 0 && (
+                  <Typography variant='body2' color="textSecondary">
+                      從 🔼 上方按鈕開始建立待辦事項
+                  </Typography>
+                )
+              }
               </div>
             </div>
             <div className="box box-default mb-4">
               <div className="box-header">逾期待辦事項</div>
               <div className="box-divider"></div>
               <div className="box-body">
-                { // future tasks first
-                  dates.filter(d => d && this.isInPast(d)).map((date, index1) => (
+                { // due tasks first
+                  dueTasks.map((date, index1) => (
                     <List
                       component="nav"
                       subheader={<ListSubheader component="div">{date == null ? "未預定" : date}</ListSubheader>}
@@ -320,6 +331,13 @@ class TaskList extends React.Component {
                       }
                     </List>
                   ))
+                }
+                {
+                  dueTasks.length === 0 && (
+                    <Typography variant='body2' color="textSecondary">
+                        恭喜 🎉 ！你沒有逾期的待辦事項
+                    </Typography>
+                  )
                 }
                 </div>
               </div>
@@ -340,6 +358,13 @@ class TaskList extends React.Component {
                           handleComplete={this.handleComplete}
                         />
                       ))
+                    }
+                    {
+                      undatedTasks.length === 0 && (
+                        <Typography variant='body2' color="textSecondary">
+                            無未預定日期的待辦事項
+                        </Typography>
+                      )
                     }
                   </List>
                 </div>
