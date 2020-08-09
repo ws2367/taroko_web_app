@@ -10,7 +10,7 @@ import Typography from '@material-ui/core/Typography';
 
 const styles = theme => ({
   divContainer: {
-    width: 300,
+    width: 400,
     padding: theme.spacing.unit*2
   },
   textField: {
@@ -21,7 +21,7 @@ const styles = theme => ({
     marginRight: theme.spacing.unit / 2
   },
   drawerActionButtons: {
-    width: 270,
+    width: 370,
     position: "fixed",
     bottom: theme.spacing.unit * 2
   }
@@ -63,7 +63,7 @@ const CommonNoteFields = ({note, classes, handleChange}) => (
 
 const QuoteNoteFields = ({note, classes, handleChange}) => (
   <>
-    <div className="divider divider-solid border-dark mb-4"></div>
+    <div className="mb-4"></div>
     <Typography variant="subheading" gutterBottom>
       遞送細節
     </Typography>
@@ -91,7 +91,7 @@ const QuoteNoteFields = ({note, classes, handleChange}) => (
 
 const ClaimNoteFields = ({note, classes, handleChange}) => (
   <>
-    <div className="divider divider-solid border-dark mb-4"></div>
+    <div className="mb-4"></div>
     <Typography variant="subheading" gutterBottom>
       理賠細節
     </Typography>
@@ -118,7 +118,7 @@ const ClaimNoteFields = ({note, classes, handleChange}) => (
 
 const SigningNoteFields = ({note, classes, handleChange}) => (
   <>
-    <div className="divider divider-solid border-dark mb-4"></div>
+    <div className="mb-4"></div>
     <Typography variant="subheading" gutterBottom>
       簽約細節
     </Typography>
@@ -147,7 +147,10 @@ const SigningNoteFields = ({note, classes, handleChange}) => (
 
 const GenericNoteFields = ({note, classes, handleChange}) => (
   <>
-    <div className="divider divider-solid border-dark mb-4"></div>
+    <div className="mb-4"></div>
+    <Typography variant="subheading">
+      一般資訊
+    </Typography>
     <TextField
       id="current_insurance"
       label="保險狀況"

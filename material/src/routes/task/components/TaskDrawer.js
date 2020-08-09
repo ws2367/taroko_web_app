@@ -16,7 +16,7 @@ import Divider from '@material-ui/core/Divider';
 
 const styles = theme => ({
   divContainer: {
-    width: 300,
+    width: 400,
     padding: theme.spacing.unit*2
   },
   priorityForm: {
@@ -30,7 +30,7 @@ const styles = theme => ({
     marginRight: theme.spacing.unit / 2
   },
   drawerActionButtons: {
-    width: 270,
+    width: 370,
     position: "fixed",
     bottom: theme.spacing.unit * 2
   }

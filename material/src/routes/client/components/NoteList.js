@@ -105,8 +105,7 @@ class CreateNoteButton extends React.Component {
 
 const cardStyles = theme => ({
   root: {
-    minWidth: 200,
-    maxWidth: 600,
+    width: '100%',
     margin: theme.spacing.unit
   },
   title: {
