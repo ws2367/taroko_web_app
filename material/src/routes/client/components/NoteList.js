@@ -24,28 +24,7 @@ import {requestHeaders} from 'auth/Auth';
 const styles = theme => ({
   button: {
     marginBottom: theme.spacing.unit * 2
-  },
-  container: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  textField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    width: '100%',
-  },
-  root: {
-    width: '100%',
-    backgroundColor: theme.palette.background.paper
-  },
-  heading: {
-    fontSize: theme.typography.pxToRem(15),
-    fontWeight: theme.typography.fontWeightRegular,
-  },
-  date: {
-    fontSize: theme.typography.pxToRem(13),
-    fontWeight: theme.typography.fontWeightRegular,
-  },
+  }
 });
 
 
@@ -65,7 +44,11 @@ class CreateNoteButton extends React.Component {
 
   handleMenuItemClick = (event) => {
     this.setState({anchorEl: null});
-    this.props.openDrawer({note_type: event.target.value, additional_data: {}});
+    this.props.openDrawer({
+      note_type: event.target.value,
+      additional_data: {},
+      date: (new Date).toLocaleDateString('en-CA')
+    });
   }
 
   render() {
@@ -103,20 +86,12 @@ class CreateNoteButton extends React.Component {
 
 
 const cardStyles = theme => ({
-  root: {
-    width: 1000,
-    margin: theme.spacing.unit
-  },
-  title: {
-    fontSize: 14,
-  },
   pos: {
-    marginBottom: 12,
+    marginBottom: theme.spacing.unit,
   },
 });
 
-const UnstyledNoteCard = ({note, classes, handleEditClick}) => {
-
+const UnstyledNoteCard = ({note, config, classes, handleEditClick}) => {
   return (
     <div className="box box-default mb-4">
       <div className="box-header">{note.title}</div>
@@ -124,6 +99,11 @@ const UnstyledNoteCard = ({note, classes, handleEditClick}) => {
       <div className="box-body">
       <Grid container justify="space-between">
         <Grid item xs={11}>
+          {note.note_type !== null &&
+            (<Typography className={classes.pos} color="textSecondary">
+              類型：{config.note_type[note.note_type]}
+            </Typography>)
+          }
           {note.date &&
             (<Typography className={classes.pos} color="textSecondary">
               日期：{note.date}
@@ -190,8 +170,6 @@ class NoteList extends React.Component {
   };
 
   openDrawer = (mode) => (selectedNote) => {
-    console.log(selectedNote);
-    console.log(mode);
     this.setState({
       openNoteDrawer: true,
       selectedNote: selectedNote,
@@ -261,7 +239,7 @@ class NoteList extends React.Component {
           if (this.state.mode === "edit") {
             // edit mode
             var index = this.state.notes.findIndex(t => t.id === newNote.id);
-            if (index) {
+            if (index > -1) {
                 var oldNote = this.state.notes[index];
                 var notes = this.state.notes;
                 notes[index] = {...oldNote, ...newNote};
@@ -289,7 +267,7 @@ class NoteList extends React.Component {
   render() {
     const { notes, selectedNote, mode, openNoteDrawer, config, drawerKey } = this.state;
     const { classes } = this.props;
-
+    
     return (
       <>
         <NoteDrawer
@@ -308,6 +286,7 @@ class NoteList extends React.Component {
             notes.map((note, index) => (
               <NoteCard
                 note={note}
+                config={config}
                 handleEditClick={this.handleNoteClick(note)} />
             ))
           }

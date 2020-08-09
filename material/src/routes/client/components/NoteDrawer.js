@@ -234,7 +234,7 @@ class NoteDrawer extends React.Component {
                   className={classes.textField}
                   InputProps={{
                     classes: {
-                      input: {fontSize: 50}
+                      input: "font-size: 50px"
                     }
                   }}
                   value={note.title}
