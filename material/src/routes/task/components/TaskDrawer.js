@@ -41,12 +41,14 @@ class TaskDrawer extends React.Component {
     super(props);
 
     var task = props.task || {};
+    let client_name = (task.client_id != null) ? this.findNameWithId(task.client_id) : null
 
     this.state = {
       content: task.content,
       due_date: task.due_date,
-      priority:  task.priority,
-      reminder:  task.reminder
+      priority: task.priority,
+      reminder: task.reminder,
+      client_name: client_name
     }
   }
 
@@ -57,10 +59,11 @@ class TaskDrawer extends React.Component {
   };
 
   handleSave = event => {
-    const {content, due_date, priority, reminder} = this.state;
+    const {content, due_date, priority, reminder, client_name} = this.state;
+    let client_id = client_name == null ? null : this.findIdWithName(client_name)
     this.props.handleSaveTask({
       ...this.props.task,
-      content, due_date, priority, reminder
+      content, due_date, priority, reminder, client_id
     });
   }
 
@@ -69,9 +72,32 @@ class TaskDrawer extends React.Component {
     this.props.handleDeleteTask(taskId);
   }
 
+  findNameWithId = (client_id) => {
+    let client = this.props.client_options.find((element) => {
+      return element.id === client_id;
+    })
+    if (client != null) {
+      return client.name;
+    } else {
+      return null
+    }
+  }
+
+  findIdWithName = (client_name) => {
+    let client = this.props.client_options.find((element) => {
+      return element.name === client_name;
+    })
+
+    if (client != null) {
+      return client.id;
+    } else {
+      return null
+    }
+  }
+
   render() {
-    const { content, due_date, priority, reminder} = this.state;
-    const { classes, mode, isOpen, handleClose } = this.props;
+    const { content, due_date, priority, reminder, client_name } = this.state;
+    const { classes, mode, isOpen, handleClose, client_options } = this.props;
 
     const config = {
       "task_priority": {"0":"一般", "1":"重要"},
@@ -128,7 +154,25 @@ class TaskDrawer extends React.Component {
                 margin="normal"
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} justify="center">
+              <TextField
+                id="client"
+                select
+                label="選擇客戶"
+                className={classes.textField}
+                value={String(client_name)}
+                onChange={this.handleChange('client_name')}
+                margin="normal"
+                >
+                {this.props.client_options.map( (option, index) => (
+                  <MenuItem key={option.name} value={option.name}>
+                    {option.name}
+                  </MenuItem>
+                ))
+              })
+              </TextField>
+              </Grid>
+              <Grid item xs={12}>
               <FormControl component="fieldset" className={classes.priorityForm}>
                 <FormLabel component="legend">優先順序</FormLabel>
                 <RadioGroup row aria-label="priority" name="priority" value={String(priority)} onChange={this.handleChange('priority')}>

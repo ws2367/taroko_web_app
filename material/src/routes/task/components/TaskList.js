@@ -83,7 +83,8 @@ class TaskList extends React.Component {
     error: null,
     selectedTask: {},
     isLoaded: false,
-    isOpen: false
+    isOpen: false,
+    client_options: []
   };
   //
 
@@ -120,22 +121,47 @@ class TaskList extends React.Component {
       mode: 'cors',
       headers: requestHeaders()
     }).then(res => res.json())
-      .then(
-        (result) => {
-          this.setState({
-            isLoaded: true,
-            tasks: result.tasks,
-            dates: this.sortDates(result.tasks)
-          });
-        },
-        (error) => {
-          this.setState({
-            isLoaded: true,
-            error
-          });
-        }
-      )
+    .then(
+      (result) => {
+        this.setState({
+          isLoaded: true,
+          tasks: result.tasks,
+          dates: this.sortDates(result.tasks)
+        });
+      },
+      (error) => {
+        this.setState({
+          isLoaded: true,
+          error
+        });
+      }
+    );
+
+    this.fetchClients()
   }
+
+  fetchClients = () => {
+    fetch("https://api.cooby.co/clients/", {
+      "method": "GET",
+      mode: 'cors',
+      headers: requestHeaders()
+    }).then(res => res.json())
+    .then(
+      (result) => {
+        let client_options = result.clients.map(c => ({id: c.profile.id, name: c.profile.name} ));
+        console.log(client_options)
+        this.setState({
+          isLoaded: true,
+          client_options: client_options,
+        });
+      },
+      (error) => {
+        this.setState({
+          isLoaded: false,
+          error
+        });
+      });
+    };
 
   handleDeleteTask = taskId => {
     this.deleteFromServer(taskId);
@@ -251,7 +277,7 @@ class TaskList extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { dates, tasks, selectedTask, isOpen, mode } = this.state;
+    const { dates, tasks, selectedTask, isOpen, mode, client_options } = this.state;
     let futureTasks  = dates.filter(d => d && !this.isInPast(d));
     let dueTasks     = dates.filter(d => d && this.isInPast(d));
     let undatedTasks = tasks.filter(task => !task.due_date);
@@ -262,6 +288,7 @@ class TaskList extends React.Component {
             isOpen={isOpen}
             key={selectedTask.id}
             task={selectedTask}
+            client_options={client_options}
             mode={mode}
             handleClose={this.handleClose}
             handleDeleteTask={this.handleDeleteTask}

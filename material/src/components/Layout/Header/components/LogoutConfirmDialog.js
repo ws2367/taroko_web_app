@@ -22,10 +22,10 @@ const LogoutConfirmDialog = ({open, handleClose}) => (
     </DialogContent>
     <DialogActions>
       <OutlinedButton onClick={handleClose(false)} color="secondary">
-        不要
+        取消
       </OutlinedButton>
       <Button variant='contained' onClick={handleClose(true)} color="primary" autoFocus>
-        要
+        確認登出
       </Button>
     </DialogActions>
   </Dialog>

@@ -70,7 +70,7 @@ type State = {
 };
 
 
-class CreatableMultiTagAutocomplete extends Component<*, State> {
+class CreatableMultiTagAutocomplete extends Component <* , State > {
   getOptionLabel = (id) => {
     let option = this.props.options.find(option => option.id === id);
     return option ? option.name : id;
@@ -81,12 +81,12 @@ class CreatableMultiTagAutocomplete extends Component<*, State> {
     value: this.props.tags.map(tagId => ({
       value: tagId,
       label: this.getOptionLabel(tagId)
-    }) )
+    }))
   };
 
   convertTagsToOptions = (tags) => {
     // restructure tags as options
-    return tags.map(tag => ({label: tag.name, value: tag.id}) );
+    return tags.map(tag => ({ label: tag.name, value: tag.id }));
   }
 
   convertOptionsToTags = (options) => {
@@ -99,7 +99,7 @@ class CreatableMultiTagAutocomplete extends Component<*, State> {
     console.log(`action: ${actionMeta.action}`);
     console.groupEnd();
     this.setState({ value: newValue });
-    this.props.handleChange( {target: {value: this.convertOptionsToTags(newValue)} });
+    this.props.handleChange({ target: { value: this.convertOptionsToTags(newValue) } });
   };
 
   handleCreate = (inputValue: any) => {
@@ -113,7 +113,7 @@ class CreatableMultiTagAutocomplete extends Component<*, State> {
         this.setState({ isLoading: false });
         // fake it like internal input
         var newValue = this.state.value;
-        this.handleChange(newValue.concat(this.convertTagsToOptions([newTag])), {action: 'create-option'});
+        this.handleChange(newValue.concat(this.convertTagsToOptions([newTag])), { action: 'create-option' });
       },
       (error) => {}
     )
