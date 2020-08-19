@@ -34,7 +34,7 @@ const styles = theme => ({
   }
 });
 
-const UnstyledTaskListItem = ({classes, task, checked, handleTaskClick, handleComplete}) => (
+const UnstyledTaskListItem = ({classes, task, checked, client_name, handleTaskClick, handleComplete}) => (
   <ListItem
     key={task.id}
     dense
@@ -44,23 +44,25 @@ const UnstyledTaskListItem = ({classes, task, checked, handleTaskClick, handleCo
     className={classes.listItem}
   >
     <ListItemIcon>
-    <Checkbox
-      checked={checked.indexOf(task.id) !== -1}
-      tabIndex={-1}
-      disableRipple
-      onClick={handleComplete(task.id)}
-    />
+      <Checkbox
+        checked={checked.indexOf(task.id) !== -1}
+        tabIndex={-1}
+        disableRipple
+        onClick={handleComplete(task.id)}
+      />
     </ListItemIcon>
     <ListItemText primary={
       (<>
         {task.content}
-        {task.priority === 1 && <Chip
-          className={classes.chip}
-          label="重要"
-        />}
       </>)}
+      secondary={client_name}
     />
     <ListItemSecondaryAction>
+      {task.priority === 1 && <Chip
+        className={classes.chip}
+        label="重要"
+        style={{backgroundColor: 'rgba(242, 69, 61, 0.2)'}}
+      />}
       <IconButton aria-label="Edit" onClick={handleTaskClick(task)}>
         <EditIcon />
       </IconButton>
@@ -149,7 +151,6 @@ class TaskList extends React.Component {
     .then(
       (result) => {
         let client_options = result.clients.map(c => ({id: c.profile.id, name: c.profile.name} ));
-        console.log(client_options)
         this.setState({
           isLoaded: true,
           client_options: client_options,
@@ -275,6 +276,17 @@ class TaskList extends React.Component {
     this.handleClose();
   };
 
+  findNameWithId = (client_id) => {
+    let client = this.state.client_options.find((element) => {
+      return element.id === client_id;
+    })
+    if (client != null) {
+      return client.name;
+    } else {
+      return null
+    }
+  };
+
   render() {
     const { classes } = this.props;
     const { dates, tasks, selectedTask, isOpen, mode, client_options } = this.state;
@@ -319,6 +331,7 @@ class TaskList extends React.Component {
                           classes={classes}
                           task={task}
                           checked={this.state.checked}
+                          client_name={this.findNameWithId(task.client_id)}
                           handleTaskClick={this.handleTaskClick}
                           handleComplete={this.handleComplete}
                         />
@@ -351,6 +364,7 @@ class TaskList extends React.Component {
                           <TaskListItem
                             task={task}
                             checked={this.state.checked}
+                            client_name={this.findNameWithId(task.client_id)}
                             handleTaskClick={this.handleTaskClick}
                             handleComplete={this.handleComplete}
                           />
@@ -381,6 +395,7 @@ class TaskList extends React.Component {
                           classes={classes}
                           task={task}
                           checked={this.state.checked}
+                          client_name={this.findNameWithId(task.client_id)}
                           handleTaskClick={this.handleTaskClick}
                           handleComplete={this.handleComplete}
                         />
